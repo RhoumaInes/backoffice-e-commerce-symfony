@@ -8,12 +8,18 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
+        {% include 'includes/head.html.twig' %}
+        
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div class="wrapper">
+            {% block body %}
+            {% endblock %}
+            {% include 'includes/jslinks.html.twig' %}
+        </div>
     </body>
 </html>
