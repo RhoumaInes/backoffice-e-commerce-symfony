@@ -3,19 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
-use App\Security\EmailVerifier;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -26,14 +27,13 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    #[Route('/admin/register', name: 'app_register')]
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authorizationChecker): Response
     {
         $user = new User();
         
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-        
         
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -44,14 +44,15 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-
+            $user->setRoles(["ROLE_USER"]);
+            
             $entityManager->persist($user);
             $entityManager->flush();
-
+            //dd('ok');
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('ines.rhouma@esprit.tn', 'Couse Express Mail Bot'))
+                    ->from(new Address('noreply@ecommerce.tn', 'Couse Express Mail Bot'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
@@ -60,10 +61,13 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('admin');
         }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+        if ($authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
+            // L'utilisateur a le rôle "Admin"
+            return $this->render('registration/register.html.twig', [
+                'registrationForm' => $form->createView(),
+            ]);
+        }
+        return $this->redirectToRoute('app_login');
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]

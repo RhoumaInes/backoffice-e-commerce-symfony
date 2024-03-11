@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+    
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Liste des employés</h3>
+                                <div class="card-tools">
+                                    <form method="post" action="{{ path('app_user') }}">
+                                        <div class="input-group input-group-sm" style="min-width: 150px;">
+                                            <input type="text" name="searchuser" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchuser') }}">
+
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-default">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                            <div class="input-group-append">
+                                                <a href="{{ path('app_user') }}" type="button" class="btn btn-default">
+                                                    Réinitialiser
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Email</th>
+                                        <th>Date</th>
+                                        <th>Statut</th>
+                                        <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if pagination|length == 0 %}
+                                            <tr>
+                                                <td>Aucun utilisateur trouvé.</td>
+                                            </tr>
+                                        {% else %}
+                                            {% for user in pagination %}
+                                                <tr>
+                                                    <td>{{ user.id }}</td>
+                                                    <td>{{ user.email }}</td>
+                                                    <td>{{ user.email }}</td>
+                                                    <td>{{ user.createdAt | date('Y-m-d H:i:s') }}</td>
+                                                    <td>{{ user.isVerified ? "Vérifié" : "Non vérifié" }}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                                                                Action<span class="sr-only">Toggle Dropdown</span>
+                                                            </button>
+                                                            <div class="dropdown-menu" role="menu" style="">
+                                                            {% if 'ROLE_SUPER_ADMIN' not in user.roles %}
+                                                                {% if app.user is not empty and 'ROLE_SUPER_ADMIN' in app.user.roles %}
+                                                                    <a class="dropdown-item" href="{{ path('user_edit', {'id': user.id}) }}">Modifier</a>
+                                                                    <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer cet utilisateur ?');">
+                                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                                                        <button class="btn">Supprimer</button>
+                                                                    </form>
+                                                                {% endif %}
+                                                            {% endif %}
+                                                            <a class="dropdown-item" href="#">Contacter</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                                {# Afficher la pagination #}
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+
+
+    
+{% endblock %}

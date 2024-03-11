@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error {{ statusCode }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="vh-100 d-flex align-items-center justify-content-center" style="background-image: url('/authentification/images/bg-01.jpg');">
+        <div class="text-center row">
+            <div class=" col-md-6">
+                <h1 class="display-1 fw-bold text-white">{{ statusCode }}</h1>
+            </div>
+            <div class=" col-md-6 mt-5">
+                <p class="fs-3"> <span class="text-white">Opps!</span> Page not found.</p>
+                <p class="lead">
+                   <strong>{{ errorMessage }}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+  </body>
+
+</html>

@@ -21,6 +21,8 @@
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
       <parameter key="EasyAdminBundle">EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle</parameter>
       <parameter key="SymfonyCastsVerifyEmailBundle">SymfonyCasts\Bundle\VerifyEmail\SymfonyCastsVerifyEmailBundle</parameter>
+      <parameter key="KnpPaginatorBundle">Knp\Bundle\PaginatorBundle\KnpPaginatorBundle</parameter>
+      <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -71,6 +73,14 @@
         <parameter key="path">E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src</parameter>
         <parameter key="namespace">SymfonyCasts\Bundle\VerifyEmail</parameter>
       </parameter>
+      <parameter key="KnpPaginatorBundle" type="collection">
+        <parameter key="path">E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle</parameter>
+        <parameter key="namespace">Knp\Bundle\PaginatorBundle</parameter>
+      </parameter>
+      <parameter key="SensioFrameworkExtraBundle" type="collection">
+        <parameter key="path">E:\PFE\CourseExpress\vendor\sensio\framework-extra-bundle\src</parameter>
+        <parameter key="namespace">Sensio\Bundle\FrameworkExtraBundle</parameter>
+      </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
@@ -103,7 +113,7 @@
     <parameter key="kernel.trusted_hosts" type="collection"/>
     <parameter key="kernel.default_locale">en</parameter>
     <parameter key="kernel.enabled_locales" type="collection"/>
-    <parameter key="kernel.error_controller">error_controller</parameter>
+    <parameter key="kernel.error_controller">App\Controller\ErrorController::errorGeneric</parameter>
     <parameter key="debug.file_link_format">null</parameter>
     <parameter key="asset.request_context.base_path">null</parameter>
     <parameter key="asset.request_context.secure">null</parameter>
@@ -245,6 +255,11 @@
         </parameter>
       </parameter>
     </parameter>
+    <parameter key="knp_paginator.template.pagination">@KnpPaginator/Pagination/sliding.html.twig</parameter>
+    <parameter key="knp_paginator.template.filtration">@KnpPaginator/Pagination/filtration.html.twig</parameter>
+    <parameter key="knp_paginator.template.sortable">@KnpPaginator/Pagination/sortable_link.html.twig</parameter>
+    <parameter key="knp_paginator.page_range">5</parameter>
+    <parameter key="knp_paginator.page_limit">null</parameter>
     <parameter key="data_collector.templates" type="collection">
       <parameter key="data_collector.request" type="collection">
         <parameter>request</parameter>
@@ -351,6 +366,14 @@
         <argument type="service" id=".service_locator.Vsl_MIv.App\Controller\Admin\DashboardController"/>
       </call>
     </service>
+    <service id="App\Controller\ErrorController" class="App\Controller\ErrorController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="request_stack"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.l1ae.Qz.App\Controller\ErrorController"/>
+      </call>
+    </service>
     <service id="App\Controller\RegistrationController" class="App\Controller\RegistrationController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -366,7 +389,17 @@
         <argument type="service" id=".service_locator.l1ae.Qz.App\Controller\SecurityController"/>
       </call>
     </service>
+    <service id="App\Controller\UserController" class="App\Controller\UserController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.l1ae.Qz.App\Controller\UserController"/>
+      </call>
+    </service>
     <service id="App\Form\RegistrationFormType" class="App\Form\RegistrationFormType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\UserType" class="App\Form\UserType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true">
@@ -410,7 +443,7 @@
     </service>
     <service id="error_controller" class="Symfony\Component\HttpKernel\Controller\ErrorController" public="true">
       <argument type="service" id="http_kernel"/>
-      <argument>error_controller</argument>
+      <argument>App\Controller\ErrorController::errorGeneric</argument>
       <argument type="service" id="error_handler.error_renderer.serializer"/>
     </service>
     <service id="exception_listener" class="Symfony\Component\HttpKernel\EventListener\ErrorListener">
@@ -418,7 +451,7 @@
       <tag name="monolog.logger" channel="request"/>
       <tag name="container.hot_path"/>
       <tag name="container.hot_path"/>
-      <argument>error_controller</argument>
+      <argument>App\Controller\ErrorController::errorGeneric</argument>
       <argument type="service" id="monolog.logger.request" on-invalid="null"/>
       <argument>true</argument>
       <argument type="collection"/>
@@ -1160,6 +1193,7 @@
       </argument>
       <argument type="collection">
         <argument>App\Form\RegistrationFormType</argument>
+        <argument>App\Form\UserType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ChoiceType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FileType</argument>
@@ -1537,6 +1571,12 @@
       <argument type="service" id=".debug.http_client" on-invalid="ignore"/>
       <argument type="service" id="monolog.logger.mailer" on-invalid="ignore"/>
     </service>
+    <service id="mailer.transport_factory.gmail" class="Symfony\Component\Mailer\Bridge\Google\Transport\GmailTransportFactory">
+      <tag name="mailer.transport_factory"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="service" id=".debug.http_client" on-invalid="ignore"/>
+      <argument type="service" id="monolog.logger.mailer" on-invalid="ignore"/>
+    </service>
     <service id="mailer.transport_factory.null" class="Symfony\Component\Mailer\Transport\NullTransportFactory">
       <tag name="mailer.transport_factory"/>
       <argument type="service" id="debug.event_dispatcher"/>
@@ -1618,6 +1658,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.ar.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.ar.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ar.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ar.xliff</argument>
           </argument>
           <argument key="az" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.az.xlf</argument>
@@ -1634,6 +1675,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.bg.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.bg.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.bg.php</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.bg.xliff</argument>
           </argument>
           <argument key="bs" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.bs.xlf</argument>
@@ -1646,6 +1688,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.ca.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.ca.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ca.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ca.xliff</argument>
           </argument>
           <argument key="cs" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.cs.xlf</argument>
@@ -1653,6 +1696,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.cs.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.cs.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.cs.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.cs.xliff</argument>
           </argument>
           <argument key="cy" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.cy.xlf</argument>
@@ -1662,6 +1706,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.da.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.da.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.da.php</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.da.xliff</argument>
           </argument>
           <argument key="de" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.de.xlf</argument>
@@ -1669,6 +1714,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.de.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.de.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.de.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.de.xliff</argument>
           </argument>
           <argument key="el" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.el.xlf</argument>
@@ -1683,6 +1729,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.en.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.en.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.en.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.en.xliff</argument>
           </argument>
           <argument key="es" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.es.xlf</argument>
@@ -1690,6 +1737,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.es.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.es.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.es.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.es.xliff</argument>
           </argument>
           <argument key="et" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.et.xlf</argument>
@@ -1701,6 +1749,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.eu.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.eu.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.eu.php</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.eu.xliff</argument>
           </argument>
           <argument key="fa" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.fa.xlf</argument>
@@ -1708,6 +1757,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.fa.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.fa.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fa.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fa.xliff</argument>
           </argument>
           <argument key="fi" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.fi.xlf</argument>
@@ -1715,6 +1765,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.fi.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.fi.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fi.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fi.xliff</argument>
           </argument>
           <argument key="fr" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.fr.xlf</argument>
@@ -1722,6 +1773,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.fr.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.fr.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fr.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fr.xliff</argument>
           </argument>
           <argument key="gl" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.gl.xlf</argument>
@@ -1740,6 +1792,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.hr.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.hr.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.hr.php</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.hr.xliff</argument>
           </argument>
           <argument key="hu" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.hu.xlf</argument>
@@ -1747,6 +1800,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.hu.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.hu.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.hu.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.hu.xliff</argument>
           </argument>
           <argument key="hy" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.hy.xlf</argument>
@@ -1760,6 +1814,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.id.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.id.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.id.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.id.xliff</argument>
           </argument>
           <argument key="it" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.it.xlf</argument>
@@ -1767,12 +1822,14 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.it.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.it.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.it.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.it.xliff</argument>
           </argument>
           <argument key="ja" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.ja.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.ja.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.ja.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ja.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ja.xliff</argument>
           </argument>
           <argument key="lb" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.lb.xlf</argument>
@@ -1785,6 +1842,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.lt.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.lt.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.lt.php</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.lt.xliff</argument>
           </argument>
           <argument key="lv" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.lv.xlf</argument>
@@ -1812,6 +1870,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.nl.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.nl.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle+intl-icu.nl.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.nl.xliff</argument>
           </argument>
           <argument key="nn" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.nn.xlf</argument>
@@ -1823,6 +1882,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.no.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.no.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.no.php</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.no.xliff</argument>
           </argument>
           <argument key="pl" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.pl.xlf</argument>
@@ -1830,6 +1890,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.pl.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.pl.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.pl.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pl.xliff</argument>
           </argument>
           <argument key="pt" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.pt.xlf</argument>
@@ -1843,6 +1904,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.pt_BR.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.pt_BR.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.pt_BR.php</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pt_BR.xliff</argument>
           </argument>
           <argument key="ro" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.ro.xlf</argument>
@@ -1850,6 +1912,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.ro.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.ro.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ro.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ro.xliff</argument>
           </argument>
           <argument key="ru" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.ru.xlf</argument>
@@ -1857,6 +1920,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.ru.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.ru.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ru.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ru.xliff</argument>
           </argument>
           <argument key="sk" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.sk.xlf</argument>
@@ -1891,6 +1955,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\form/Resources/translations\validators.sv.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.sv.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.sv.php</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sv.xliff</argument>
           </argument>
           <argument key="th" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.th.xlf</argument>
@@ -1908,6 +1973,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.tr.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.tr.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.tr.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.tr.xliff</argument>
           </argument>
           <argument key="uk" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.uk.xlf</argument>
@@ -1915,6 +1981,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations\security.uk.xlf</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations\EasyAdminBundle.uk.php</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.uk.xlf</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.uk.xliff</argument>
           </argument>
           <argument key="ur" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations\validators.ur.xlf</argument>
@@ -1952,6 +2019,12 @@
           <argument key="sr" type="collection">
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.sr.xlf</argument>
           </argument>
+          <argument key="ky" type="collection">
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ky.xliff</argument>
+          </argument>
+          <argument key="sw" type="collection">
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sw.xliff</argument>
+          </argument>
         </argument>
         <argument key="scanned_directories" type="collection">
           <argument>E:\PFE\CourseExpress\vendor\symfony\validator/Resources/translations</argument>
@@ -1959,6 +2032,7 @@
           <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations</argument>
           <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations</argument>
           <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+          <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations</argument>
           <argument>E:\PFE\CourseExpress/translations</argument>
           <argument>E:\PFE\CourseExpress\vendor\symfony\framework-bundle/translations</argument>
           <argument>E:\PFE\CourseExpress\vendor\doctrine\doctrine-bundle/translations</argument>
@@ -1970,6 +2044,7 @@
           <argument>E:\PFE\CourseExpress\vendor\symfony\security-bundle/translations</argument>
           <argument>E:\PFE\CourseExpress\vendor\symfony\monolog-bundle/translations</argument>
           <argument>E:\PFE\CourseExpress\vendor\symfony\maker-bundle\src/translations</argument>
+          <argument>E:\PFE\CourseExpress\vendor\sensio\framework-extra-bundle\src/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -1978,6 +2053,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-core/Resources/translations</argument>
             <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/translations</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+            <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/translations</argument>
             <argument>translations</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\framework-bundle/translations</argument>
             <argument>E:\PFE\CourseExpress\vendor\doctrine\doctrine-bundle/translations</argument>
@@ -1989,6 +2065,7 @@
             <argument>E:\PFE\CourseExpress\vendor\symfony\security-bundle/translations</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\monolog-bundle/translations</argument>
             <argument>E:\PFE\CourseExpress\vendor\symfony\maker-bundle\src/translations</argument>
+            <argument>E:\PFE\CourseExpress\vendor\sensio\framework-extra-bundle\src/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -2274,6 +2351,14 @@
         <argument type="collection">
           <argument type="service_closure" id="EasyCorp\Bundle\EasyAdminBundle\EventListener\CrudResponseListener"/>
           <argument>onKernelView</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.sliding_pagination"/>
+          <argument>onKernelRequest</argument>
         </argument>
         <argument>0</argument>
       </call>
@@ -2724,6 +2809,110 @@
           <argument>onKernelController</argument>
         </argument>
         <argument>128</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.before</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.paginate"/>
+          <argument>before</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.pagination</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.paginate"/>
+          <argument>pagination</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.before</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.sortable"/>
+          <argument>before</argument>
+        </argument>
+        <argument>1</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.before</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.filtration"/>
+          <argument>before</argument>
+        </argument>
+        <argument>1</argument>
+      </call>
+      <call method="addListener">
+        <argument>knp_pager.pagination</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="knp_paginator.subscriber.sliding_pagination"/>
+          <argument>pagination</argument>
+        </argument>
+        <argument>1</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="sensio_framework_extra.controller.listener"/>
+          <argument>onKernelController</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="sensio_framework_extra.converter.listener"/>
+          <argument>onKernelController</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="sensio_framework_extra.view.listener"/>
+          <argument>onKernelController</argument>
+        </argument>
+        <argument>-128</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.view</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="sensio_framework_extra.view.listener"/>
+          <argument>onKernelView</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="sensio_framework_extra.cache.listener"/>
+          <argument>onKernelController</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="sensio_framework_extra.cache.listener"/>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller_arguments</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="sensio_framework_extra.security.listener"/>
+          <argument>onKernelControllerArguments</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller_arguments</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="framework_extra_bundle.event.is_granted"/>
+          <argument>onKernelControllerArguments</argument>
+        </argument>
+        <argument>0</argument>
       </call>
       <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
@@ -3321,7 +3510,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.aF0VNrt"/>
+      <argument type="service" id=".service_locator.a4hRxjO"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -4852,6 +5041,9 @@
       <call method="addExtension">
         <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Twig\EasyAdminTwigExtension"/>
       </call>
+      <call method="addExtension">
+        <argument type="service" id="knp_paginator.twig.extension.pagination"/>
+      </call>
       <call method="addGlobal">
         <argument>app</argument>
         <argument type="service" id="twig.app_variable"/>
@@ -4936,6 +5128,14 @@
         <argument>!Debug</argument>
       </call>
       <call method="addPath">
+        <argument>E:\PFE\CourseExpress/templates/bundles/TwigBundle</argument>
+        <argument>Twig</argument>
+      </call>
+      <call method="addPath">
+        <argument>E:\PFE\CourseExpress/templates/bundles/TwigBundle</argument>
+        <argument>!Twig</argument>
+      </call>
+      <call method="addPath">
         <argument>E:\PFE\CourseExpress\vendor\symfony\web-profiler-bundle/Resources/views</argument>
         <argument>WebProfiler</argument>
       </call>
@@ -4958,6 +5158,14 @@
       <call method="addPath">
         <argument>E:\PFE\CourseExpress\vendor\easycorp\easyadmin-bundle\src/Resources/views</argument>
         <argument>!EasyAdmin</argument>
+      </call>
+      <call method="addPath">
+        <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/templates</argument>
+        <argument>KnpPaginator</argument>
+      </call>
+      <call method="addPath">
+        <argument>E:\PFE\CourseExpress\vendor\knplabs\knp-paginator-bundle/templates</argument>
+        <argument>!KnpPaginator</argument>
       </call>
       <call method="addPath">
         <argument>E:\PFE\CourseExpress/templates</argument>
@@ -5045,7 +5253,7 @@
       <argument>,</argument>
     </service>
     <service id="twig.runtime_loader" class="Twig\RuntimeLoader\ContainerRuntimeLoader">
-      <argument type="service" id=".service_locator.pTeli0u"/>
+      <argument type="service" id=".service_locator.YmHjcFj"/>
     </service>
     <service id="twig.error_renderer.html" class="Symfony\Bridge\Twig\ErrorRenderer\TwigErrorRenderer">
       <argument type="service" id="twig"/>
@@ -5337,7 +5545,25 @@
         </service>
       </argument>
     </service>
-    <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap"/>
+    <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap">
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.XCDbvwQ"/>
+        <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_SUPER_ADMIN</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher._pRcrzc"/>
+        <argument type="collection">
+          <argument>ROLE_USER</argument>
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_SUPER_ADMIN</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+    </service>
     <service id="security.context_listener" class="Symfony\Component\Security\Http\Firewall\ContextListener">
       <tag name="monolog.logger" channel="security"/>
       <argument type="service" id="security.untracked_token_storage"/>
@@ -5851,6 +6077,12 @@
         <argument key="security.firewall.map.context.dev" type="service_closure" id="security.firewall.map.context.dev"/>
         <argument key="security.firewall.map.context.main" type="service_closure" id="security.firewall.map.context.main"/>
       </argument>
+    </service>
+    <service id=".security.request_matcher.XCDbvwQ" class="Symfony\Component\HttpFoundation\RequestMatcher">
+      <argument>^/admin/user/\d+/edit</argument>
+    </service>
+    <service id=".security.request_matcher._pRcrzc" class="Symfony\Component\HttpFoundation\RequestMatcher">
+      <argument>^/admin/</argument>
     </service>
     <service id="security.command.user_password_hash" class="Symfony\Component\PasswordHasher\Command\UserPasswordHashCommand">
       <tag name="console.command"/>
@@ -6440,18 +6672,148 @@
       <argument type="service" id="symfonycasts.verify_email.token_generator"/>
       <argument>3600</argument>
     </service>
+    <service id="knp_paginator" class="Knp\Component\Pager\Paginator" public="true" lazy="true">
+      <tag name="proxy" interface="Knp\Component\Pager\PaginatorInterface"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="service" id="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess"/>
+      <call method="setDefaultPaginatorOptions">
+        <argument type="collection">
+          <argument key="pageParameterName">page</argument>
+          <argument key="sortFieldParameterName">sort</argument>
+          <argument key="sortDirectionParameterName">direction</argument>
+          <argument key="filterFieldParameterName">filterField</argument>
+          <argument key="filterValueParameterName">filterValue</argument>
+          <argument key="distinct">true</argument>
+          <argument key="pageOutOfRange">ignore</argument>
+          <argument key="defaultLimit">10</argument>
+        </argument>
+      </call>
+    </service>
+    <service id="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess" class="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess">
+      <argument type="service" id="request_stack"/>
+    </service>
+    <service id="knp_paginator.subscriber.paginate" class="Knp\Component\Pager\Event\Subscriber\Paginate\PaginationSubscriber">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="knp_paginator.subscriber.sortable" class="Knp\Component\Pager\Event\Subscriber\Sortable\SortableSubscriber">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="knp_paginator.subscriber.filtration" class="Knp\Component\Pager\Event\Subscriber\Filtration\FiltrationSubscriber">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="knp_paginator.subscriber.sliding_pagination" class="Knp\Bundle\PaginatorBundle\Subscriber\SlidingPaginationSubscriber">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
+      <tag name="container.hot_path"/>
+      <argument type="collection">
+        <argument key="defaultPaginationTemplate">@KnpPaginator/Pagination/sliding.html.twig</argument>
+        <argument key="defaultSortableTemplate">@KnpPaginator/Pagination/sortable_link.html.twig</argument>
+        <argument key="defaultFiltrationTemplate">@KnpPaginator/Pagination/filtration.html.twig</argument>
+        <argument key="defaultPageRange">5</argument>
+        <argument key="defaultPageLimit">null</argument>
+      </argument>
+    </service>
+    <service id="knp_paginator.helper.processor" class="Knp\Bundle\PaginatorBundle\Helper\Processor">
+      <argument type="service" id="router.default"/>
+      <argument type="service" id="translator.data_collector"/>
+    </service>
+    <service id="knp_paginator.twig.extension.pagination" class="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationExtension">
+      <tag name="twig.extension"/>
+    </service>
+    <service id="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime" class="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime">
+      <tag name="twig.runtime"/>
+      <argument type="service" id="knp_paginator.helper.processor"/>
+    </service>
+    <service id="sensio_framework_extra.controller.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="annotations.cached_reader"/>
+    </service>
+    <service id="sensio_framework_extra.converter.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="sensio_framework_extra.converter.manager"/>
+      <argument>true</argument>
+    </service>
+    <service id="sensio_framework_extra.converter.manager" class="Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterManager">
+      <call method="add">
+        <argument type="service" id="sensio_framework_extra.converter.doctrine.orm"/>
+        <argument>0</argument>
+        <argument>doctrine.orm</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id="framework_extra_bundle.date_time_param_converter"/>
+        <argument>0</argument>
+        <argument>datetime</argument>
+      </call>
+    </service>
+    <service id="sensio_framework_extra.converter.doctrine.orm" class="Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DoctrineParamConverter">
+      <tag name="request.param_converter" converter="doctrine.orm"/>
+      <argument type="service" id="doctrine" on-invalid="ignore"/>
+      <argument type="service" id="sensio_framework_extra.converter.doctrine.orm.expression_language.default" on-invalid="null"/>
+    </service>
+    <service id="framework_extra_bundle.date_time_param_converter" class="Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DateTimeParamConverter">
+      <tag name="request.param_converter" converter="datetime"/>
+    </service>
+    <service id="sensio_framework_extra.converter.doctrine.orm.expression_language.default" class="Symfony\Component\ExpressionLanguage\ExpressionLanguage"/>
+    <service id="sensio_framework_extra.view.guesser" class="Sensio\Bundle\FrameworkExtraBundle\Templating\TemplateGuesser">
+      <argument type="service" id="kernel"/>
+    </service>
+    <service id="sensio_framework_extra.view.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.service_subscriber" id="twig"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="sensio_framework_extra.view.guesser"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.PQK0.4p.sensio_framework_extra.view.listener"/>
+      </call>
+    </service>
+    <service id="sensio_framework_extra.cache.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <tag name="container.hot_path"/>
+    </service>
+    <service id="sensio_framework_extra.security.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="framework_extra_bundle.argument_name_convertor"/>
+      <argument type="service" id="sensio_framework_extra.security.expression_language.default" on-invalid="null"/>
+      <argument type="service" id="security.authentication.trust_resolver" on-invalid="null"/>
+      <argument type="service" id="security.role_hierarchy" on-invalid="null"/>
+      <argument type="service" id="security.token_storage" on-invalid="null"/>
+      <argument type="service" id="security.authorization_checker" on-invalid="null"/>
+      <argument type="service" id="monolog.logger" on-invalid="null"/>
+    </service>
+    <service id="sensio_framework_extra.security.expression_language.default" class="Sensio\Bundle\FrameworkExtraBundle\Security\ExpressionLanguage"/>
+    <service id="framework_extra_bundle.event.is_granted" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="framework_extra_bundle.argument_name_convertor"/>
+      <argument type="service" id="security.authorization_checker" on-invalid="null"/>
+    </service>
+    <service id="framework_extra_bundle.argument_name_convertor" class="Sensio\Bundle\FrameworkExtraBundle\Request\ArgumentNameConverter">
+      <argument type="service" id="argument_metadata_factory"/>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\DashboardController" class="App\Controller\Admin\DashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\DashboardController" class="App\Controller\Admin\DashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.EasyCorp\Bundle\EasyAdminBundle\Contracts\Controller\DashboardControllerInterface.0.App\Controller\Admin\DashboardController" class="App\Controller\Admin\DashboardController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Admin\DashboardController" class="App\Controller\Admin\DashboardController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ErrorController" class="App\Controller\ErrorController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ErrorController" class="App\Controller\ErrorController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ErrorController" class="App\Controller\ErrorController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\UserController" class="App\Controller\UserController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\UserController" class="App\Controller\UserController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\UserController" class="App\Controller\UserController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\RegistrationFormType" class="App\Form\RegistrationFormType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\RegistrationFormType" class="App\Form\RegistrationFormType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\UserType" class="App\Form\UserType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\UserType" class="App\Form\UserType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.EasyCorp\Bundle\EasyAdminBundle\Contracts\Filter\FilterConfiguratorInterface.0.EasyCorp\Bundle\EasyAdminBundle\Filter\Configurator\ChoiceConfigurator" class="EasyCorp\Bundle\EasyAdminBundle\Filter\Configurator\ChoiceConfigurator" abstract="true"/>
@@ -6904,9 +7266,10 @@
         <argument key="user" type="service_closure" id=".errored..service_locator.q6hA_O0.Symfony\Component\Security\Core\User\UserInterface"/>
       </argument>
     </service>
-    <service id=".service_locator.4u5os03" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.ma1z39y" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="authorizationChecker" type="service_closure" id="security.authorization_checker"/>
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="userPasswordHasher" type="service_closure" id="security.user_password_hasher"/>
       </argument>
@@ -6924,21 +7287,49 @@
         <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
       </argument>
     </service>
-    <service id=".service_locator.v2GYPw4" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.YcjFw.k" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="paginator" type="service_closure" id="knp_paginator"/>
+        <argument key="userRep" type="service_closure" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.0l9Ew6A" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="user" type="service_closure" id=".errored..service_locator.0l9Ew6A.App\Entity\User"/>
+        <argument key="userRep" type="service_closure" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.LruWq6u" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="user" type="service_closure" id=".errored..service_locator.LruWq6u.App\Entity\User"/>
+      </argument>
+    </service>
+    <service id=".service_locator.b601Mzw" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\DashboardController::configureUserMenu" type="service_closure" id=".service_locator.q6hA_O0"/>
-        <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.4u5os03"/>
+        <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.ma1z39y"/>
         <argument key="App\Controller\RegistrationController::verifyUserEmail" type="service_closure" id=".service_locator.KAr4.j6"/>
         <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.UDgw6Ol"/>
+        <argument key="App\Controller\UserController::delete" type="service_closure" id=".service_locator.LruWq6u"/>
+        <argument key="App\Controller\UserController::edit" type="service_closure" id=".service_locator.0l9Ew6A"/>
+        <argument key="App\Controller\UserController::index" type="service_closure" id=".service_locator.YcjFw.k"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.KfbR3DY"/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.KfbR3DY"/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.KfbR3DY"/>
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.KfbR3DY"/>
         <argument key="App\Controller\Admin\DashboardController:configureUserMenu" type="service_closure" id=".service_locator.q6hA_O0"/>
-        <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.4u5os03"/>
+        <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.ma1z39y"/>
         <argument key="App\Controller\RegistrationController:verifyUserEmail" type="service_closure" id=".service_locator.KAr4.j6"/>
         <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.UDgw6Ol"/>
+        <argument key="App\Controller\UserController:delete" type="service_closure" id=".service_locator.LruWq6u"/>
+        <argument key="App\Controller\UserController:edit" type="service_closure" id=".service_locator.0l9Ew6A"/>
+        <argument key="App\Controller\UserController:index" type="service_closure" id=".service_locator.YcjFw.k"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.KfbR3DY"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.KfbR3DY"/>
       </argument>
@@ -7012,10 +7403,11 @@
       <argument type="service" id="debug.argument_resolver.not_tagged_controller.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.aF0VNrt" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.a4hRxjO" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\RegistrationFormType" type="service_closure" id="App\Form\RegistrationFormType"/>
+        <argument key="App\Form\UserType" type="service_closure" id="App\Form\UserType"/>
         <argument key="EasyCorp\Bundle\EasyAdminBundle\Form\Type\CrudFormType" type="service_closure" id="EasyCorp\Bundle\EasyAdminBundle\Form\Type\CrudFormType"/>
         <argument key="EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType" type="service_closure" id="EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType"/>
         <argument key="EasyCorp\Bundle\EasyAdminBundle\Form\Type\FiltersFormType" type="service_closure" id="EasyCorp\Bundle\EasyAdminBundle\Form\Type\FiltersFormType"/>
@@ -7360,10 +7752,10 @@
     <service id="EasyCorp\Bundle\EasyAdminBundle\Registry\DashboardControllerRegistry" class="EasyCorp\Bundle\EasyAdminBundle\Registry\DashboardControllerRegistry">
       <argument>E:\PFE\CourseExpress\var\cache\dev</argument>
       <argument type="collection">
-        <argument key="App\Controller\Admin\DashboardController">400de64</argument>
+        <argument key="App\Controller\Admin\DashboardController">e2a77ae</argument>
       </argument>
       <argument type="collection">
-        <argument key="400de64">App\Controller\Admin\DashboardController</argument>
+        <argument key="e2a77ae">App\Controller\Admin\DashboardController</argument>
       </argument>
     </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Registry\CrudControllerRegistry" class="EasyCorp\Bundle\EasyAdminBundle\Registry\CrudControllerRegistry">
@@ -7425,6 +7817,12 @@
         <argument key="twig" type="service_closure" id="twig" on-invalid="ignore"/>
       </argument>
     </service>
+    <service id=".service_locator.l1ae.Qz.App\Controller\ErrorController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ErrorController"/>
+      <argument>App\Controller\ErrorController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.l1ae.Qz" method="withContext"/>
+    </service>
     <service id=".service_locator.l1ae.Qz.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RegistrationController"/>
       <argument>App\Controller\RegistrationController</argument>
@@ -7434,6 +7832,12 @@
     <service id=".service_locator.l1ae.Qz.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SecurityController"/>
       <argument>App\Controller\SecurityController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.l1ae.Qz" method="withContext"/>
+    </service>
+    <service id=".service_locator.l1ae.Qz.App\Controller\UserController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\UserController"/>
+      <argument>App\Controller\UserController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.l1ae.Qz" method="withContext"/>
     </service>
@@ -7484,6 +7888,18 @@
       <argument>twig.template_cache_warmer</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.aq4MYft" method="withContext"/>
+    </service>
+    <service id=".service_locator.PQK0.4p" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="twig" type="service_closure" id="twig" on-invalid="ignore"/>
+      </argument>
+    </service>
+    <service id=".service_locator.PQK0.4p.sensio_framework_extra.view.listener" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="sensio_framework_extra.view.listener"/>
+      <argument>sensio_framework_extra.view.listener</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.PQK0.4p" method="withContext"/>
     </service>
     <service id=".service_locator.XXv1IfR" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -7615,12 +8031,12 @@
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
-      <argument type="service" id=".service_locator.v2GYPw4"/>
+      <argument type="service" id=".service_locator.b601Mzw"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
-      <argument type="service" id=".service_locator.v2GYPw4"/>
+      <argument type="service" id=".service_locator.b601Mzw"/>
     </service>
     <service id="debug.traced.messenger.bus.default.inner" class="Symfony\Component\Messenger\MessageBus">
       <argument type="iterator">
@@ -7641,6 +8057,8 @@
     </service>
     <service id=".errored..service_locator.KfbR3DY.Symfony\Component\Config\Loader\LoaderInterface" class="Symfony\Component\Config\Loader\LoaderInterface"/>
     <service id=".errored..service_locator.q6hA_O0.Symfony\Component\Security\Core\User\UserInterface" class="Symfony\Component\Security\Core\User\UserInterface"/>
+    <service id=".errored..service_locator.0l9Ew6A.App\Entity\User" class="App\Entity\User"/>
+    <service id=".errored..service_locator.LruWq6u.App\Entity\User" class="App\Entity\User"/>
     <service id=".console.command.about.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>about</argument>
       <argument type="collection"/>
@@ -8436,13 +8854,14 @@
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
-    <service id=".service_locator.pTeli0u" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.YmHjcFj" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="Symfony\Bridge\Twig\Extension\CsrfRuntime" type="service_closure" id="twig.runtime.security_csrf"/>
         <argument key="Symfony\Bridge\Twig\Extension\HttpKernelRuntime" type="service_closure" id="twig.runtime.httpkernel"/>
         <argument key="Symfony\Bridge\Twig\Extension\SerializerRuntime" type="service_closure" id="twig.runtime.serializer"/>
         <argument key="Symfony\Component\Form\FormRenderer" type="service_closure" id="twig.form.renderer"/>
+        <argument key="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime" type="service_closure" id="Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime"/>
       </argument>
     </service>
     <service id="App\Kernel" alias="kernel" public="true"/>
@@ -8584,9 +9003,13 @@
     <service id="EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemMatcherInterface" alias="EasyCorp\Bundle\EasyAdminBundle\Menu\MenuItemMatcher"/>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Contracts\Orm\EntityPaginatorInterface" alias="EasyCorp\Bundle\EasyAdminBundle\Orm\EntityPaginator"/>
     <service id="SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface" alias="symfonycasts.verify_email.helper"/>
+    <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
+    <service id="Knp\Component\Pager\ArgumentAccess\ArgumentAccessInterface" alias="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess"/>
+    <service id="sensio_framework_extra.converter.doctrine.orm.expression_language" alias="sensio_framework_extra.converter.doctrine.orm.expression_language.default"/>
+    <service id="sensio_framework_extra.security.expression_language" alias="sensio_framework_extra.security.expression_language.default"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.gSv9zYw" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.v2GYPw4"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.b601Mzw"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -8609,10 +9032,12 @@
     <service id=".service_locator.h8Jkkd2" alias="messenger.retry_strategy_locator"/>
     <service id=".service_locator.Mo0FXEU" alias="service_locator_EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator"/>
     <service id=".service_locator.0GV1BZZ" alias=".service_locator.gSv9zYw"/>
-    <service id=".service_locator.Dby0_1s" alias=".service_locator.4u5os03"/>
-    <service id=".service_locator.1sjFIho" alias=".service_locator.v2GYPw4"/>
+    <service id=".service_locator.AT7Cxj1" alias=".service_locator.ma1z39y"/>
+    <service id=".service_locator.JNF4k6H" alias=".service_locator.0l9Ew6A"/>
+    <service id=".service_locator.PaJQGxZ" alias=".service_locator.LruWq6u"/>
+    <service id=".service_locator.JiNnb9L" alias=".service_locator.b601Mzw"/>
     <service id=".service_locator.wKF4yn1" alias=".service_locator.19_mNxd"/>
-    <service id=".service_locator.zOEDDkY" alias=".service_locator.aF0VNrt"/>
+    <service id=".service_locator.IMQFVty" alias=".service_locator.a4hRxjO"/>
     <service id=".service_locator.XW18Svm" alias=".service_locator.TcKhdzh"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
     <service id=".service_locator.Wk4XLSu" alias=".service_locator.Vsl_MIv"/>
@@ -8642,9 +9067,12 @@
     <service id="doctrine.orm.default_metadata_driver" alias=".doctrine.orm.default_metadata_driver"/>
     <service id=".service_locator.JBAFp66" alias=".service_locator.KfbR3DY"/>
     <service id=".service_locator.vS1lpro" alias=".service_locator.q6hA_O0"/>
-    <service id=".service_locator.LzwvCJx" alias=".service_locator.4u5os03"/>
+    <service id=".service_locator.8WejQbh" alias=".service_locator.ma1z39y"/>
     <service id=".service_locator.zifMgHR" alias=".service_locator.KAr4.j6"/>
     <service id=".service_locator.kXCVHeG" alias=".service_locator.UDgw6Ol"/>
+    <service id=".service_locator.OxtRFZk" alias=".service_locator.YcjFw.k"/>
+    <service id=".service_locator.ly57KwX" alias=".service_locator.0l9Ew6A"/>
+    <service id=".service_locator.ackJGrf" alias=".service_locator.LruWq6u"/>
     <service id=".service_locator.wPhikB0" alias=".service_locator.Vsl_MIv"/>
     <service id=".service_locator.moWzgtz" alias=".service_locator.l1ae.Qz"/>
     <service id=".service_locator.u6DWx23" alias=".service_locator.cXsfP3P"/>

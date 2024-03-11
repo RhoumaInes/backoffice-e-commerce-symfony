@@ -18,8 +18,8 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
         'c2aad8997a98dfc4771bdbffea3d62b7' => __DIR__ . '/..' . '/laminas/laminas-code/polyfill/ReflectionEnumPolyfill.php',
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
         '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
-        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '92c8763cd6170fce6fcfe7e26b4e8c10' => __DIR__ . '/..' . '/symfony/phpunit-bridge/bootstrap.php',
     );
@@ -79,6 +79,7 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
             'Symfony\\Component\\Mime\\' => 23,
             'Symfony\\Component\\Messenger\\Bridge\\Doctrine\\' => 44,
             'Symfony\\Component\\Messenger\\' => 28,
+            'Symfony\\Component\\Mailer\\Bridge\\Google\\' => 39,
             'Symfony\\Component\\Mailer\\' => 25,
             'Symfony\\Component\\Lock\\' => 23,
             'Symfony\\Component\\Intl\\' => 23,
@@ -112,6 +113,7 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
             'Symfony\\Bridge\\Monolog\\' => 23,
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'SymfonyCasts\\Bundle\\VerifyEmail\\' => 32,
+            'Sensio\\Bundle\\FrameworkExtraBundle\\' => 35,
         ),
         'P' => 
         array (
@@ -131,6 +133,11 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
         'L' => 
         array (
             'Laminas\\Code\\' => 13,
+        ),
+        'K' => 
+        array (
+            'Knp\\Component\\' => 14,
+            'Knp\\Bundle\\PaginatorBundle\\' => 27,
         ),
         'E' => 
         array (
@@ -338,6 +345,10 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
         array (
             0 => __DIR__ . '/..' . '/symfony/messenger',
         ),
+        'Symfony\\Component\\Mailer\\Bridge\\Google\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/google-mailer',
+        ),
         'Symfony\\Component\\Mailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/mailer',
@@ -470,6 +481,10 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
         array (
             0 => __DIR__ . '/..' . '/symfonycasts/verify-email-bundle/src',
         ),
+        'Sensio\\Bundle\\FrameworkExtraBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
@@ -509,6 +524,14 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
         'Laminas\\Code\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-code/src',
+        ),
+        'Knp\\Component\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component',
+        ),
+        'Knp\\Bundle\\PaginatorBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src',
         ),
         'Egulias\\EmailValidator\\' => 
         array (
@@ -595,10 +618,16 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
 
     public static $classMap = array (
         'App\\Controller\\Admin\\DashboardController' => __DIR__ . '/../..' . '/src/Controller/Admin/DashboardController.php',
+        'App\\Controller\\ErrorController' => __DIR__ . '/../..' . '/src/Controller/ErrorController.php',
         'App\\Controller\\RegistrationController' => __DIR__ . '/../..' . '/src/Controller/RegistrationController.php',
         'App\\Controller\\SecurityController' => __DIR__ . '/../..' . '/src/Controller/SecurityController.php',
+        'App\\Controller\\UserController' => __DIR__ . '/../..' . '/src/Controller/UserController.php',
+        'App\\Controller\\UserCrudController' => __DIR__ . '/../..' . '/src/Controller/UserCrudController.php',
+        'App\\Entity\\Traits\\Timestampable' => __DIR__ . '/../..' . '/src/Entity/Traits/Timestampable.php',
         'App\\Entity\\User' => __DIR__ . '/../..' . '/src/Entity/User.php',
         'App\\Form\\RegistrationFormType' => __DIR__ . '/../..' . '/src/Form/RegistrationFormType.php',
+        'App\\Form\\User1Type' => __DIR__ . '/../..' . '/src/Form/User1Type.php',
+        'App\\Form\\UserType' => __DIR__ . '/../..' . '/src/Form/UserType.php',
         'App\\Kernel' => __DIR__ . '/../..' . '/src/Kernel.php',
         'App\\Repository\\UserRepository' => __DIR__ . '/../..' . '/src/Repository/UserRepository.php',
         'App\\Security\\EmailVerifier' => __DIR__ . '/../..' . '/src/Security/EmailVerifier.php',
@@ -2170,6 +2199,63 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
         'Egulias\\EmailValidator\\Warning\\TLD' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/TLD.php',
         'Egulias\\EmailValidator\\Warning\\Warning' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/Warning.php',
         'IntlDateFormatter' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Resources/stubs/IntlDateFormatter.php',
+        'Knp\\Bundle\\PaginatorBundle\\Definition\\AbstractPaginatorAware' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Definition/AbstractPaginatorAware.php',
+        'Knp\\Bundle\\PaginatorBundle\\Definition\\PaginatorAwareInterface' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Definition/PaginatorAwareInterface.php',
+        'Knp\\Bundle\\PaginatorBundle\\DependencyInjection\\Compiler\\PaginatorAwarePass' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/DependencyInjection/Compiler/PaginatorAwarePass.php',
+        'Knp\\Bundle\\PaginatorBundle\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/DependencyInjection/Configuration.php',
+        'Knp\\Bundle\\PaginatorBundle\\DependencyInjection\\KnpPaginatorExtension' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/DependencyInjection/KnpPaginatorExtension.php',
+        'Knp\\Bundle\\PaginatorBundle\\EventListener\\ExceptionListener' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/EventListener/ExceptionListener.php',
+        'Knp\\Bundle\\PaginatorBundle\\Helper\\Processor' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Helper/Processor.php',
+        'Knp\\Bundle\\PaginatorBundle\\KnpPaginatorBundle' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/KnpPaginatorBundle.php',
+        'Knp\\Bundle\\PaginatorBundle\\Pagination\\SlidingPagination' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Pagination/SlidingPagination.php',
+        'Knp\\Bundle\\PaginatorBundle\\Pagination\\SlidingPaginationInterface' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Pagination/SlidingPaginationInterface.php',
+        'Knp\\Bundle\\PaginatorBundle\\Subscriber\\SlidingPaginationSubscriber' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Subscriber/SlidingPaginationSubscriber.php',
+        'Knp\\Bundle\\PaginatorBundle\\Templating\\PaginationHelper' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Templating/PaginationHelper.php',
+        'Knp\\Bundle\\PaginatorBundle\\Twig\\Extension\\PaginationExtension' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Twig/Extension/PaginationExtension.php',
+        'Knp\\Bundle\\PaginatorBundle\\Twig\\Extension\\PaginationRuntime' => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src/Twig/Extension/PaginationRuntime.php',
+        'Knp\\Component\\Pager\\ArgumentAccess\\ArgumentAccessInterface' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/ArgumentAccess/ArgumentAccessInterface.php',
+        'Knp\\Component\\Pager\\ArgumentAccess\\RequestArgumentAccess' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/ArgumentAccess/RequestArgumentAccess.php',
+        'Knp\\Component\\Pager\\Event\\AfterEvent' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/AfterEvent.php',
+        'Knp\\Component\\Pager\\Event\\BeforeEvent' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/BeforeEvent.php',
+        'Knp\\Component\\Pager\\Event\\ItemsEvent' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/ItemsEvent.php',
+        'Knp\\Component\\Pager\\Event\\PaginationEvent' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/PaginationEvent.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Filtration\\Doctrine\\ORM\\QuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/Doctrine/ORM/QuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Filtration\\Doctrine\\ORM\\Query\\WhereWalker' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/Doctrine/ORM/Query/WhereWalker.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Filtration\\FiltrationSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/FiltrationSubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Filtration\\PropelQuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/PropelQuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\ArraySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/ArraySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Callback\\CallbackPagination' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Callback/CallbackPagination.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Callback\\CallbackSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Callback/CallbackSubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\CollectionSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/CollectionSubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\DBALQueryBuilderSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/DBALQueryBuilderSubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\ODM\\MongoDB\\QueryBuilderSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/ODM/MongoDB/QueryBuilderSubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\ODM\\MongoDB\\QuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/ODM/MongoDB/QuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\ODM\\PHPCR\\QueryBuilderSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/ODM/PHPCR/QueryBuilderSubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\ODM\\PHPCR\\QuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/ODM/PHPCR/QuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\ORM\\QueryBuilderSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/ORM/QueryBuilderSubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\ORM\\QuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/ORM/QuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\Doctrine\\ORM\\Query\\Helper' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/Doctrine/ORM/Query/Helper.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\ElasticaQuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/ElasticaQuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\PaginationSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/PaginationSubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\PropelQuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/PropelQuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Paginate\\SolariumQuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Paginate/SolariumQuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Sortable\\ArraySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Sortable/ArraySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Sortable\\Doctrine\\ODM\\MongoDB\\QuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Sortable/Doctrine/ODM/MongoDB/QuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Sortable\\Doctrine\\ORM\\QuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Sortable/Doctrine/ORM/QuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Sortable\\Doctrine\\ORM\\Query\\OrderByWalker' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Sortable/Doctrine/ORM/Query/OrderByWalker.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Sortable\\ElasticaQuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Sortable/ElasticaQuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Sortable\\PropelQuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Sortable/PropelQuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Sortable\\SolariumQuerySubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Sortable/SolariumQuerySubscriber.php',
+        'Knp\\Component\\Pager\\Event\\Subscriber\\Sortable\\SortableSubscriber' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Sortable/SortableSubscriber.php',
+        'Knp\\Component\\Pager\\Exception\\InvalidValueException' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Exception/InvalidValueException.php',
+        'Knp\\Component\\Pager\\Exception\\PageLimitInvalidException' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Exception/PageLimitInvalidException.php',
+        'Knp\\Component\\Pager\\Exception\\PageNumberInvalidException' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Exception/PageNumberInvalidException.php',
+        'Knp\\Component\\Pager\\Exception\\PageNumberOutOfRangeException' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Exception/PageNumberOutOfRangeException.php',
+        'Knp\\Component\\Pager\\Pagination\\AbstractPagination' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Pagination/AbstractPagination.php',
+        'Knp\\Component\\Pager\\Pagination\\PaginationInterface' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Pagination/PaginationInterface.php',
+        'Knp\\Component\\Pager\\Pagination\\SlidingPagination' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Pagination/SlidingPagination.php',
+        'Knp\\Component\\Pager\\Paginator' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/Paginator.php',
+        'Knp\\Component\\Pager\\PaginatorInterface' => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component/Pager/PaginatorInterface.php',
         'Laminas\\Code\\DeclareStatement' => __DIR__ . '/..' . '/laminas/laminas-code/src/DeclareStatement.php',
         'Laminas\\Code\\Exception\\BadMethodCallException' => __DIR__ . '/..' . '/laminas/laminas-code/src/Exception/BadMethodCallException.php',
         'Laminas\\Code\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/laminas/laminas-code/src/Exception/ExceptionInterface.php',
@@ -3479,6 +3565,36 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/type/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/type/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\Cache' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/Cache.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\ConfigurationAnnotation' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/ConfigurationAnnotation.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\ConfigurationInterface' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/ConfigurationInterface.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\Entity' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/Entity.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\IsGranted' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/IsGranted.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\Method' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/Method.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\ParamConverter' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/ParamConverter.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\Route' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/Route.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\Security' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/Security.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\Template' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Configuration/Template.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\DependencyInjection\\Compiler\\AddExpressionLanguageProvidersPass' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/DependencyInjection/Compiler/AddExpressionLanguageProvidersPass.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\DependencyInjection\\Compiler\\AddParamConverterPass' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/DependencyInjection/Compiler/AddParamConverterPass.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\DependencyInjection\\Compiler\\OptimizerPass' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/DependencyInjection/Compiler/OptimizerPass.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/DependencyInjection/Configuration.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\DependencyInjection\\SensioFrameworkExtraExtension' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/DependencyInjection/SensioFrameworkExtraExtension.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\EventListener\\ControllerListener' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/EventListener/ControllerListener.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\EventListener\\HttpCacheListener' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/EventListener/HttpCacheListener.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\EventListener\\IsGrantedListener' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/EventListener/IsGrantedListener.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\EventListener\\ParamConverterListener' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/EventListener/ParamConverterListener.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\EventListener\\SecurityListener' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/EventListener/SecurityListener.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\EventListener\\TemplateListener' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/EventListener/TemplateListener.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Request\\ArgumentNameConverter' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Request/ArgumentNameConverter.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Request\\ParamConverter\\DateTimeParamConverter' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Request/ParamConverter/DateTimeParamConverter.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Request\\ParamConverter\\DoctrineParamConverter' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Request/ParamConverter/DoctrineParamConverter.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Request\\ParamConverter\\ParamConverterInterface' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Request/ParamConverter/ParamConverterInterface.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Request\\ParamConverter\\ParamConverterManager' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Request/ParamConverter/ParamConverterManager.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Routing\\AnnotatedRouteControllerLoader' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Routing/AnnotatedRouteControllerLoader.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Security\\ExpressionLanguage' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Security/ExpressionLanguage.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/SensioFrameworkExtraBundle.php',
+        'Sensio\\Bundle\\FrameworkExtraBundle\\Templating\\TemplateGuesser' => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src/Templating/TemplateGuesser.php',
         'SymfonyCasts\\Bundle\\VerifyEmail\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/symfonycasts/verify-email-bundle/src/DependencyInjection/Configuration.php',
         'SymfonyCasts\\Bundle\\VerifyEmail\\DependencyInjection\\SymfonyCastsVerifyEmailExtension' => __DIR__ . '/..' . '/symfonycasts/verify-email-bundle/src/DependencyInjection/SymfonyCastsVerifyEmailExtension.php',
         'SymfonyCasts\\Bundle\\VerifyEmail\\Exception\\ExpiredSignatureException' => __DIR__ . '/..' . '/symfonycasts/verify-email-bundle/src/Exception/ExpiredSignatureException.php',
@@ -5094,6 +5210,8 @@ class ComposerStaticInit589f321178ecce9ae009332d2857d3ba
         'Symfony\\Component\\Lock\\Strategy\\ConsensusStrategy' => __DIR__ . '/..' . '/symfony/lock/Strategy/ConsensusStrategy.php',
         'Symfony\\Component\\Lock\\Strategy\\StrategyInterface' => __DIR__ . '/..' . '/symfony/lock/Strategy/StrategyInterface.php',
         'Symfony\\Component\\Lock\\Strategy\\UnanimousStrategy' => __DIR__ . '/..' . '/symfony/lock/Strategy/UnanimousStrategy.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Google\\Transport\\GmailSmtpTransport' => __DIR__ . '/..' . '/symfony/google-mailer/Transport/GmailSmtpTransport.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Google\\Transport\\GmailTransportFactory' => __DIR__ . '/..' . '/symfony/google-mailer/Transport/GmailTransportFactory.php',
         'Symfony\\Component\\Mailer\\DataCollector\\MessageDataCollector' => __DIR__ . '/..' . '/symfony/mailer/DataCollector/MessageDataCollector.php',
         'Symfony\\Component\\Mailer\\DelayedEnvelope' => __DIR__ . '/..' . '/symfony/mailer/DelayedEnvelope.php',
         'Symfony\\Component\\Mailer\\Envelope' => __DIR__ . '/..' . '/symfony/mailer/Envelope.php',
