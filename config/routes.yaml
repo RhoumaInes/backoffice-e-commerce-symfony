@@ -5,3 +5,13 @@ controllers:
 kernel:
     resource: ../src/Kernel.php
     type: annotation
+
+error500:
+    path: /error500
+    controller: App\Controller\ErrorController::error500
+error404:
+    path: /error404
+    controller: App\Controller\ErrorController::error404
+error_generic:
+    path: /error
+    controller: App\Controller\ErrorController::errorGeneric

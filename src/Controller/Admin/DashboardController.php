@@ -10,6 +10,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
+    #[Route('/', name: 'app_home')]
+    public function redirection(): Response
+    {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('admin');
+        }
+        return $this->redirectToRoute('app_login');
+    }
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
@@ -29,7 +37,10 @@ class DashboardController extends AbstractDashboardController
         // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
-        return $this->render('dashboard.html.twig');
+        if ($this->getUser()) {
+            return $this->render('dashboard.html.twig');
+        }
+        return $this->redirectToRoute('app_login');
     }
 
     public function configureDashboard(): Dashboard

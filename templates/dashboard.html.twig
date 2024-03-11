@@ -2,28 +2,16 @@
 {% block body %}
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+    <img class="animation__shake" src="{{ asset('dist/img/logo.png') }}" alt="AdminLTELogo" height="260" width="260">
   </div>
-  {% include 'nav.html.twig' %}
-  {% include 'aside.html.twig' %}
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+    {% for type, messages in app.flashes() %}
+      {% for message in messages %}
+          <div class="alert {{ type }}">{{ message }}</div>
+      {% endfor %}
+    {% endfor %}
   </div>
 
-
- <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.2.0
-    </div>
-  </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
 {% endblock %}
