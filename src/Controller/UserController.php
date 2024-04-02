@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ProfileType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManager;
 use App\Form\RegistrationFormType;
@@ -65,5 +66,26 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_user', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/mon-profile', name: 'user_profile', methods: ['GET', 'POST'])]
+    public function profile(Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(ProfileType::class, $this->getUser(), [
+            'attr' => ['class' => 'form-horizontal'],
+        ]);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($this->getUser());
+            $em->flush();
+
+            return $this->redirectToRoute('app_user');
+        }
+        //dd($form->createView());
+
+        return $this->render('user/profile.html.twig', [
+            'formprofile' => $form->createView(),
+        ]);
+
     }
 }

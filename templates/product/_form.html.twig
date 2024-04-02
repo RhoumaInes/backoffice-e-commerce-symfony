@@ -1,0 +1,53 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        <label>Titre</label>
+        {{ form_widget(form.title, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.title) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Récapitulatif</label>
+        {{ form_widget(form.summary, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.summary) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        {{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.description) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Quantité</label>
+        {{ form_widget(form.totalQuantity, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.totalQuantity) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Qté minimale à la vente</label>
+        {{ form_widget(form.minimumQuantityForSale, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.minimumQuantityForSale) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Unité de vente</label>
+        {{ form_widget(form.unit, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.unit) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Référence</label>
+        {{ form_widget(form.reference, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.reference) }}
+        </div>
+    </div>
+    
+    <button class="btn btn-primary" formnovalidate>{{ button_label|default('Valider') }}</button>
+{{ form_end(form) }}

@@ -12,6 +12,7 @@ use Doctrine\ORM\HasLifecycleCallbacks;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cet e-mail.')]
@@ -25,9 +26,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message:"Cette valeur ne doit pas être vide.")]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Assert\Count(min: 0, minMessage:"Vous devez sélectionner au minimum un rôle.")]
     private array $roles = [];
 
     /**
@@ -40,10 +43,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $isVerified = false;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message:"Cette valeur ne doit pas être vide.")]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message:"Cette valeur ne doit pas être vide.")]
     private ?string $lastname = null;
+
+    #[ORM\Column(type: "text", nullable : true)]
+    private ?string $profession = null;
+
+    #[ORM\Column(type: "text", nullable : true)]
+    private ?string $education = null;
+
+    #[ORM\Column(length: 255, nullable : true)]
+    private ?string $location = null;
+
+    #[ORM\Column(type: "text", nullable : true)]
+    private ?string $skills = null;
+
+    #[ORM\Column(type: "text", nullable : true)]
+    private ?string $notes = null;
 
     
 
@@ -149,6 +169,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getProfession(): ?string
+    {
+        return $this->profession;
+    }
+
+    public function setProfession(string $profession): static
+    {
+        $this->profession = $profession;
+
+        return $this;
+    }
+
+    public function getEducation(): ?string
+    {
+        return $this->education;
+    }
+
+    public function setEducation(?string $education): static
+    {
+        $this->education = $education;
+
+        return $this;
+    }
+
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    public function setLocation(string $location): static
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    public function getSkills(): ?string
+    {
+        return $this->skills;
+    }
+
+    public function setSkills(string $skills): static
+    {
+        $this->skills = $skills;
+
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(string $notes): static
+    {
+        $this->notes = $notes;
 
         return $this;
     }

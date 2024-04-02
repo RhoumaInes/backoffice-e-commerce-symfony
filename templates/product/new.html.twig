@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau produit{% endblock %}
+
+{% block body %}
+<div class="row">
+    <!-- left column -->
+    <div class="col-md-10">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Créer un nouveau produit</h3>
+            </div>
+            <div class="card-body">
+                {% if form_errors(form) %}
+                    <div class="alert alert-danger">{{ form_errors(form) }}</div>
+                {% endif %} 
+                {{ include('product/_form.html.twig') }}
+            </div>
+        </div>
+        <a href="{{ path('app_product_index') }}">back to list</a>
+    </div>  
+</div>
+{% endblock %}
