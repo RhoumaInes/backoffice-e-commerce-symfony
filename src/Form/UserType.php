@@ -19,6 +19,11 @@ class UserType extends AbstractType
             ->add('firstname')
             ->add('lastname')
             ->add('email')
+            ->add('profession')
+            ->add('education')
+            ->add('location')
+            ->add('skills')
+            ->add('notes')
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Admin' => 'ROLE_ADMIN',
