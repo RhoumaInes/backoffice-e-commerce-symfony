@@ -9,9 +9,9 @@
                 <div class="card-header">
                     <h3 class="card-title">Liste des produits</h3>
                     <div class="card-tools">
-                        <form method="post" action="{{ path('app_user') }}">
+                        <form method="post" action="{{ path('app_product_index') }}">
                             <div class="input-group input-group-sm" style="min-width: 150px;">
-                                <input type="text" name="searchuser" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchuser') }}">
+                                <input type="text" name="searchproduct" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchproduct') }}">
 
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
@@ -19,7 +19,7 @@
                                     </button>
                                 </div>
                                 <div class="input-group-append">
-                                    <a href="{{ path('app_user') }}" type="button" class="btn btn-default">
+                                    <a href="{{ path('app_product_index') }}" type="button" class="btn btn-default">
                                         Réinitialiser
                                     </a>
                                 </div>
@@ -58,8 +58,13 @@
                                         <td>{{ product.totalQuantity }}</td>
                                         <td></td>
                                         <td>
-                                            <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
-                                            <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
+                                            <a href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
+                                            {% if app.user is not empty and 'ROLE_SUPER_ADMIN' in app.user.roles %}
+                                                <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer ce produit ?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                                    <button class="btn">Supprimer</button>
+                                                </form>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -74,5 +79,5 @@
             <!-- /.card -->
         </div>
     </div>
-    <a href="{{ path('app_product_new') }}">Create new</a>
+    <a href="{{ path('app_product_new') }}">Nouveau produit</a>
 {% endblock %}

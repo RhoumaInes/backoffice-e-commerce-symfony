@@ -14,9 +14,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -70,6 +73,42 @@ class RegistrationController extends AbstractController
             ]);
         }
         return $this->redirectToRoute('app_login');
+    }
+
+    #[Route('/api/csrf-token', name: 'api_csrf_token', methods: ['GET'])]
+    public function getToken(CsrfTokenManagerInterface $csrfTokenManager): JsonResponse
+    {
+        $token = $csrfTokenManager->getToken('register')->getValue();
+
+        return new JsonResponse(['token' => $token]);
+    }
+    
+    #[Route('/register', name: 'app_register_from_register', methods: ['POST'])]
+    public function registerFromFront(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager): Response
+    {
+        $csrfToken = $request->request->get('_csrf_token');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('register', $csrfToken))) {
+            return new Response('Invalid CSRF token', Response::HTTP_FORBIDDEN);
+        }
+        $lastname = $request->request->get('lastname');
+        $firstname = $request->request->get('firstname');
+        $password = $request->request->get('password');
+        $email = $request->request->get('email');
+
+        if (!$lastname || !$firstname || !$password || !$email) {
+            return new Response('Invalid data', Response::HTTP_BAD_REQUEST);
+        }
+
+        $user = new User();
+        $user->setLastname($lastname);
+        $user->setFirstname($firstname);
+        $user->setEmail($email);
+        $user->setPassword($passwordHasher->hashPassword($user, $password));
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return new Response('User registered successfully', Response::HTTP_OK);
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
