@@ -26,7 +26,7 @@ class UserController extends AbstractController
         if ($searchTerm) {
             $users = $userRep->findByLikeEmail($searchTerm);
         } else {
-            $users = $userRep->findBy([], []);
+            $users = $userRep->findAll();
         }
         $pagination = $paginator->paginate(
             $users,

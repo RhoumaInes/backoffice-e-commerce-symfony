@@ -65,6 +65,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "text", nullable : true)]
     private ?string $notes = null;
 
+    #[ORM\OneToOne(mappedBy: 'userId', cascade: ['persist', 'remove'])]
+    private ?Avatar $avatar = null;
+
     
 
     public function getId(): ?int
@@ -229,6 +232,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNotes(string $notes): static
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?Avatar
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(Avatar $avatar): static
+    {
+        // set the owning side of the relation if necessary
+        if ($avatar->getUserId() !== $this) {
+            $avatar->setUserId($this);
+        }
+
+        $this->avatar = $avatar;
 
         return $this;
     }

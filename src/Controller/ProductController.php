@@ -15,11 +15,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/admin/product')]
 class ProductController extends AbstractController
 {
-    #[Route('/', name: 'app_product_index', methods: ['GET'])]
+    #[Route('/', name: 'app_product_index', methods: ['GET','POST'])]
     public function index(PaginatorInterface $paginator, Request $request, ProductRepository $productRepository): Response
     {
+        $searchproduct = $request->request->get('searchproduct');
+        if ($searchproduct) {
+            $prods = $productRepository->findByLikeName($searchproduct);
+        } else {
+            $prods = $productRepository->findAll();
+        }
         $pagination = $paginator->paginate(
-            $productRepository->findAll(),
+            $prods,
             $request->query->getInt('page', 1), 
             10
         );
