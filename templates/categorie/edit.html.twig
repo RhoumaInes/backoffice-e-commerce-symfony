@@ -3,11 +3,22 @@
 {% block title %}Edit Categorie{% endblock %}
 
 {% block body %}
-    <h1>Edit Categorie</h1>
-
-    {{ include('categorie/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_categorie_index') }}">back to list</a>
-
-    {{ include('categorie/_delete_form.html.twig') }}
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-10">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Modifier une categorie</h3>
+                </div>
+                <div class="card-body">
+                    {% if form_errors(form) %}
+                        <div class="alert alert-danger">{{ form_errors(form) }}</div>
+                    {% endif %} 
+                    {{ include('categorie/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+                </div>
+            </div>
+            <a href="{{ path('app_categorie_index') }}">Retour à la liste</a>
+            {{ include('categorie/_delete_form.html.twig') }}
+        </div>  
+    </div>
 {% endblock %}

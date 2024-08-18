@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Categorie
 {
     use Timestampable;
@@ -25,16 +26,17 @@ class Categorie
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'categories')]
-    private Collection $product;
-
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categorie')]
     private ?self $categorie = null;
 
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'categories')]
+    private Collection $products;
+
     public function __construct()
     {
-        $this->product = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -65,30 +67,6 @@ class Categorie
         return $this;
     }
 
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProduct(): Collection
-    {
-        return $this->product;
-    }
-
-    public function addProduct(Product $product): static
-    {
-        if (!$this->product->contains($product)) {
-            $this->product->add($product);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): static
-    {
-        $this->product->removeElement($product);
-
-        return $this;
-    }
-
     public function getCategorie(): ?self
     {
         return $this->categorie;
@@ -97,6 +75,33 @@ class Categorie
     public function setCategorie(?self $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            $product->removeCategory($this);
+        }
 
         return $this;
     }

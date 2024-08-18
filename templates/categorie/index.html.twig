@@ -10,9 +10,9 @@
                 <div class="card-header">
                     <h3 class="card-title">Liste des catégories</h3>
                     <div class="card-tools">
-                        <form method="post" action="{{ path('app_product_index') }}">
+                        <form method="post" action="{{ path('app_categorie_index') }}">
                             <div class="input-group input-group-sm" style="min-width: 150px;">
-                                <input type="text" name="searchproduct" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchproduct') }}">
+                                <input type="text" name="searchcategorie" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchcategorie') }}">
 
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
@@ -20,7 +20,7 @@
                                     </button>
                                 </div>
                                 <div class="input-group-append">
-                                    <a href="{{ path('app_product_index') }}" type="button" class="btn btn-default">
+                                    <a href="{{ path('app_categorie_index') }}" type="button" class="btn btn-default">
                                         Réinitialiser
                                     </a>
                                 </div>
@@ -46,12 +46,12 @@
                                 <tr>
                                     <td>{{ categorie.id }}</td>
                                     <td>{{ categorie.name }}</td>
-                                    <td>{{ categorie.description }}</td>
+                                    <td>{{ categorie.description|slice(0, 15) }}...</td>
                                     <td>{{ categorie.createdAt ? categorie.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                                     <td>{{ categorie.updatedAt ? categorie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                                     <td>
-                                        <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">show</a>
-                                        <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">edit</a>
+                                        <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">Modifier</a>
+                                        <a href="{{ path('app_category_products', { 'id': categorie.id }) }}">Voir les produits</a>
                                     </td>
                                 </tr>
                             {% else %}
@@ -69,5 +69,5 @@
             <!-- /.card -->
         </div>
     </div>
-    <a href="{{ path('app_categorie_new') }}">Create new</a>
+    <a href="{{ path('app_categorie_new') }}">Ajouter une catégorie</a>
 {% endblock %}

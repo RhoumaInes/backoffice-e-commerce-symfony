@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\CategorieRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -34,6 +35,28 @@ class ProductController extends AbstractController
         ]);
     }
 
+    #[Route('/categorie/{id}/products', name: 'app_category_products', methods: ['GET','POST'])]
+    public function listProductsByCategory(PaginatorInterface $paginator, Request $request, $id, ProductRepository $productRepository, CategorieRepository $categorieRepository): Response
+    {
+        // Récupérer la catégorie
+        $category = $categorieRepository->find($id);
+        if (!$category) {
+            throw $this->createNotFoundException('La catégorie n\'existe pas.');
+        }
+        // Récupérer les produits de la catégorie
+        $products = $category->getProducts();
+        $pagination = $paginator->paginate(
+            $products,
+            $request->query->getInt('page', 1), 
+            10
+        );
+
+        return $this->render('product/index.html.twig', [
+            'category' => $category,
+            'products' => $pagination,
+        ]);
+    }
+
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -42,7 +65,7 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
         
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {            
             $product->setUser($this->getUser());
             $entityManager->persist($product);
             $entityManager->flush();

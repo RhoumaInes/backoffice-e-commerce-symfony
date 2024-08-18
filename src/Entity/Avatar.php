@@ -7,6 +7,7 @@ use App\Repository\AvatarRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AvatarRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Avatar
 {
     use Timestampable;

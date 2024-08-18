@@ -16,10 +16,15 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/admin/categorie')]
 class CategorieController extends AbstractController
 {
-    #[Route('/', name: 'app_categorie_index', methods: ['GET'])]
+    #[Route('/', name: 'app_categorie_index', methods: ['GET','POST'])]
     public function index(PaginatorInterface $paginator,Request $request,CategorieRepository $categorieRepository): Response
     {
-        $categories = $categorieRepository->findAll();
+        $searchcategorie = $request->request->get('searchcategorie');
+        if ($searchcategorie) {
+            $categories = $categorieRepository->findByLikeName($searchcategorie);
+        } else {
+            $categories = $categorieRepository->findAll();
+        }
         $pagination = $paginator->paginate(
             $categories,
             $request->query->getInt('page', 1), 

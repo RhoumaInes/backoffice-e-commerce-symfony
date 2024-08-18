@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Categorie;
 use App\Entity\Product;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -49,15 +51,21 @@ class ProductType extends AbstractType
                 ]),
             ],
         ] )
-            ->add('minimumQuantityForSale', NumberType::class , ['constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 1,
-                        'message' => 'La quantité doit être supérieure ou égale à 1.',
-                    ]),
-                ],
-            ])
-            ->add('unit')
-            ->add('reference')
+        ->add('minimumQuantityForSale', NumberType::class , ['constraints' => [
+                new GreaterThanOrEqual([
+                    'value' => 1,
+                    'message' => 'La quantité doit être supérieure ou égale à 1.',
+                ]),
+            ],
+        ])
+        ->add('categories', EntityType::class, [
+            'class' => Categorie::class,
+            'choice_label' => "name",
+            'multiple' => true,
+            'expanded' => false,
+        ])
+        ->add('unit')
+        ->add('reference')
         ;
     }
 

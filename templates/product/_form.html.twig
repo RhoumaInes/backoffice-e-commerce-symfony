@@ -48,6 +48,13 @@
             {{ form_errors(form.reference) }}
         </div>
     </div>
+    <div class="form-group">
+        <label>Catégories</label>
+        {{ form_widget(form.categories, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.categories) }}
+        </div>
+    </div>
     
     <button class="btn btn-primary" formnovalidate>{{ button_label|default('Valider') }}</button>
 {{ form_end(form) }}
