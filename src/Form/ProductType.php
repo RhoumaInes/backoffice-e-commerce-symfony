@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Categorie;
 use App\Entity\Product;
+use App\Entity\Provider;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -25,7 +28,9 @@ class ProductType extends AbstractType
                 ]),
                 ],
             ])
-            ->add('summary', TextareaType::class , ['constraints' => [
+            ->add('summary', TextareaType::class , [
+                'attr' => ['id' => 'summernote'],
+                'constraints' => [
                 new NotBlank([
                     'message' => 'Le récapitulatif ne doit pas être vide.',
                 ]),
@@ -49,15 +54,23 @@ class ProductType extends AbstractType
                 ]),
             ],
         ] )
-            ->add('minimumQuantityForSale', NumberType::class , ['constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 1,
-                        'message' => 'La quantité doit être supérieure ou égale à 1.',
-                    ]),
-                ],
-            ])
-            ->add('unit')
-            ->add('reference')
+        ->add('minimumQuantityForSale', NumberType::class , ['constraints' => [
+                new GreaterThanOrEqual([
+                    'value' => 1,
+                    'message' => 'La quantité doit être supérieure ou égale à 1.',
+                ]),
+            ],
+        ])
+        ->add('provider', EntityType::class, [
+            'class' => Provider::class,
+            'choice_label' => "name",
+            'multiple' => false,
+            'expanded' => false,
+            'required' => false, // Ensure the field is not required
+            'placeholder' => 'Aucun', // Add "Aucun" as a placeholder
+        ])
+        ->add('unit')
+        ->add('reference')
         ;
     }
 

@@ -7,7 +7,15 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Liste des produits</h3>
+                    <h3 class="card-title">
+                    {% if category is defined and category is not null %}
+                        Liste des produits de la catégorie "{{ category.name }}"
+                    {% elseif provider is defined and provider is not null %}
+                        Liste des produits du fournisseur "{{ provider.name }}"
+                    {% else %}
+                        Liste des produits
+                    {% endif %}
+                    </h3>
                     <div class="card-tools">
                         <form method="post" action="{{ path('app_product_index') }}">
                             <div class="input-group input-group-sm" style="min-width: 150px;">
@@ -59,12 +67,12 @@
                                         <td></td>
                                         <td>
                                             <a href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
-                                            {% if app.user is not empty and 'ROLE_SUPER_ADMIN' in app.user.roles %}
+                                            {#% if app.user is not empty and 'ROLE_SUPER_ADMIN' in app.user.roles %}
                                                 <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer ce produit ?');">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
                                                     <button class="btn">Supprimer</button>
                                                 </form>
-                                            {% endif %}
+                                            {% endif %#}
                                         </td>
                                     </tr>
                                 {% endfor %}

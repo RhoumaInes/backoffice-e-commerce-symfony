@@ -37,7 +37,7 @@
                 with font-awesome or any other icon font library -->
             <li class="nav-item">
                 <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-copy"></i>
+                    <i class="nav-icon fas fa-users"></i>
                     <p>
                         Gestion des employés
                         <i class="fas fa-angle-left right"></i>
@@ -66,7 +66,7 @@
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-chart-pie"></i>
+                    <i class="nav-icon fas fa-barcode"></i>
                     <p>
                         Gestion de stock
                         <i class="right fas fa-angle-left"></i>
@@ -76,20 +76,32 @@
                     <li class="nav-item">
                         <a href="{{ path('app_product_index') }}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
-                            <p>Produits</p>
+                            <p>Gestion des produits</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="pages/charts/flot.html" class="nav-link">
+                        <a href="{{ path('app_categorie_index') }}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
-                            <p>Commandes</p>
+                            <p>Gestion des catégories</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('app_provider_index') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Gestion des fournisseurs</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('app_categorie_index') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Gestion des commandes</p>
                         </a>
                     </li>
                 </ul>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-tree"></i>
+                    <i class="nav-icon fas fa-truck"></i>
                     <p>
                     Gestion des livraisons
                     <i class="fas fa-angle-left right"></i>
@@ -112,7 +124,7 @@
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-edit"></i>
+                    <i class="nav-icon fas fa-credit-card"></i>
                     <p>
                     Gestion de paiement
                     <i class="fas fa-angle-left right"></i>

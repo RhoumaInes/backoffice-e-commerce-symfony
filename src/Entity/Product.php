@@ -44,19 +44,24 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\ManyToOne(targetEntity: Provider::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Provider $provider = null;
-
-    #[ORM\ManyToMany(targetEntity: Categorie::class, mappedBy: 'product')]
-    private Collection $categories;
 
     #[ORM\ManyToMany(targetEntity: Attribute::class, mappedBy: 'product')]
     private Collection $attributes;
 
+    #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'products')]
+    private Collection $categories;
+
+    #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Imagesproduct::class, orphanRemoval: true)]
+    private Collection $imagesproducts;
+
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
         $this->attributes = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->imagesproducts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -172,32 +177,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Categorie>
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(Categorie $category): static
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories->add($category);
-            $category->addProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Categorie $category): static
-    {
-        if ($this->categories->removeElement($category)) {
-            $category->removeProduct($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Attribute>
@@ -221,6 +200,60 @@ class Product
     {
         if ($this->attributes->removeElement($attribute)) {
             $attribute->removeProduct($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Categorie>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Categorie $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Categorie $category): static
+    {
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Imagesproduct>
+     */
+    public function getImagesproducts(): Collection
+    {
+        return $this->imagesproducts;
+    }
+
+    public function addImagesproduct(Imagesproduct $imagesproduct): static
+    {
+        if (!$this->imagesproducts->contains($imagesproduct)) {
+            $this->imagesproducts->add($imagesproduct);
+            $imagesproduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImagesproduct(Imagesproduct $imagesproduct): static
+    {
+        if ($this->imagesproducts->removeElement($imagesproduct)) {
+            // set the owning side to null (unless already changed)
+            if ($imagesproduct->getProduct() === $this) {
+                $imagesproduct->setProduct(null);
+            }
         }
 
         return $this;

@@ -3,6 +3,106 @@
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+<!-- Page specific script -->
+<script>
+  $(function () {
+    $('.summernote').summernote({
+      height: 300,
+      callbacks: {
+        onImageUpload: function(files) {
+          sendFile(files[0]);
+        }
+      }
+    });
+
+    function sendFile(file) {
+      var data = new FormData();
+      data.append("file", file);
+
+      $.ajax({
+        url: '/upload_image', // L'URL du script backend pour gérer l'upload
+        type: 'POST',
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          console.log('ok');
+          if (response.url) {
+            $('.summernote').summernote('insertImage', response.url); // Insère l'image dans l'éditeur
+          } else {
+            console.error('URL not returned from server');
+          }
+        },
+        error: function() {
+          console.error('Failed to upload image');
+        }
+      });
+    }
+  });
+
+  // DropzoneJS Demo Code Start
+  Dropzone.autoDiscover = false
+
+  // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+  var previewNode = document.querySelector("#template")
+  previewNode.id = ""
+  var previewTemplate = previewNode.parentNode.innerHTML
+  previewNode.parentNode.removeChild(previewNode)
+  var productId = document.querySelector('input[name="product_id"]').value;
+  var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+    url: "/file_upload", // Set the url
+    thumbnailWidth: 80,
+    thumbnailHeight: 80,
+    parallelUploads: 20,
+    previewTemplate: previewTemplate,
+    autoQueue: false, // Make sure the files aren't queued until manually added
+    previewsContainer: "#previews", // Define the container to display the previews
+    clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+    init: function () {
+        this.on("sending", function (file, xhr, formData) {
+            formData.append("product_id", productId);
+        });
+    }
+  });
+
+  myDropzone.on("addedfile", function(file) {
+    // Hookup the start button
+    file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) 
+      }
+  })
+
+  // Update the total progress bar
+  myDropzone.on("totaluploadprogress", function(progress) {
+    document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+  })
+
+  myDropzone.on("sending", function(file) {
+    // Show the total progress bar when upload starts
+    document.querySelector("#total-progress").style.opacity = "1"
+    // And disable the start button
+    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+  })
+
+  // Hide the total progress bar when nothing's uploading anymore
+  myDropzone.on("queuecomplete", function(progress) {
+    document.querySelector("#total-progress").style.opacity = "0"
+  })
+
+  // Setup the buttons for all transfers
+  // The "add files" button doesn't need to be setup because the config
+  // `clickable` has already been specified.
+  document.querySelector("#actions .start").onclick = function() {
+    console.log(myDropzone.getFilesWithStatus(Dropzone.ADDED));
+    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+  }
+  document.querySelector("#actions .cancel").onclick = function() {
+    myDropzone.removeAllFiles(true)
+  }
+  // DropzoneJS Demo Code End
+</script>
+
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)

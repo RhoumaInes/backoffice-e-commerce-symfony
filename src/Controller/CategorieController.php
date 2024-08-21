@@ -13,13 +13,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/admin/categorie')]
+
 class CategorieController extends AbstractController
 {
-    #[Route('/', name: 'app_categorie_index', methods: ['GET'])]
+    #[Route('/admin/categorie', name: 'app_categorie_index', methods: ['GET','POST'])]
     public function index(PaginatorInterface $paginator,Request $request,CategorieRepository $categorieRepository): Response
     {
-        $categories = $categorieRepository->findAll();
+        $searchcategorie = $request->request->get('searchcategorie');
+        if ($searchcategorie) {
+            $categories = $categorieRepository->findByLikeName($searchcategorie);
+        } else {
+            $categories = $categorieRepository->findAll();
+        }
         $pagination = $paginator->paginate(
             $categories,
             $request->query->getInt('page', 1), 
@@ -30,9 +35,7 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/api/categories", name="get_categories", methods={"GET"})
-     */
+    #[Route('/api/categories', name: 'get_categories', methods: ['GET'])]
     public function getCategories(CategorieRepository $categoryRepository): JsonResponse
     {
         $categories = $categoryRepository->findAll();
@@ -47,10 +50,13 @@ class CategorieController extends AbstractController
                 ]
             ];
         }
-        return new JsonResponse($data);
+        return new JsonResponse([
+            'success' => true,
+            'categories' => $data
+        ], 200);
     }
 
-    #[Route('/new', name: 'app_categorie_new', methods: ['GET', 'POST'])]
+    #[Route('/admin/categorie/new', name: 'app_categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $categorie = new Categorie();
@@ -70,7 +76,7 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_categorie_show', methods: ['GET'])]
+    #[Route('/admin/categorie/{id}', name: 'app_categorie_show', methods: ['GET'])]
     public function show(Categorie $categorie): Response
     {
         return $this->render('categorie/show.html.twig', [
@@ -78,7 +84,7 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_categorie_edit', methods: ['GET', 'POST'])]
+    #[Route('/admin/categorie/{id}/edit', name: 'app_categorie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CategorieType::class, $categorie);
@@ -96,7 +102,7 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_categorie_delete', methods: ['POST'])]
+    #[Route('/admin/categorie/{id}', name: 'app_categorie_delete', methods: ['POST'])]
     public function delete(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$categorie->getId(), $request->request->get('_token'))) {

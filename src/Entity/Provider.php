@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: ProviderRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Provider
 {
     use Timestampable;

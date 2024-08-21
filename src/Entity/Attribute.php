@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: AttributeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Attribute
 {
     use Timestampable;
