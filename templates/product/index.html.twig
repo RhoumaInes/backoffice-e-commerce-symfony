@@ -10,6 +10,8 @@
                     <h3 class="card-title">
                     {% if category is defined and category is not null %}
                         Liste des produits de la catégorie "{{ category.name }}"
+                    {% elseif provider is defined and provider is not null %}
+                        Liste des produits du fournisseur "{{ provider.name }}"
                     {% else %}
                         Liste des produits
                     {% endif %}

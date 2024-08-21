@@ -6,15 +6,37 @@
     <div class="row">
         <!-- left column -->
         <div class="col-md-10">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Modifier le Produit</h3>
-                </div>
-                <div class="card-body">
-                    {% if form_errors(form) %}
-                        <div class="alert alert-danger">{{ form_errors(form) }}</div>
-                    {% endif %} 
-                    {{ include('product/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+            <div class="card">
+                <div class="card-header p-2">
+                  <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#infoProd" data-toggle="tab">Infos Produit</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#imagesUpload" data-toggle="tab">Images</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#categories" data-toggle="tab">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#attributs" data-toggle="tab">Attributs</a></li>
+                  </ul>
+                </div><!-- /.card-header -->
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="card card-primary active tab-pane" id="infoProd">
+                        <div class="card-header">
+                            <h3 class="card-title">Modifier le Produit</h3>
+                        </div>
+                        <div class="card-body">
+                            {% if form_errors(form) %}
+                                <div class="alert alert-danger">{{ form_errors(form) }}</div>
+                            {% endif %} 
+                            {{ include('product/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="categories">
+                        {{ include('product/categories.html.twig') }}
+                    </div>
+                    <div class="tab-pane" id="imagesUpload">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        {{ include('image_upload/upload.html.twig') }}
+                    </div>
+                    
                 </div>
             </div>
             <a href="{{ path('app_product_index') }}">Retour à la liste</a>

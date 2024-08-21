@@ -44,7 +44,8 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\ManyToOne(targetEntity: Provider::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Provider $provider = null;
 
     #[ORM\ManyToMany(targetEntity: Attribute::class, mappedBy: 'product')]
@@ -53,10 +54,14 @@ class Product
     #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'products')]
     private Collection $categories;
 
+    #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Imagesproduct::class, orphanRemoval: true)]
+    private Collection $imagesproducts;
+
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->imagesproducts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -220,6 +225,36 @@ class Product
     public function removeCategory(Categorie $category): static
     {
         $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Imagesproduct>
+     */
+    public function getImagesproducts(): Collection
+    {
+        return $this->imagesproducts;
+    }
+
+    public function addImagesproduct(Imagesproduct $imagesproduct): static
+    {
+        if (!$this->imagesproducts->contains($imagesproduct)) {
+            $this->imagesproducts->add($imagesproduct);
+            $imagesproduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImagesproduct(Imagesproduct $imagesproduct): static
+    {
+        if ($this->imagesproducts->removeElement($imagesproduct)) {
+            // set the owning side to null (unless already changed)
+            if ($imagesproduct->getProduct() === $this) {
+                $imagesproduct->setProduct(null);
+            }
+        }
 
         return $this;
     }

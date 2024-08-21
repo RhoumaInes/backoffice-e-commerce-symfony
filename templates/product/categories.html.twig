@@ -1,0 +1,69 @@
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Liste des catégories</h3>
+    </div>
+    <div class="card-body">
+        {% for category in categories %}
+            {% if category.subcategorie is null %}
+            <div>
+                <input 
+                    type="checkbox" 
+                    id="category_{{ category.id }}" 
+                    name="categories[]" 
+                    value="{{ category.id }}"
+                    {% if product.categories.contains(category) %}checked{% endif %}
+                >
+                <label for="category_{{ category.id }}">{{ category.name }}</label>
+                
+                {% if category.subcategories|length > 0 %}
+                    <div style="margin-left: 20px;">
+                        {% for subcategory in category.subcategories %}
+                            <input 
+                                type="checkbox" 
+                                id="subcategory_{{ subcategory.id }}" 
+                                name="categories[]" 
+                                value="{{ subcategory.id }}"
+                                {% if product.categories.contains(subcategory) %}checked{% endif %}
+                            >
+                            <label for="subcategory_{{ subcategory.id }}">{{ subcategory.name }}</label>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div> 
+</div>
+<script>
+document.querySelectorAll('input[name="categories[]"]').forEach(checkbox => {
+checkbox.addEventListener('change', function() {
+    const categoryId = this.value;
+    const productId = document.querySelector('input[name="product_id"]').value;
+    const isChecked = this.checked;
+
+    fetch(`/admin/product/${productId}/update_category`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        },
+        body: JSON.stringify({
+            category_id: categoryId,
+            add: isChecked
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log(`Category ${isChecked ? 'added to' : 'removed from'} product.`);
+        } else {
+            console.error('An error occurred while updating the category.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+});
+
+</script>

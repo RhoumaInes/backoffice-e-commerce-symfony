@@ -26,15 +26,19 @@ class Categorie
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categorie')]
-    private ?self $categorie = null;
-
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'categories')]
     private Collection $products;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subcategories')]
+    private ?self $subcategorie = null;
+
+    #[ORM\OneToMany(mappedBy: 'subcategorie', targetEntity: self::class)]
+    private Collection $subcategories;
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->subcategories = new ArrayCollection();
     }
 
 
@@ -66,19 +70,6 @@ class Categorie
 
         return $this;
     }
-
-    public function getCategorie(): ?self
-    {
-        return $this->categorie;
-    }
-
-    public function setCategorie(?self $categorie): static
-    {
-        $this->categorie = $categorie;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Product>
      */
@@ -101,6 +92,48 @@ class Categorie
     {
         if ($this->products->removeElement($product)) {
             $product->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function getSubcategorie(): ?self
+    {
+        return $this->subcategorie;
+    }
+
+    public function setSubcategorie(?self $subcategorie): static
+    {
+        $this->subcategorie = $subcategorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getSubcategories(): Collection
+    {
+        return $this->subcategories;
+    }
+
+    public function addSubcategory(self $subcategory): static
+    {
+        if (!$this->subcategories->contains($subcategory)) {
+            $this->subcategories->add($subcategory);
+            $subcategory->setSubcategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubcategory(self $subcategory): static
+    {
+        if ($this->subcategories->removeElement($subcategory)) {
+            // set the owning side to null (unless already changed)
+            if ($subcategory->getSubcategorie() === $this) {
+                $subcategory->setSubcategorie(null);
+            }
         }
 
         return $this;

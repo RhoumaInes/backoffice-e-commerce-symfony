@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des fournisseurs{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Liste des fournisseurs</h3>
+                <div class="card-tools">
+                    <form method="post" action="{{ path('app_provider_index') }}">
+                        <div class="input-group input-group-sm" style="min-width: 150px;">
+                            <input type="text" name="searchprovider" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchprovider') }}">
+
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="input-group-append">
+                                <a href="{{ path('app_provider_index') }}" type="button" class="btn btn-default">
+                                    Réinitialiser
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Titre</th>
+                            <th>Numéro Tél</th>
+                            <th>Date de création</th>
+                            <th>Date MAJ</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for provider in providers %}
+                        <tr>
+                            <td>{{ provider.id }}</td>
+                            <td>{{ provider.name }}</td>
+                            <td>{{ provider.phonenumber }}</td>
+                            <td>{{ provider.createdAt ? provider.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ provider.updatedAt ? provider.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>
+                                <a href="{{ path('app_provider_edit', {'id': provider.id}) }}">Modifier</a><br>
+                                <a href="{{ path('app_provider_products', { 'id': provider.id }) }}">Voir les produits</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="10">Aucun fournisseur trouvé.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+
+    <a href="{{ path('app_provider_new') }}">Nouveau fournisseur</a>
+{% endblock %}

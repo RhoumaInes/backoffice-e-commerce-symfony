@@ -1,0 +1,22 @@
+<div class="modal fade" id="confirmationModal{{ image.id }}" tabindex="-1" aria-labelledby="confirmationModalLabel{{ image.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel{{ image.id }}">Confirmation de suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr(e) de vouloir supprimer cette photo ?
+            </div>
+            <div class="modal-footer">
+                <!-- Formulaire pour soumettre la suppression -->
+                <form method="post" action="{{ path('image_delete', {'id': image.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ image.id) }}">
+                    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                </form>
+                <!-- Bouton pour fermer la fenêtre modale -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>

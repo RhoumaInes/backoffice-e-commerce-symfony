@@ -1,0 +1,115 @@
+
+<!-- left column -->
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Ajouter des fichiers et des photos</h3>
+        </div>
+        <div class="card-body">
+            <div class="card card-default">
+                
+                <div class="card-body">
+                    <div id="actions" class="row">
+                    <div class="col-lg-12">
+                        <div class="btn-group w-100">
+                        <span class="btn btn-success col fileinput-button">
+                            <i class="fas fa-plus"></i>
+                            <span>Ajouter des fichiers</span>
+                        </span>
+                        <button type="submit" class="btn btn-primary col start">
+                            <i class="fas fa-upload"></i>
+                            <span>Démarrer le téléchargement</span>
+                        </button>
+                        <button type="reset" class="btn btn-warning col cancel">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Annuler le téléchargement</span>
+                        </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 d-flex align-items-center">
+                        <div class="fileupload-process w-100">
+                        <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="table table-striped files" id="previews">
+                    <div id="template" class="row mt-2">
+                        <div class="col-auto">
+                            <span class="preview"><img src="data:," alt="" data-dz-thumbnail /></span>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <p class="mb-0">
+                            <span class="lead" data-dz-name></span>
+                            (<span data-dz-size></span>)
+                            </p>
+                            <strong class="error text-danger" data-dz-errormessage></strong>
+                        </div>
+                        <div class="col-4 d-flex align-items-center">
+                            <div class="progress progress-striped active w-100" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                            </div>
+                        </div>
+                        <div class="col-auto d-flex align-items-center">
+                        <div class="btn-group">
+                            <button class="btn btn-primary start">
+                            <i class="fas fa-upload"></i>
+                            <span>Démarrer</span>
+                            </button>
+                            <button data-dz-remove class="btn btn-warning cancel">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Annuler</span>
+                            </button>
+                            <button data-dz-remove class="btn btn-danger delete">
+                            <i class="fas fa-trash"></i>
+                            <span>Supprimer</span>
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="existing-images">
+            <div class="row">
+                {% for image in images %}
+                    <div class="col-md-4 image-preview">
+                        <img src="{{ asset('uploads/' ~ image.filename) }}" class="img-fluid" alt="Image for {{ product.title }}">
+                        <button class="btn btn-danger delete-image" data-id="{{ image.id }}" data-bs-toggle="modal" data-bs-target="#confirmationModal{{ image.id }}"><i class="nav-icon fas fa-trash"></i></button>
+                        {{ include('image_upload/_delete_form.html.twig') }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>        
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.delete-image').forEach(button => {
+        button.addEventListener('click', function() {
+            const imageId = this.dataset.id;
+            const confirmButton = document.getElementById('confirmDeleteImage');
+            
+            confirmButton.setAttribute('data-id', imageId); // Set image ID on the confirm button
+        });
+    });
+
+    document.getElementById('confirmDeleteImage').addEventListener('click', function() {
+        const imageId = this.getAttribute('data-id');
+        
+        fetch(`/image/${imageId}/delete`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelector(`button[data-id="${imageId}"]`).closest('.image-preview').remove();
+                    document.getElementById('imageConfirmationModal').classList.remove('show'); // Hide modal
+                    document.querySelector('.modal-backdrop').remove(); // Remove backdrop
+                }
+            });
+    });
+</script>

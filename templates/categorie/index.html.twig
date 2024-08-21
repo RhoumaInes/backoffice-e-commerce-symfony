@@ -34,11 +34,10 @@
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Nom</th>
-                                <th>Description</th>
-                                <th>Création</th>
-                                <th>UpdatedAt</th>
-                                <th>actions</th>
+                                <th>Titre</th>
+                                <th>Date de création</th>
+                                <th>Date MAJ</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,11 +45,10 @@
                                 <tr>
                                     <td>{{ categorie.id }}</td>
                                     <td>{{ categorie.name }}</td>
-                                    <td>{{ categorie.description|slice(0, 15) }}...</td>
                                     <td>{{ categorie.createdAt ? categorie.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                                     <td>{{ categorie.updatedAt ? categorie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                                     <td>
-                                        <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">Modifier</a>
+                                        <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">Modifier</a><br>
                                         <a href="{{ path('app_category_products', { 'id': categorie.id }) }}">Voir les produits</a>
                                     </td>
                                 </tr>

@@ -20,6 +20,14 @@ class ProviderRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Provider::class);
     }
+    public function findByLikeName(string $searchprovider): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.name LIKE :searchprovider')
+            ->setParameter('searchprovider', '%' . $searchprovider . '%')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Provider[] Returns an array of Provider objects

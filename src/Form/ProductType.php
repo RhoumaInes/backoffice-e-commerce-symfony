@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Categorie;
 use App\Entity\Product;
+use App\Entity\Provider;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,7 +28,9 @@ class ProductType extends AbstractType
                 ]),
                 ],
             ])
-            ->add('summary', TextareaType::class , ['constraints' => [
+            ->add('summary', TextareaType::class , [
+                'attr' => ['id' => 'summernote'],
+                'constraints' => [
                 new NotBlank([
                     'message' => 'Le récapitulatif ne doit pas être vide.',
                 ]),
@@ -58,11 +61,13 @@ class ProductType extends AbstractType
                 ]),
             ],
         ])
-        ->add('categories', EntityType::class, [
-            'class' => Categorie::class,
+        ->add('provider', EntityType::class, [
+            'class' => Provider::class,
             'choice_label' => "name",
-            'multiple' => true,
+            'multiple' => false,
             'expanded' => false,
+            'required' => false, // Ensure the field is not required
+            'placeholder' => 'Aucun', // Add "Aucun" as a placeholder
         ])
         ->add('unit')
         ->add('reference')
