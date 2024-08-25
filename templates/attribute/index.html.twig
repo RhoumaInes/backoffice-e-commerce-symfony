@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Attributs{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Attributs</h3>
+                <div class="card-tools">
+                    <form method="post" action="{{ path('app_attribute_index') }}">
+                        <div class="input-group input-group-sm" style="min-width: 150px;">
+                            <input type="text" name="searchattributes" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchattributes') }}">
+
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="input-group-append">
+                                <a href="{{ path('app_attribute_index') }}" type="button" class="btn btn-default">
+                                    Réinitialiser
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Titre</th>
+                            <th>Type</th>
+                            <th>Date de création</th>
+                            <th>Date MAJ</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for attribute in attributes %}
+                        <tr>
+                            <td>{{ attribute.id }}</td>
+                            <td><a href="{{ path('app_attribute_value_index', {'id_attribute': attribute.id}) }}">{{ attribute.name }}</a></td>
+                            <td>{{ attribute.type.value }}</td>
+                            <td>{{ attribute.createdAt ? attribute.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ attribute.updatedAt ? attribute.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>
+                                <a href="{{ path('app_attribute_edit', {'id': attribute.id}) }}">Modifier</a><br>
+                                <a href="{{ path('app_attribute_value_new', {'id_attribute': attribute.id}) }}">Ajouter des valeurs</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">Aucun attribut trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {# Afficher la pagination #}
+                {{ knp_pagination_render(attributes) }}
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+<a href="{{ path('app_attribute_new') }}">Ajouter un attribut</a>
+{% endblock %}

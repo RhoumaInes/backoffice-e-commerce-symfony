@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Attribute;
 use App\Entity\Categorie;
 use App\Entity\Imagesproduct;
 use App\Entity\Product;
@@ -122,6 +123,7 @@ class ProductController extends AbstractController
         // Load existing images
         $images = $entityManager->getRepository(Imagesproduct::class)->findBy(['Product' => $product]);
         $categories = $entityManager->getRepository(Categorie::class)->findAll();
+        $attributes = $entityManager->getRepository(Attribute::class)->findAll();
         //dump($form);die;
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -153,7 +155,8 @@ class ProductController extends AbstractController
             'product' => $product,
             'form' => $form,
             'images' => $images,
-            'categories' => $categories
+            'categories' => $categories,
+            'attributes' => $attributes,
         ]);
     }
 
@@ -171,6 +174,30 @@ class ProductController extends AbstractController
                 $product->addCategory($category);
             } else {
                 $product->removeCategory($category);
+            }
+
+            $em->flush();
+
+            return new JsonResponse(['success' => true]);
+        }
+
+        return new JsonResponse(['success' => false], Response::HTTP_BAD_REQUEST);
+    }
+
+    #[Route('/{id}/update_attributs', name: 'product_update_attributs', methods: ['POST'])]
+    public function updateAttributs(Product $product, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $attributId = $data['attribut_id'];
+        $add = $data['add'];
+
+        $attribut = $em->getRepository(Attribute::class)->find($attributId);
+
+        if ($attribut) {
+            if ($add) {
+                $product->addAttribute($attribut);
+            } else {
+                $product->removeAttribute($attribut);
             }
 
             $em->flush();

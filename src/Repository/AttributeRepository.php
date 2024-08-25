@@ -20,7 +20,14 @@ class AttributeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Attribute::class);
     }
-
+    public function findByLikeName(string $searchattributes): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.name LIKE :searchattributes')
+            ->setParameter('searchattributes', '%' . $searchattributes . '%')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Attribute[] Returns an array of Attribute objects
 //     */

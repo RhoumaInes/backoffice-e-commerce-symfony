@@ -15,6 +15,8 @@ return [
         '/_profiler/open' => [[['_route' => '_profiler_open_file', '_controller' => 'web_profiler.controller.profiler::openAction'], null, null, null, false, false, null]],
         '/' => [[['_route' => 'app_home', '_controller' => 'App\\Controller\\Admin\\DashboardController::redirection'], null, null, null, false, false, null]],
         '/admin' => [[['_route' => 'admin', '_controller' => 'App\\Controller\\Admin\\DashboardController::index'], null, null, null, false, false, null]],
+        '/attribute' => [[['_route' => 'app_attribute_index', '_controller' => 'App\\Controller\\AttributeController::index'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
+        '/attribute/new' => [[['_route' => 'app_attribute_new', '_controller' => 'App\\Controller\\AttributeController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/avatar' => [[['_route' => 'app_avatar_index', '_controller' => 'App\\Controller\\AvatarController::index'], null, ['GET' => 0], null, true, false, null]],
         '/avatar/api/save-avatar' => [[['_route' => 'save_avatar', '_controller' => 'App\\Controller\\AvatarController::saveAvatar'], null, ['POST' => 0], null, false, false, null]],
         '/avatar/api/check-avatar' => [[['_route' => 'check_avatar', '_controller' => 'App\\Controller\\AvatarController::checkUserAvatar'], null, ['GET' => 0], null, false, false, null]],
@@ -62,43 +64,64 @@ return [
                     .')'
                 .')'
                 .'|/a(?'
+                    .'|ttribute/(?'
+                        .'|([^/]++)(?'
+                            .'|(*:197)'
+                            .'|/edit(*:210)'
+                            .'|(*:218)'
+                        .')'
+                        .'|value/(?'
+                            .'|([^/]++)(*:244)'
+                            .'|new/([^/]++)(*:264)'
+                            .'|([^/]++)(?'
+                                .'|(*:283)'
+                                .'|/(?'
+                                    .'|edit(*:299)'
+                                    .'|([^/]++)(*:315)'
+                                .')'
+                            .')'
+                        .')'
+                    .')'
                     .'|vatar/([^/]++)(?'
-                        .'|(*:191)'
-                        .'|/edit(*:204)'
-                        .'|(*:212)'
+                        .'|(*:344)'
+                        .'|/edit(*:357)'
+                        .'|(*:365)'
                     .')'
                     .'|dmin/(?'
                         .'|categorie/([^/]++)(?'
-                            .'|(*:250)'
-                            .'|/edit(*:263)'
-                            .'|(*:271)'
+                            .'|(*:403)'
+                            .'|/edit(*:416)'
+                            .'|(*:424)'
                         .')'
                         .'|pro(?'
                             .'|duct/(?'
-                                .'|categorie/([^/]++)/products(*:321)'
-                                .'|provider/([^/]++)/products(*:355)'
+                                .'|categorie/([^/]++)/products(*:474)'
+                                .'|provider/([^/]++)/products(*:508)'
                                 .'|([^/]++)(?'
-                                    .'|(*:374)'
+                                    .'|(*:527)'
                                     .'|/(?'
-                                        .'|edit(*:390)'
-                                        .'|update_category(*:413)'
+                                        .'|edit(*:543)'
+                                        .'|update_(?'
+                                            .'|category(*:569)'
+                                            .'|attributs(*:586)'
+                                        .')'
                                     .')'
-                                    .'|(*:422)'
+                                    .'|(*:596)'
                                 .')'
                             .')'
                             .'|vider/([^/]++)(?'
-                                .'|(*:449)'
-                                .'|/edit(*:462)'
-                                .'|(*:470)'
+                                .'|(*:623)'
+                                .'|/edit(*:636)'
+                                .'|(*:644)'
                             .')'
                         .')'
                         .'|user/(?'
-                            .'|([^/]++)/edit(*:501)'
-                            .'|delete/([^/]++)(*:524)'
+                            .'|([^/]++)/edit(*:675)'
+                            .'|delete/([^/]++)(*:698)'
                         .')'
                     .')'
                 .')'
-                .'|/image/([^/]++)/delete(*:557)'
+                .'|/image/([^/]++)/delete(*:731)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
@@ -109,24 +132,33 @@ return [
         136 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
         149 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
         159 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
-        191 => [[['_route' => 'app_avatar_show', '_controller' => 'App\\Controller\\AvatarController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        204 => [[['_route' => 'app_avatar_edit', '_controller' => 'App\\Controller\\AvatarController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        212 => [[['_route' => 'app_avatar_delete', '_controller' => 'App\\Controller\\AvatarController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        250 => [[['_route' => 'app_categorie_show', '_controller' => 'App\\Controller\\CategorieController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        263 => [[['_route' => 'app_categorie_edit', '_controller' => 'App\\Controller\\CategorieController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        271 => [[['_route' => 'app_categorie_delete', '_controller' => 'App\\Controller\\CategorieController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        321 => [[['_route' => 'app_category_products', '_controller' => 'App\\Controller\\ProductController::listProductsByCategory'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        355 => [[['_route' => 'app_provider_products', '_controller' => 'App\\Controller\\ProductController::listProductsByProvider'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        374 => [[['_route' => 'app_product_show', '_controller' => 'App\\Controller\\ProductController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        390 => [[['_route' => 'app_product_edit', '_controller' => 'App\\Controller\\ProductController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        413 => [[['_route' => 'product_update_category', '_controller' => 'App\\Controller\\ProductController::updateCategory'], ['id'], ['POST' => 0], null, false, false, null]],
-        422 => [[['_route' => 'app_product_delete', '_controller' => 'App\\Controller\\ProductController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        449 => [[['_route' => 'app_provider_show', '_controller' => 'App\\Controller\\ProviderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        462 => [[['_route' => 'app_provider_edit', '_controller' => 'App\\Controller\\ProviderController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        470 => [[['_route' => 'app_provider_delete', '_controller' => 'App\\Controller\\ProviderController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        501 => [[['_route' => 'user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        524 => [[['_route' => 'user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        557 => [
+        197 => [[['_route' => 'app_attribute_show', '_controller' => 'App\\Controller\\AttributeController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        210 => [[['_route' => 'app_attribute_edit', '_controller' => 'App\\Controller\\AttributeController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        218 => [[['_route' => 'app_attribute_delete', '_controller' => 'App\\Controller\\AttributeController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        244 => [[['_route' => 'app_attribute_value_index', '_controller' => 'App\\Controller\\AttributeValueController::index'], ['id_attribute'], ['GET' => 0], null, false, true, null]],
+        264 => [[['_route' => 'app_attribute_value_new', '_controller' => 'App\\Controller\\AttributeValueController::new'], ['id_attribute'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        283 => [[['_route' => 'app_attribute_value_show', '_controller' => 'App\\Controller\\AttributeValueController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        299 => [[['_route' => 'app_attribute_value_edit', '_controller' => 'App\\Controller\\AttributeValueController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        315 => [[['_route' => 'app_attribute_value_delete', '_controller' => 'App\\Controller\\AttributeValueController::delete'], ['id', 'id_attribute'], ['POST' => 0], null, false, true, null]],
+        344 => [[['_route' => 'app_avatar_show', '_controller' => 'App\\Controller\\AvatarController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        357 => [[['_route' => 'app_avatar_edit', '_controller' => 'App\\Controller\\AvatarController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        365 => [[['_route' => 'app_avatar_delete', '_controller' => 'App\\Controller\\AvatarController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        403 => [[['_route' => 'app_categorie_show', '_controller' => 'App\\Controller\\CategorieController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        416 => [[['_route' => 'app_categorie_edit', '_controller' => 'App\\Controller\\CategorieController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        424 => [[['_route' => 'app_categorie_delete', '_controller' => 'App\\Controller\\CategorieController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        474 => [[['_route' => 'app_category_products', '_controller' => 'App\\Controller\\ProductController::listProductsByCategory'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        508 => [[['_route' => 'app_provider_products', '_controller' => 'App\\Controller\\ProductController::listProductsByProvider'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        527 => [[['_route' => 'app_product_show', '_controller' => 'App\\Controller\\ProductController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        543 => [[['_route' => 'app_product_edit', '_controller' => 'App\\Controller\\ProductController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        569 => [[['_route' => 'product_update_category', '_controller' => 'App\\Controller\\ProductController::updateCategory'], ['id'], ['POST' => 0], null, false, false, null]],
+        586 => [[['_route' => 'product_update_attributs', '_controller' => 'App\\Controller\\ProductController::updateAttributs'], ['id'], ['POST' => 0], null, false, false, null]],
+        596 => [[['_route' => 'app_product_delete', '_controller' => 'App\\Controller\\ProductController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        623 => [[['_route' => 'app_provider_show', '_controller' => 'App\\Controller\\ProviderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        636 => [[['_route' => 'app_provider_edit', '_controller' => 'App\\Controller\\ProviderController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        644 => [[['_route' => 'app_provider_delete', '_controller' => 'App\\Controller\\ProviderController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        675 => [[['_route' => 'user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        698 => [[['_route' => 'user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        731 => [
             [['_route' => 'image_delete', '_controller' => 'App\\Controller\\ImageUploadController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],

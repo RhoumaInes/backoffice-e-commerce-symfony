@@ -1,0 +1,56 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        <label>Groupe d'attributs</label>
+        {{ form_widget(form.attribute, { 'attr': {'class': 'form-control custom-select'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.attribute) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Valeur</label>
+        {{ form_widget(form.value, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.value) }}
+        </div>
+    </div>
+    {% if form.color is defined %}
+    <div class="form-group" id="color-group">
+        <label>Couleur</label>
+        {{ form_widget(form.color, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.color) }}
+        </div>
+    </div>
+    {% endif %}
+    <button class="btn btn-primary" formnovalidate>{{ button_label|default('Valider') }}</button>
+{{ form_end(form) }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var attributeTypeField = document.querySelector('#attribute_value_attribute');
+        var colorFieldGroup = document.querySelector('#color-group');
+
+        // Parse the attribute types from the JSON data
+        var attributeTypes = JSON.parse('{{ attributeTypes|raw }}');
+        var colorTypeValue = "{{ colorType }}";
+
+        function toggleColorField() {
+            var selectedAttributeId = attributeTypeField.value;
+
+            // Get the type of the selected attribute
+            var selectedAttributeType = attributeTypes[selectedAttributeId] || '';
+
+            // Show or hide the color field based on the selected attribute type
+            if (selectedAttributeType === colorTypeValue) {
+                colorFieldGroup.style.display = 'block';
+            } else {
+                colorFieldGroup.style.display = 'none';
+            }
+        }
+
+        // Initial check on page load
+        toggleColorField();
+
+        // Add an event listener to handle changes
+        attributeTypeField.addEventListener('change', toggleColorField);
+    });
+</script>

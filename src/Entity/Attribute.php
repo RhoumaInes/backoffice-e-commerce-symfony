@@ -7,6 +7,7 @@ use App\Entity\Traits\Timestampable;
 use App\Repository\AttributeRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Enum\AttributeType;
 
 #[ORM\Entity(repositoryClass: AttributeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -22,15 +23,19 @@ class Attribute
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
+    #[ORM\Column(length: 255, enumType: AttributeType::class)]
+    private ?AttributeType $type = null;
 
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'attributes')]
     private Collection $product;
 
+    #[ORM\OneToMany(mappedBy: 'Attribute', targetEntity: AttributeValue::class, orphanRemoval: true)]
+    private Collection $attributeValues;
+
     public function __construct()
     {
         $this->product = new ArrayCollection();
+        $this->attributeValues = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,12 +55,12 @@ class Attribute
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): ?AttributeType
     {
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(AttributeType $type): static
     {
         $this->type = $type;
 
@@ -82,6 +87,36 @@ class Attribute
     public function removeProduct(Product $product): static
     {
         $this->product->removeElement($product);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AttributeValue>
+     */
+    public function getAttributeValues(): Collection
+    {
+        return $this->attributeValues;
+    }
+
+    public function addAttributeValue(AttributeValue $attributeValue): static
+    {
+        if (!$this->attributeValues->contains($attributeValue)) {
+            $this->attributeValues->add($attributeValue);
+            $attributeValue->setAttribute($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttributeValue(AttributeValue $attributeValue): static
+    {
+        if ($this->attributeValues->removeElement($attributeValue)) {
+            // set the owning side to null (unless already changed)
+            if ($attributeValue->getAttribute() === $this) {
+                $attributeValue->setAttribute(null);
+            }
+        }
 
         return $this;
     }
