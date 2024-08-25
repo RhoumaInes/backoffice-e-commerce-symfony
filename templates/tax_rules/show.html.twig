@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TaxRules{% endblock %}
+
+{% block body %}
+    <h1>TaxRules</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ tax_rule.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ tax_rule.name }}</td>
+            </tr>
+            <tr>
+                <th>Rate</th>
+                <td>{{ tax_rule.rate }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ tax_rule.state ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tax_rules_index') }}">back to list</a>
+
+    <a href="{{ path('app_tax_rules_edit', {'id': tax_rule.id}) }}">edit</a>
+
+    {{ include('tax_rules/_delete_form.html.twig') }}
+{% endblock %}

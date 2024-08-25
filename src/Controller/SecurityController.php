@@ -33,44 +33,7 @@ class SecurityController extends AbstractController
             'error' => $error,
         ]);
     }
-    #[Route(path: '/connexion/api/csrf-token', name: 'api_csrf_cnx_token', methods: ["GET"])]
-    public function getCsrfToken(CsrfTokenManagerInterface $csrfTokenManager): JsonResponse
-    {
-        $token = $csrfTokenManager->getToken('authenticate')->getValue();
-        return $this->json(['token' => $token]);
-    }
-    #[Route(path: '/connexion2', name: 'app_connexionn', methods: ['POST',"GET"])]
-    public function loginFront2(Request $request, CsrfTokenManagerInterface $csrfTokenManager, AuthenticationUtils $authenticationUtils, UserPasswordHasherInterface $passwordHasher, UserRepository $userRepository): JsonResponse
-    {
-        // Get the CSRF token from the request
-        $submittedToken = $request->request->get('_csrf_token');
-
-        // Validate the CSRF token
-        if (!$this->isCsrfTokenValid('authenticate', $submittedToken)) {
-            return $this->json(['success' => false, 'message' => 'Invalid CSRF token'], 400);
-        }
-        // Retrieve credentials from the request
-        $username = $request->request->get('username');
-        $password = $request->request->get('password');
-
-        // Validate credentials (implement your authentication logic here)
-        $user = $userRepository->findOneBy(['email' => $username]);
-
-        if (!$user || !$passwordHasher->isPasswordValid($user, $password)) {
-            // Invalid credentials
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Invalid credentials'
-            ], 401);
-        }
-
-        // Return JSON response with login data including CSRF token
-        return new JsonResponse([
-            'success' => true,
-            'username' => $username,
-            // Add any other relevant data you need to return
-        ]);
-    }
+    
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {

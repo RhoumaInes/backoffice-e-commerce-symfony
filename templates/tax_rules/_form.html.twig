@@ -1,0 +1,11 @@
+{{ form_start(form) }}
+    <div class="custom-toggle-container">
+        <label class="custom-toggle">
+            {{ form_widget(form.state) }}
+            <span class="custom-toggle-slider round"></span>
+        </label>
+        <span id="toggle-status">Désactive</span>
+    </div>
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

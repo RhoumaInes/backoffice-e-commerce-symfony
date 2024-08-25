@@ -57,6 +57,18 @@ class Product
     #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Imagesproduct::class, orphanRemoval: true)]
     private Collection $imagesproducts;
 
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    private ?TaxRules $taxRules = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $prixAchat = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $prixVenteHt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $prixVenteTtc = null;
+
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
@@ -255,6 +267,54 @@ class Product
                 $imagesproduct->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTaxRules(): ?TaxRules
+    {
+        return $this->taxRules;
+    }
+
+    public function setTaxRules(?TaxRules $taxRules): static
+    {
+        $this->taxRules = $taxRules;
+
+        return $this;
+    }
+
+    public function getPrixAchat(): ?float
+    {
+        return $this->prixAchat;
+    }
+
+    public function setPrixAchat(?float $prixAchat): static
+    {
+        $this->prixAchat = $prixAchat;
+
+        return $this;
+    }
+
+    public function getPrixVenteHt(): ?float
+    {
+        return $this->prixVenteHt;
+    }
+
+    public function setPrixVenteHt(?float $prixVenteHt): static
+    {
+        $this->prixVenteHt = $prixVenteHt;
+
+        return $this;
+    }
+
+    public function getPrixVenteTtc(): ?float
+    {
+        return $this->prixVenteTtc;
+    }
+
+    public function setPrixVenteTtc(?float $prixVenteTtc): static
+    {
+        $this->prixVenteTtc = $prixVenteTtc;
 
         return $this;
     }

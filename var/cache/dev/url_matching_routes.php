@@ -18,12 +18,17 @@ return [
         '/attribute' => [[['_route' => 'app_attribute_index', '_controller' => 'App\\Controller\\AttributeController::index'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
         '/attribute/new' => [[['_route' => 'app_attribute_new', '_controller' => 'App\\Controller\\AttributeController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/avatar' => [[['_route' => 'app_avatar_index', '_controller' => 'App\\Controller\\AvatarController::index'], null, ['GET' => 0], null, true, false, null]],
-        '/avatar/api/save-avatar' => [[['_route' => 'save_avatar', '_controller' => 'App\\Controller\\AvatarController::saveAvatar'], null, ['POST' => 0], null, false, false, null]],
-        '/avatar/api/check-avatar' => [[['_route' => 'check_avatar', '_controller' => 'App\\Controller\\AvatarController::checkUserAvatar'], null, ['GET' => 0], null, false, false, null]],
         '/avatar/new' => [[['_route' => 'app_avatar_new', '_controller' => 'App\\Controller\\AvatarController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/categorie' => [[['_route' => 'app_categorie_index', '_controller' => 'App\\Controller\\CategorieController::index'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/api/categories' => [[['_route' => 'get_categories', '_controller' => 'App\\Controller\\CategorieController::getCategories'], null, ['GET' => 0], null, false, false, null]],
         '/admin/categorie/new' => [[['_route' => 'app_categorie_new', '_controller' => 'App\\Controller\\CategorieController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/client/auth' => [[['_route' => 'app_client_auth', '_controller' => 'App\\Controller\\ClientAuthController::index'], null, null, null, false, false, null]],
+        '/api/csrf-token' => [[['_route' => 'api_csrf_token', '_controller' => 'App\\Controller\\ClientAuthController::getToken'], null, ['GET' => 0], null, false, false, null]],
+        '/register' => [[['_route' => 'app_register_from_register', '_controller' => 'App\\Controller\\ClientAuthController::registerFromFront'], null, ['POST' => 0], null, false, false, null]],
+        '/connexion/api/csrf-token' => [[['_route' => 'api_csrf_cnx_token', '_controller' => 'App\\Controller\\ClientAuthController::getCsrfToken'], null, ['GET' => 0], null, false, false, null]],
+        '/connexion2' => [[['_route' => 'app_connexionn', '_controller' => 'App\\Controller\\ClientAuthController::loginFront2'], null, ['POST' => 0, 'GET' => 1], null, false, false, null]],
+        '/avatar/api/check-avatar' => [[['_route' => 'check_avatar', '_controller' => 'App\\Controller\\ClientAuthController::checkUserAvatar'], null, ['GET' => 0], null, false, false, null]],
+        '/avatar/api/save-avatar' => [[['_route' => 'save_avatar', '_controller' => 'App\\Controller\\ClientAuthController::saveAvatar'], null, ['POST' => 0], null, false, false, null]],
         '/image/upload' => [[['_route' => 'app_image_upload', '_controller' => 'App\\Controller\\ImageUploadController::index'], null, null, null, false, false, null]],
         '/product/image/upload' => [[['_route' => 'app_image_upload_product', '_controller' => 'App\\Controller\\ImageUploadController::uploadForProduct'], null, null, null, false, false, null]],
         '/upload_image' => [[['_route' => 'upload_image', '_controller' => 'App\\Controller\\ImageUploadController::uploadImage'], null, ['POST' => 0], null, false, false, null]],
@@ -33,13 +38,11 @@ return [
         '/admin/provider' => [[['_route' => 'app_provider_index', '_controller' => 'App\\Controller\\ProviderController::index'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
         '/admin/provider/new' => [[['_route' => 'app_provider_new', '_controller' => 'App\\Controller\\ProviderController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/register' => [[['_route' => 'app_register', '_controller' => 'App\\Controller\\RegistrationController::register'], null, null, null, false, false, null]],
-        '/api/csrf-token' => [[['_route' => 'api_csrf_token', '_controller' => 'App\\Controller\\RegistrationController::getToken'], null, ['GET' => 0], null, false, false, null]],
-        '/register' => [[['_route' => 'app_register_from_register', '_controller' => 'App\\Controller\\RegistrationController::registerFromFront'], null, ['POST' => 0], null, false, false, null]],
         '/verify/email' => [[['_route' => 'app_verify_email', '_controller' => 'App\\Controller\\RegistrationController::verifyUserEmail'], null, null, null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
-        '/connexion/api/csrf-token' => [[['_route' => 'api_csrf_cnx_token', '_controller' => 'App\\Controller\\SecurityController::getCsrfToken'], null, ['GET' => 0], null, false, false, null]],
-        '/connexion2' => [[['_route' => 'app_connexionn', '_controller' => 'App\\Controller\\SecurityController::loginFront2'], null, ['POST' => 0, 'GET' => 1], null, false, false, null]],
         '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
+        '/tax/rules' => [[['_route' => 'app_tax_rules_index', '_controller' => 'App\\Controller\\TaxRulesController::index'], null, ['GET' => 0], null, true, false, null]],
+        '/tax/rules/new' => [[['_route' => 'app_tax_rules_new', '_controller' => 'App\\Controller\\TaxRulesController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/user' => [[['_route' => 'app_user', '_controller' => 'App\\Controller\\UserController::index'], null, null, null, true, false, null]],
         '/admin/user/mon-profile' => [[['_route' => 'user_profile', '_controller' => 'App\\Controller\\UserController::profile'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/error500' => [[['_route' => 'error500', '_controller' => 'App\\Controller\\ErrorController::error500'], null, null, null, false, false, null]],
@@ -122,6 +125,14 @@ return [
                     .')'
                 .')'
                 .'|/image/([^/]++)/delete(*:731)'
+                .'|/tax/rules/(?'
+                    .'|([^/]++)(?'
+                        .'|(*:764)'
+                        .'|/edit(*:777)'
+                    .')'
+                    .'|toggle/([^/]++)(*:801)'
+                    .'|([^/]++)(*:817)'
+                .')'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
@@ -158,8 +169,12 @@ return [
         644 => [[['_route' => 'app_provider_delete', '_controller' => 'App\\Controller\\ProviderController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
         675 => [[['_route' => 'user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         698 => [[['_route' => 'user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        731 => [
-            [['_route' => 'image_delete', '_controller' => 'App\\Controller\\ImageUploadController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null],
+        731 => [[['_route' => 'image_delete', '_controller' => 'App\\Controller\\ImageUploadController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
+        764 => [[['_route' => 'app_tax_rules_show', '_controller' => 'App\\Controller\\TaxRulesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        777 => [[['_route' => 'app_tax_rules_edit', '_controller' => 'App\\Controller\\TaxRulesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        801 => [[['_route' => 'toggle_tax', '_controller' => 'App\\Controller\\TaxRulesController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
+        817 => [
+            [['_route' => 'app_tax_rules_delete', '_controller' => 'App\\Controller\\TaxRulesController::delete'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TaxRules{% endblock %}
+
+{% block body %}
+    <h1>Edit TaxRules</h1>
+
+    {{ include('tax_rules/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_tax_rules_index') }}">back to list</a>
+
+    {{ include('tax_rules/_delete_form.html.twig') }}
+{% endblock %}
