@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une nouvelle valeur{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-10">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Ajouter une nouvelle valeur</h3>
+                </div>
+                <div class="card-body">
+                    {% if form_errors(form) %}
+                        <div class="alert alert-danger">{{ form_errors(form) }}</div>
+                    {% endif %} 
+                    {{ include('attribute_value/_form.html.twig') }}
+                </div>
+            </div>
+            <a href="{{ path('app_attribute_value_index', {'id_attribute': attribute.id}) }}">La liste des valeurs</a>
+        </div>  
+    </div>
+{% endblock %}

@@ -1,0 +1,58 @@
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Liste des attributs</h3>
+    </div>
+    <div class="card-body">
+        <h4>Liste des attributs</h4>
+        {% for attribute in attributes %}
+            <input 
+                type="checkbox" 
+                id="attribute_{{ attribute.id }}" 
+                name="attributes[]" 
+                value="{{ attribute.id }}"
+                {% if product.attributes.contains(attribute) %}checked{% endif %}
+            >
+            <label for="attribute_{{ attribute.id }}">{{ attribute.name }}</label>
+            <select multiple="" class="form-control" disabled>
+                {% for value in attribute.attributeValues %}
+                    <option value="{{ value.id }}">
+                        {{ value.value }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endfor %}
+    </div> 
+</div>
+<script>
+document.querySelectorAll('input[name="attributes[]"]').forEach(checkbox => {
+checkbox.addEventListener('change', function() {
+    const attributId = this.value;
+    const productId = document.querySelector('input[name="product_id"]').value;
+    const isChecked = this.checked;
+
+    fetch(`/admin/product/${productId}/update_attributs`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        },
+        body: JSON.stringify({
+            attribut_id: attributId,
+            add: isChecked
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log(`attribut ${isChecked ? 'added to' : 'removed from'} product.`);
+        } else {
+            console.error('An error occurred while updating the category.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+});
+
+</script>

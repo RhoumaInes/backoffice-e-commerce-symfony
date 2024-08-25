@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}La liste des valeurs{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">La liste des valeurs</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Valeur</th>
+                            {% if attribute.type.value == 'Couleur' %}
+                                <th>Couleur</th>
+                            {% endif %}
+                            <th>Date de création</th>
+                            <th>Date MAJ</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for attribute_value in attribute_values %}
+                        <tr>
+                            <td>{{ attribute_value.id }}</td>
+                            <td>{{ attribute_value.value }}</td>
+                            {% if attribute_value.attribute.type.value == 'Couleur' %}
+                                <td>
+                                    {{ ('<span style="display: block;border: 2px solid #000;background-color: ' ~ attribute_value.color|default('black') ~ '; width: 50px; height: 30px;"></span>') | raw }}
+                                </td>
+                            {% endif %}
+                            <td>{{ attribute_value.createdAt ? attribute_value.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ attribute_value.updatedAt ? attribute_value.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>
+                                <a href="{{ path('app_attribute_value_edit', {'id': attribute_value.id}) }}">Modifier</a><br>
+                                {{ include('attribute_value/_delete_form.html.twig') }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">Aucune valeur trouvée</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {# Afficher la pagination #}
+                {{ knp_pagination_render(attribute_values) }}
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+<a href="{{ path('app_attribute_value_new', {'id_attribute': attribute.id}) }}">Ajouter une valeur</a><br>
+<a href="{{ path('app_attribute_index') }}">Liste des attributs</a>
+{% endblock %}

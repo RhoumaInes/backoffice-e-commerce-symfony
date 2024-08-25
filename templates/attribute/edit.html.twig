@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un attribut{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-10">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Modifier un attribut</h3>
+                </div>
+                <div class="card-body">
+                    {% if form_errors(form) %}
+                        <div class="alert alert-danger">{{ form_errors(form) }}</div>
+                    {% endif %} 
+                    {{ include('attribute/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+                    <a href="{{ path('app_attribute_value_new', {'id_attribute': attribute.id}) }}">Ajouter des valeurs</a>
+                </div>
+            </div>
+            <a href="{{ path('app_attribute_index') }}">Retour à la liste</a>
+            {{ include('attribute/_delete_form.html.twig') }}
+        </div>  
+    </div>
+{% endblock %}
