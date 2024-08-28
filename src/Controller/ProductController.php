@@ -6,6 +6,7 @@ use App\Entity\Attribute;
 use App\Entity\Categorie;
 use App\Entity\Imagesproduct;
 use App\Entity\Product;
+use App\Form\ProductPricingType;
 use App\Form\ProductType;
 use App\Repository\CategorieRepository;
 use App\Repository\ProductRepository;
@@ -28,7 +29,7 @@ class ProductController extends AbstractController
         if ($searchproduct) {
             $prods = $productRepository->findByLikeName($searchproduct);
         } else {
-            $prods = $productRepository->findAll();
+            $prods = $productRepository->findAllWithFirstImage();
         }
         $pagination = $paginator->paginate(
             $prods,
@@ -117,20 +118,27 @@ class ProductController extends AbstractController
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
-        //dump($_POST['description']);die;
         $form = $this->createForm(ProductType::class, $product);
+        $pricingForm = $this->createForm(ProductPricingType::class, $product);
+
         $form->handleRequest($request);
-        // Load existing images
+        $pricingForm->handleRequest($request);
+
+        // Charger les images existantes
         $images = $entityManager->getRepository(Imagesproduct::class)->findBy(['Product' => $product]);
         $categories = $entityManager->getRepository(Categorie::class)->findAll();
         $attributes = $entityManager->getRepository(Attribute::class)->findAll();
-        //dump($form);die;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
+
+        if ($pricingForm->isSubmitted() && $pricingForm->isValid()) {
+            $entityManager->flush();
+            return $this->redirectToRoute('app_product_edit', ['id' => $product->getId()], Response::HTTP_SEE_OTHER);
+        }
+
         if ($request->isMethod('POST')) {
             $file = $request->files->get('file');
 
@@ -138,7 +146,6 @@ class ProductController extends AbstractController
                 $filename = uniqid() . '.' . $file->guessExtension();
                 $file->move($this->getParameter('uploads_directory'), $filename);
 
-                // Save the image to the database
                 $image = new Imagesproduct();
                 $image->setFilename($filename);
                 $image->setProduct($product);
@@ -154,6 +161,7 @@ class ProductController extends AbstractController
         return $this->renderForm('product/edit.html.twig', [
             'product' => $product,
             'form' => $form,
+            'pricingForm' => $pricingForm,
             'images' => $images,
             'categories' => $categories,
             'attributes' => $attributes,

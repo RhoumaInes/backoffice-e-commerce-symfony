@@ -105,4 +105,11 @@ class TaxRules
 
         return $this;
     }
+
+    public function updateProductPrices(): void
+    {
+        foreach ($this->products as $product) {
+            $product->updatePrixVenteTtc();
+        }
+    }
 }

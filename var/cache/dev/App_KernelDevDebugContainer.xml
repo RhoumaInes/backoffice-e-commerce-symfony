@@ -462,6 +462,10 @@
         <argument type="service" id=".service_locator.jIxfAsi.App\Controller\UserController"/>
       </call>
     </service>
+    <service id="App\EventListener\TaxRulesListener" class="App\EventListener\TaxRulesListener" autowire="true" autoconfigure="true">
+      <tag name="doctrine.event_listener" event="postUpdate"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
     <service id="App\Form\AttributeType" class="App\Form\AttributeType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
@@ -472,6 +476,9 @@
       <tag name="form.type"/>
     </service>
     <service id="App\Form\CategorieType" class="App\Form\CategorieType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\ProductPricingType" class="App\Form\ProductPricingType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Form\ProductType" class="App\Form\ProductType" autowire="true" autoconfigure="true">
@@ -1326,6 +1333,7 @@
         <argument>App\Form\AttributeValueType</argument>
         <argument>App\Form\AvatarType</argument>
         <argument>App\Form\CategorieType</argument>
+        <argument>App\Form\ProductPricingType</argument>
         <argument>App\Form\ProductType</argument>
         <argument>App\Form\ProfileType</argument>
         <argument>App\Form\ProviderType</argument>
@@ -3660,7 +3668,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator._5XA7qI"/>
+      <argument type="service" id=".service_locator.Q.IvqDf"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -4469,11 +4477,17 @@
       </call>
     </service>
     <service id="doctrine.dbal.default_connection.event_manager" class="Symfony\Bridge\Doctrine\ContainerAwareEventManager">
-      <argument type="service" id=".service_locator.TcKhdzh"/>
+      <argument type="service" id=".service_locator.DnZAF.f"/>
       <argument type="collection">
         <argument>doctrine.orm.messenger.doctrine_schema_subscriber</argument>
         <argument>doctrine.orm.listeners.doctrine_dbal_cache_adapter_schema_subscriber</argument>
         <argument>doctrine.orm.listeners.doctrine_token_provider_schema_subscriber</argument>
+        <argument type="collection">
+          <argument type="collection">
+            <argument>postUpdate</argument>
+          </argument>
+          <argument>App\EventListener\TaxRulesListener</argument>
+        </argument>
         <argument type="collection">
           <argument type="collection">
             <argument>loadClassMetadata</argument>
@@ -7268,6 +7282,8 @@
     <service id=".abstract.instanceof.App\Form\AvatarType" class="App\Form\AvatarType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\CategorieType" class="App\Form\CategorieType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\CategorieType" class="App\Form\CategorieType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProductPricingType" class="App\Form\ProductPricingType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\ProductPricingType" class="App\Form\ProductPricingType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProductType" class="App\Form\ProductType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ProductType" class="App\Form\ProductType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProfileType" class="App\Form\ProfileType" autowire="true" abstract="true"/>
@@ -8212,13 +8228,14 @@
       <argument type="service" id="debug.argument_resolver.not_tagged_controller.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator._5XA7qI" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Q.IvqDf" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\AttributeType" type="service_closure" id="App\Form\AttributeType"/>
         <argument key="App\Form\AttributeValueType" type="service_closure" id="App\Form\AttributeValueType"/>
         <argument key="App\Form\AvatarType" type="service_closure" id="App\Form\AvatarType"/>
         <argument key="App\Form\CategorieType" type="service_closure" id="App\Form\CategorieType"/>
+        <argument key="App\Form\ProductPricingType" type="service_closure" id="App\Form\ProductPricingType"/>
         <argument key="App\Form\ProductType" type="service_closure" id="App\Form\ProductType"/>
         <argument key="App\Form\ProfileType" type="service_closure" id="App\Form\ProfileType"/>
         <argument key="App\Form\ProviderType" type="service_closure" id="App\Form\ProviderType"/>
@@ -8303,9 +8320,10 @@
       <argument type="service" id=".debug.http_client.inner"/>
       <argument type="service" id="debug.stopwatch" on-invalid="ignore"/>
     </service>
-    <service id=".service_locator.TcKhdzh" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.DnZAF.f" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\EventListener\TaxRulesListener" type="service_closure" id="App\EventListener\TaxRulesListener"/>
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service_closure" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
         <argument key="doctrine.orm.listeners.doctrine_dbal_cache_adapter_schema_subscriber" type="service_closure" id="doctrine.orm.listeners.doctrine_dbal_cache_adapter_schema_subscriber"/>
         <argument key="doctrine.orm.listeners.doctrine_token_provider_schema_subscriber" type="service_closure" id="doctrine.orm.listeners.doctrine_token_provider_schema_subscriber"/>
@@ -9952,8 +9970,8 @@
     <service id=".service_locator.b76MKMg" alias=".service_locator.GPGtF8v"/>
     <service id=".service_locator.oJIshqB" alias=".service_locator.CjlmkaI"/>
     <service id=".service_locator.wKF4yn1" alias=".service_locator.19_mNxd"/>
-    <service id=".service_locator.4DJTrsw" alias=".service_locator._5XA7qI"/>
-    <service id=".service_locator.XW18Svm" alias=".service_locator.TcKhdzh"/>
+    <service id=".service_locator.ei496WH" alias=".service_locator.Q.IvqDf"/>
+    <service id=".service_locator.t4pBJ9b" alias=".service_locator.DnZAF.f"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
     <service id=".service_locator.Cw5qYVH" alias=".service_locator.XmW3LYn"/>
     <service id=".service_locator._eRAkJb" alias=".service_locator.jIxfAsi"/>

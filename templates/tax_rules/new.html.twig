@@ -20,24 +20,4 @@
         <a href="{{ path('app_tax_rules_index') }}">Retour à la liste</a>
     </div>  
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-const toggleInput = document.querySelector('.custom-toggle input');
-const toggleStatus = document.getElementById('toggle-status');
-
-    function updateToggleStatus() {
-        if (toggleInput.checked) {
-            toggleStatus.textContent = 'Active';
-        } else {
-            toggleStatus.textContent = 'Désactive';
-        }
-    }
-
-    toggleInput.addEventListener('change', updateToggleStatus);
-
-    // Initial call to set the correct status text
-    updateToggleStatus();
-});
-
-</script>
 {% endblock %}

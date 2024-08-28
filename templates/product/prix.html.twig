@@ -1,0 +1,54 @@
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Prix</h3>
+    </div>
+    <div class="card-body">
+        {{ form_start(pricingForm) }}
+            <div class="form-group">
+                <label>Prix achat</label>
+                {{ form_widget(pricingForm.prixAchat, { 'attr': {'class': 'form-control'} }) }}
+                <div class="text-danger">
+                    {{ form_errors(pricingForm.prixAchat) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Prix HT</label>
+                {{ form_widget(pricingForm.prixVenteHt, { 'attr': {'class': 'form-control'} }) }}
+                <div class="text-danger">
+                    {{ form_errors(pricingForm.prixVenteHt) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Taxes</label>
+                {{ form_widget(pricingForm.taxRules, { 'attr': {'class': 'form-control custom-select'} }) }}
+                <div class="text-danger">
+                    {{ form_errors(pricingForm.taxRules) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Prix TTC</label>
+                {{ form_widget(pricingForm.prixVenteTtc, { 'attr': {'class': 'form-control'} }) }}
+                <div class="text-danger">
+                    {{ form_errors(pricingForm.prixVenteTtc) }}
+                </div>
+            </div>
+            <button class="btn btn-primary">Enregistrer les prix</button>
+        {{ form_end(pricingForm) }}
+    </div> 
+</div>
+<script>
+    const prixVenteHtInput = document.getElementById('{{ pricingForm.prixVenteHt.vars.id }}');
+    const prixVenteTtcInput = document.getElementById('{{ pricingForm.prixVenteTtc.vars.id }}');
+    const taxRulesSelect = document.getElementById('{{ pricingForm.taxRules.vars.id }}');
+
+    function calculateTTC() {
+        const prixVenteHt = parseFloat(prixVenteHtInput.value) || 0;
+        const taxRate = parseFloat(taxRulesSelect.options[taxRulesSelect.selectedIndex].dataset.rate) || 0;
+        const prixVenteTtc = prixVenteHt * (1 + taxRate / 100);
+        prixVenteTtcInput.value = prixVenteTtc.toFixed(2);
+    }
+
+    prixVenteHtInput.addEventListener('input', calculateTTC);
+    taxRulesSelect.addEventListener('change', calculateTTC);
+    calculateTTC();
+</script>

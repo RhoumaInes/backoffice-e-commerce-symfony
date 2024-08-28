@@ -318,4 +318,11 @@ class Product
 
         return $this;
     }
+
+    public function updatePrixVenteTtc(): void
+    {
+        if ($this->prixVenteHt !== null && $this->taxRules !== null) {
+            $this->prixVenteTtc = $this->prixVenteHt * (1 + $this->taxRules->getRate() / 100);
+        }
+    }
 }

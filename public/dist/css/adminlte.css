@@ -54670,7 +54670,7 @@ a.text-muted:hover {
     width: 20px;
     border-radius: 50%;
     left: 3px;
-    bottom: 3px;
+    bottom: 2px;
     background-color: white;
     transition: .4s;
 }
@@ -54755,5 +54755,9 @@ input:checked + .slider:after {
     content: '';
     left: 35%;
 }
-
+img.small-image {
+    width: auto;
+    max-width: 60px;
+    height: auto;
+}
 /*# sourceMappingURL=adminlte.css.map */

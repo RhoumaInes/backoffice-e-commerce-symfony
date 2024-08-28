@@ -41,10 +41,11 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th></th>
                                 <th>Titre</th>
                                 <th>Reference</th>
-                                <th>Catégories</th>
                                 <th>Prix HT</th>
+                                <th>Prix TTC</th>
                                 <th>Quantité</th>
                                 <th>État</th>
                                 <th>Actions</th>
@@ -59,10 +60,17 @@
                                 {% for product in products %}
                                     <tr>
                                         <td>{{ product.id }}</td>
+                                        <td>
+                                            {% if product.imagesproducts|length > 0 %}
+                                                <img class="small-image" src="{{ asset('uploads/' ~ product.imagesproducts[0].getFilename()) }}" alt="{{ product.title }}">
+                                            {% else %}
+                                                <p></p>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ product.title }}</td>
                                         <td>{{ product.reference }}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ product.prixVenteHt }}</td>
+                                        <td>{{ product.prixVenteTtc }}</td>
                                         <td>{{ product.totalQuantity }}</td>
                                         <td></td>
                                         <td>
