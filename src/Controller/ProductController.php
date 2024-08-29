@@ -216,6 +216,21 @@ class ProductController extends AbstractController
         return new JsonResponse(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 
+    #[Route('/toggle/{id}', name: 'toggle_product', methods: ['POST'])]
+    public function toggleTaxState(int $id, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $product = $em->getRepository(Product::class)->find($id);
+
+        if (!$product) {
+            return new JsonResponse(['success' => false, 'error' => 'Product not found'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $product->setState($data['state']);
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
 
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response

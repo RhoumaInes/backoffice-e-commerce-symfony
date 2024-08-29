@@ -72,7 +72,12 @@
                                         <td>{{ product.prixVenteHt }}</td>
                                         <td>{{ product.prixVenteTtc }}</td>
                                         <td>{{ product.totalQuantity }}</td>
-                                        <td></td>
+                                        <td>
+                                            <label class="custom-toggle">
+                                                <input type="checkbox" class="custom-toggle-switch" data-id="{{ product.id }}" {{ product.state ? 'checked' : '' }}>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </td>
                                         <td>
                                             <a href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
                                             {#% if app.user is not empty and 'ROLE_SUPER_ADMIN' in app.user.roles %}
@@ -96,4 +101,31 @@
         </div>
     </div>
     <a href="{{ path('app_product_new') }}">Nouveau produit</a>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    $('.custom-toggle-switch').change(function () {
+        const productId = $(this).data('id');
+        const newState = $(this).prop('checked') ? 1 : 0;
+
+        fetch(`/admin/product/toggle/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ state: newState }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Product state updated successfully.');
+            } else {
+                console.error('Error updating product state.');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

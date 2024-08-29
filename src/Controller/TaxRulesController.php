@@ -88,10 +88,17 @@ class TaxRulesController extends AbstractController
     #[Route('/{id}', name: 'app_tax_rules_delete', methods: ['POST'])]
     public function delete(Request $request, TaxRules $taxRule, EntityManagerInterface $entityManager): Response
     {
+        $products = $taxRule->getProducts();
+        foreach ($products as $product) {
+            $product->setTaxRules(null);
+            $entityManager->persist($product);
+        }
+
+        $entityManager->flush();
         if ($this->isCsrfTokenValid('delete'.$taxRule->getId(), $request->request->get('_token'))) {
             $entityManager->remove($taxRule);
             $entityManager->flush();
-        }
+        }       
 
         return $this->redirectToRoute('app_tax_rules_index', [], Response::HTTP_SEE_OTHER);
     }

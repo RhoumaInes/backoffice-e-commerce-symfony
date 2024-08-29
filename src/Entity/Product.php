@@ -58,6 +58,7 @@ class Product
     private Collection $imagesproducts;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?TaxRules $taxRules = null;
 
     #[ORM\Column(nullable: true)]
@@ -69,11 +70,18 @@ class Product
     #[ORM\Column(nullable: true)]
     private ?float $prixVenteTtc = null;
 
+    #[ORM\Column(type: 'boolean',nullable: false)]
+    private ?bool $state = false;
+
+    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'products')]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->imagesproducts = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -324,5 +332,44 @@ class Product
         if ($this->prixVenteHt !== null && $this->taxRules !== null) {
             $this->prixVenteTtc = $this->prixVenteHt * (1 + $this->taxRules->getRate() / 100);
         }
+    }
+
+    public function isState(): ?bool
+    {
+        return $this->state;
+    }
+
+    public function setState(?bool $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            $order->removeProduct($this);
+        }
+
+        return $this;
     }
 }

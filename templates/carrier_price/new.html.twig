@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New CarrierPrice{% endblock %}
+
+{% block body %}
+    <h1>Create new CarrierPrice</h1>
+
+    {{ include('carrier_price/_form.html.twig') }}
+
+    <a href="{{ path('app_carrier_price_index') }}">back to list</a>
+{% endblock %}

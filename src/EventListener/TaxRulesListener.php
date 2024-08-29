@@ -1,6 +1,7 @@
 <?php 
 namespace App\EventListener;
 
+use App\Entity\TaxRules;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
@@ -19,7 +20,7 @@ class TaxRulesListener
         $entity = $args->getEntity();
 
         // Check if the updated entity is an instance of TaxRules
-        if (!$entity instanceof \App\Entity\TaxRules) {
+        if (!$entity instanceof TaxRules) {
             return;
         }
 
@@ -46,29 +47,5 @@ class TaxRulesListener
         $this->entityManager->flush();
     }
 
-    public function postRemove(PostRemoveEventArgs $args)
-    {
-        $entity = $args->getEntity();
-
-        if (!$entity instanceof \App\Entity\TaxRules) {
-            return;
-        }
-
-        $products = $entity->getProducts();
-
-        foreach ($products as $product) {
-            $product->setTaxRules(null);  // Remove the association with the deleted tax rule
-
-            $prixVenteHt = $product->getPrixVenteHt();
-            if ($prixVenteHt !== null) {
-                // Optionally reset the TTC price, or calculate it differently
-                $product->setPrixVenteTtc($prixVenteHt); // Assuming no tax is applied now
-            }
-
-            $this->entityManager->persist($product);
-        }
-
-        $this->entityManager->flush();
-    }
 }
 
