@@ -29,6 +29,18 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    // src/Repository/ProductRepository.php
+
+    public function findAllWithFirstImage(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.imagesproducts', 'ip')
+            ->addSelect('ip')
+            ->groupBy('p.id')
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Product[] Returns an array of Product objects

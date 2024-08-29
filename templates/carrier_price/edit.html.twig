@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit CarrierPrice{% endblock %}
+
+{% block body %}
+    <h1>Edit CarrierPrice</h1>
+
+    {{ include('carrier_price/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_carrier_price_index') }}">back to list</a>
+
+    {{ include('carrier_price/_delete_form.html.twig') }}
+{% endblock %}

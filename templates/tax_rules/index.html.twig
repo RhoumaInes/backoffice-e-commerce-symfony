@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taxes{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Taxes</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Taux</th>
+                            <th>Activé</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for tax_rule in tax_rules %}
+                        <tr>
+                            <td>{{ tax_rule.id }}</td>
+                            <td>{{ tax_rule.name }}</td>
+                            <td>{{ tax_rule.rate }}</td>
+                            <td>
+                                <label class="custom-toggle">
+                                    <input type="checkbox" class="custom-toggle-switch" data-id="{{ tax_rule.id }}" {{ tax_rule.state ? 'checked' : '' }}>
+                                    <span class="slider"></span>
+                                </label>
+                            </td>                            
+                            <td>
+                                <a href="{{ path('app_tax_rules_edit', {'id': tax_rule.id}) }}">Modifier</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">Aucune taxe trouvée</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<a href="{{ path('app_tax_rules_new') }}">Ajouter une taxe</a>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    $('.custom-toggle-switch').change(function () {
+        const taxId = $(this).data('id');
+        const newState = $(this).prop('checked') ? 1 : 0;
+
+        fetch(`/tax/rules/toggle/${taxId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ state: newState }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Tax state updated successfully.');
+            } else {
+                console.error('Error updating tax state.');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

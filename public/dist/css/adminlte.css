@@ -54635,4 +54635,129 @@ a.text-muted:hover {
 }
 
 
+
+/*************************Toggle type******************************/
+/* Custom Toggle Switch */
+.custom-toggle {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.custom-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.custom-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc; /* Default inactive color (gray) */
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.custom-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    left: 3px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .custom-toggle-slider {
+    background-color: #4CAF50; /* Active color (green) */
+}
+
+input:checked + .custom-toggle-slider:before {
+    transform: translateX(24px);
+}
+
+/* Optional: Add rounded corners for the toggle switch */
+.custom-toggle-slider.round {
+    border-radius: 34px;
+}
+
+.custom-toggle-slider.round:before {
+    border-radius: 50%;
+}
+
+
+
+/* Custom toggle switch style */
+.custom-toggle {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.custom-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50; /* Green when active */
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider:after {
+    content: '';
+    color: white;
+    display: block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 65%;
+    font-size: 10px;
+}
+
+input:checked + .slider:after {
+    content: '';
+    left: 35%;
+}
+img.small-image {
+    width: auto;
+    max-width: 60px;
+    height: auto;
+}
 /*# sourceMappingURL=adminlte.css.map */

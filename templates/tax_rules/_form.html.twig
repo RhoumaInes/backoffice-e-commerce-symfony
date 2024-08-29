@@ -1,0 +1,45 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        <label>Nom</label>
+        {{ form_widget(form.name, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.name) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Taux</label>
+        {{ form_widget(form.rate, { 'attr': {'class': 'form-control'} }) }}
+        <div class="text-danger">
+            {{ form_errors(form.rate) }}
+        </div>
+    </div>
+    <div class="custom-toggle-container form-group">
+        <label id="toggle-status">{{ taxRule is defined and taxRule.state ? 'Activé' : 'Désactivé' }}</label>
+        <label class="custom-toggle">
+            {{ form_widget(form.state) }}
+            <span class="custom-toggle-slider round"></span>
+        </label>
+    </div>
+    <button class="btn btn-primary" formnovalidate>{{ button_label|default('Valider') }}</button>
+{{ form_end(form) }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const toggleInput = document.querySelector('.custom-toggle input');
+const toggleStatus = document.getElementById('toggle-status');
+
+    function updateToggleStatus() {
+        if (toggleInput.checked) {
+            toggleStatus.textContent = 'Activé';
+        } else {
+            toggleStatus.textContent = 'Désactivé';
+        }
+    }
+
+    toggleInput.addEventListener('change', updateToggleStatus);
+
+    // Initial call to set the correct status text
+    updateToggleStatus();
+});
+
+</script>
+

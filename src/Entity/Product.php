@@ -57,11 +57,31 @@ class Product
     #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Imagesproduct::class, orphanRemoval: true)]
     private Collection $imagesproducts;
 
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?TaxRules $taxRules = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $prixAchat = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $prixVenteHt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $prixVenteTtc = null;
+
+    #[ORM\Column(type: 'boolean',nullable: false)]
+    private ?bool $state = false;
+
+    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'products')]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->imagesproducts = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -254,6 +274,100 @@ class Product
             if ($imagesproduct->getProduct() === $this) {
                 $imagesproduct->setProduct(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getTaxRules(): ?TaxRules
+    {
+        return $this->taxRules;
+    }
+
+    public function setTaxRules(?TaxRules $taxRules): static
+    {
+        $this->taxRules = $taxRules;
+
+        return $this;
+    }
+
+    public function getPrixAchat(): ?float
+    {
+        return $this->prixAchat;
+    }
+
+    public function setPrixAchat(?float $prixAchat): static
+    {
+        $this->prixAchat = $prixAchat;
+
+        return $this;
+    }
+
+    public function getPrixVenteHt(): ?float
+    {
+        return $this->prixVenteHt;
+    }
+
+    public function setPrixVenteHt(?float $prixVenteHt): static
+    {
+        $this->prixVenteHt = $prixVenteHt;
+
+        return $this;
+    }
+
+    public function getPrixVenteTtc(): ?float
+    {
+        return $this->prixVenteTtc;
+    }
+
+    public function setPrixVenteTtc(?float $prixVenteTtc): static
+    {
+        $this->prixVenteTtc = $prixVenteTtc;
+
+        return $this;
+    }
+
+    public function updatePrixVenteTtc(): void
+    {
+        if ($this->prixVenteHt !== null && $this->taxRules !== null) {
+            $this->prixVenteTtc = $this->prixVenteHt * (1 + $this->taxRules->getRate() / 100);
+        }
+    }
+
+    public function isState(): ?bool
+    {
+        return $this->state;
+    }
+
+    public function setState(?bool $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            $order->removeProduct($this);
         }
 
         return $this;

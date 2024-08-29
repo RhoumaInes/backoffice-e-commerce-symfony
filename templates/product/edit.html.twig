@@ -9,10 +9,11 @@
             <div class="card">
                 <div class="card-header p-2">
                   <ul class="nav nav-pills">
-                    <li class="nav-item"><a class="nav-link active" href="#infoProd" data-toggle="tab">Infos Produit</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#infoProd" data-toggle="tab">Infos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#imagesUpload" data-toggle="tab">Images</a></li>
                     <li class="nav-item"><a class="nav-link" href="#categories" data-toggle="tab">Categories</a></li>
                     <li class="nav-item"><a class="nav-link" href="#attributs" data-toggle="tab">Attributs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#prix" data-toggle="tab">Prix</a></li>
                   </ul>
                 </div><!-- /.card-header -->
             </div>
@@ -28,6 +29,9 @@
                             {% endif %} 
                             {{ include('product/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
                         </div>
+                    </div>
+                    <div class="tab-pane" id="prix">
+                        {{ include('product/prix.html.twig') }}
                     </div>
                     <div class="tab-pane" id="attributs">
                         {{ include('product/attributes.html.twig') }}

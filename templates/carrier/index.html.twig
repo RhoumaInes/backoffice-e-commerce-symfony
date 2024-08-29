@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des transporteurs{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Liste des transporteurs</h3>
+                    <div class="card-tools">
+                        <form method="post" action="{{ path('app_carrier_index') }}">
+                            <div class="input-group input-group-sm" style="min-width: 150px;">
+                                <input type="text" name="searchcarrier" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchcarrier') }}">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <div class="input-group-append">
+                                    <a href="{{ path('app_carrier_index') }}" type="button" class="btn btn-default">
+                                        Réinitialiser
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nom</th>
+                                <th>Statue</th>
+                                <th>Date de création</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for carrier in carriers %}
+                            <tr>
+                                <td>{{ carrier.id }}</td>
+                                <td>{{ carrier.name }}</td>
+                                <td>
+                                    <label class="custom-toggle">
+                                        <input type="checkbox" class="custom-toggle-switch" data-id="{{ carrier.id }}" {{ carrier.state ? 'checked' : '' }}>
+                                        <span class="slider"></span>
+                                    </label>
+                                </td>
+                                <td>{{ carrier.createdAt ? carrier.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>
+                                    <a href="{{ path('app_carrier_edit', {'id': carrier.id}) }}">Modifier</a>&nbsp;&nbsp;
+                                    <a href="{{ path('app_carrier_price_index', {'id': carrier.id}) }}">Prix livraison</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4">Aucun transporteur trouvé</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {# Afficher la pagination #}
+                {{ knp_pagination_render(carriers) }}
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+<a href="{{ path('app_carrier_new') }}">Ajouter un transporteur</a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    $('.custom-toggle-switch').change(function () {
+        const carrierId = $(this).data('id');
+        const newState = $(this).prop('checked') ? 1 : 0;
+
+        fetch(`/admin/carrier/toggle/${carrierId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ state: newState }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Carrier state updated successfully.');
+            } else {
+                console.error('Error updating carrier state.');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
