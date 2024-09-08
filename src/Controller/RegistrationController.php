@@ -64,14 +64,14 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('admin');
         }
-        if ($authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
+        //if ($authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
             $errors = $form->getErrors(true, false);
             //dd($errors);
             // L'utilisateur a le rôle "Admin"
             return $this->render('registration/register.html.twig', [
                 'registrationForm' => $form->createView(),
             ]);
-        }
+        //}
         return $this->redirectToRoute('app_login');
     }
 

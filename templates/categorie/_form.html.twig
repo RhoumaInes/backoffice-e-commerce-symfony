@@ -22,9 +22,9 @@
     </div>
     <div class="form-group">
         <label>Catégorie parent</label>
-        {{ form_widget(form.categorie, { 'attr': {'class': 'custom-select form-control'} }) }}
+        {{ form_widget(form.subcategorie, { 'attr': {'class': 'custom-select form-control'} }) }}
         <div class="text-danger">
-            {{ form_errors(form.categorie) }}
+            {{ form_errors(form.subcategorie) }}
         </div>
     </div>
     <button class="btn btn-primary" formnovalidate>{{ button_label|default('Valider') }}</button>
