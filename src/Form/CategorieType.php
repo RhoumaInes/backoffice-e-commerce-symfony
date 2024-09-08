@@ -33,7 +33,7 @@ class CategorieType extends AbstractType
                 ]),
                 ],
             ])
-            ->add('categorie', EntityType::class, [
+            ->add('subcategorie', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => "name",
                 'multiple' => false,

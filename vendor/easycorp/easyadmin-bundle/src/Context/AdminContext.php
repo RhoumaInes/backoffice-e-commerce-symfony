@@ -65,7 +65,9 @@ final class AdminContext
 
     public function getReferrer(): ?string
     {
-        return $this->request->query->get(EA::REFERRER);
+        $referrer = $this->request->query->get(EA::REFERRER);
+
+        return '' !== $referrer ? $referrer : null;
     }
 
     public function getI18n(): I18nDto
@@ -136,6 +138,11 @@ final class AdminContext
     public function getDashboardHasDarkModeEnabled(): bool
     {
         return $this->dashboardDto->isDarkModeEnabled();
+    }
+
+    public function getDashboardDefaultColorScheme(): string
+    {
+        return $this->dashboardDto->getDefaultColorScheme();
     }
 
     /**

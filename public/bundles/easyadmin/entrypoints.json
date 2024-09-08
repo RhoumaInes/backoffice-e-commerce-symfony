@@ -2,11 +2,11 @@
   "entrypoints": {
     "app": {
       "css": [
-        "/app.a358ddd1.css",
-        "/app.a358ddd1.rtl.css"
+        "/app.19616e33.css",
+        "/app.19616e33.rtl.css"
       ],
       "js": [
-        "/app.c3e41b70.js"
+        "/app.18be9a54.js"
       ]
     },
     "form": {
@@ -21,7 +21,7 @@
     },
     "page-color-scheme": {
       "js": [
-        "/page-color-scheme.e0316f30.js"
+        "/page-color-scheme.6860ce57.js"
       ]
     },
     "field-boolean": {
@@ -40,7 +40,7 @@
     },
     "field-collection": {
       "js": [
-        "/field-collection.8ea41328.js"
+        "/field-collection.60fea06d.js"
       ]
     },
     "field-file-upload": {
@@ -55,7 +55,7 @@
     },
     "field-slug": {
       "js": [
-        "/field-slug.051e4dcd.js"
+        "/field-slug.0dd3942b.js"
       ]
     },
     "field-textarea": {
@@ -65,8 +65,8 @@
     },
     "field-text-editor": {
       "css": [
-        "/field-text-editor.7f2b8426.css",
-        "/field-text-editor.7f2b8426.rtl.css"
+        "/field-text-editor.20a546a4.css",
+        "/field-text-editor.20a546a4.rtl.css"
       ],
       "js": [
         "/field-text-editor.833157ee.js"

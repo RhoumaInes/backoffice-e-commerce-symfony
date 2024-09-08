@@ -1,5 +1,5 @@
 // any CSS you require will output into a single css file (app.css in this case)
-require('../css/app.scss');
+require('../css/app.css');
 
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle';
 import Mark from 'mark.js/src/vanilla';
@@ -183,7 +183,7 @@ class App {
         const searchQueryTerms = tokenizeString(searchElement.value);
         const searchQueryTermsHighlightRegexp = new RegExp(searchQueryTerms.join('|'), 'i');
 
-        const elementsToHighlight = document.querySelectorAll('table tbody td:not(.actions)');
+        const elementsToHighlight = document.querySelectorAll('table tbody td.searchable');
         const highlighter = new Mark(elementsToHighlight);
         highlighter.markRegExp(searchQueryTermsHighlightRegexp);
     }
