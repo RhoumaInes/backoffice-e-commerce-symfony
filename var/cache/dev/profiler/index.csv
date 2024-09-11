@@ -529,3 +529,15 @@ fb04e1,172.18.0.1,GET,http://localhost:8080/admin/product/1/dist/img/user8-128x1
 46b72c,172.18.0.1,GET,http://localhost:8080/admin/product/1/dist/img/user1-128x128.jpg,1725798943,50f492,200
 2841f0,172.18.0.1,GET,http://localhost:8080/admin/product/1/dist/img/user3-128x128.jpg,1725798944,,404
 50f492,172.18.0.1,GET,http://localhost:8080/admin/product/1/dist/img/user1-128x128.jpg,1725798944,,404
+6cede3,172.18.0.1,GET,http://127.0.0.1:8080/,1725918960,,302
+f342e4,172.18.0.1,GET,http://127.0.0.1:8080/login,1725918967,,200
+3f732a,172.18.0.1,POST,http://127.0.0.1:8080/login,1725918983,,302
+5e99fd,172.18.0.1,GET,http://127.0.0.1:8080/,1725918986,,302
+0ed7a0,172.18.0.1,GET,http://127.0.0.1:8080/admin,1725918988,,200
+8e440a,172.18.0.1,GET,http://127.0.0.1:8080/tax/rules/,1725919561,,200
+aa5fcf,172.18.0.1,GET,http://127.0.0.1:8080/tax/rules/dist/img/user8-128x128.jpg,1725919563,e60841,200
+db390c,172.18.0.1,GET,http://127.0.0.1:8080/tax/rules/dist/img/user1-128x128.jpg,1725919563,3aa935,200
+e60841,172.18.0.1,GET,http://127.0.0.1:8080/tax/rules/dist/img/user8-128x128.jpg,1725919563,,404
+3aa935,172.18.0.1,GET,http://127.0.0.1:8080/tax/rules/dist/img/user1-128x128.jpg,1725919563,,404
+35dffb,172.18.0.1,GET,http://127.0.0.1:8080/tax/rules/dist/img/user3-128x128.jpg,1725919564,ad51ac,200
+ad51ac,172.18.0.1,GET,http://127.0.0.1:8080/tax/rules/dist/img/user3-128x128.jpg,1725919564,,404
