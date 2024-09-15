@@ -587,3 +587,12 @@ a0983f,127.0.0.1,GET,http://127.0.0.1:8000/admin/user/dist/img/user3-128x128.jpg
 40816e,127.0.0.1,POST,http://127.0.0.1:8000/admin/register,1726411956,,302
 b0a6ea,127.0.0.1,GET,http://127.0.0.1:8000/admin,1726411956,,200
 845991,127.0.0.1,GET,http://127.0.0.1:8000/admin,1726412177,,200
+ebaa4d,127.0.0.1,GET,http://127.0.0.1:8000/,1726412473,b9523c,200
+b9523c,127.0.0.1,GET,http://127.0.0.1:8000/,1726412473,,500
+ffa1f6,172.18.0.1,GET,http://localhost:8080/admin/user/,1726412736,,200
+663be2,172.18.0.1,GET,http://localhost:8080/admin/user/dist/img/user1-128x128.jpg,1726412739,979e23,200
+5904af,172.18.0.1,GET,http://localhost:8080/admin/user/dist/img/user8-128x128.jpg,1726412739,824936,200
+979e23,172.18.0.1,GET,http://localhost:8080/admin/user/dist/img/user1-128x128.jpg,1726412739,,404
+824936,172.18.0.1,GET,http://localhost:8080/admin/user/dist/img/user8-128x128.jpg,1726412739,,404
+d328ce,172.18.0.1,GET,http://localhost:8080/admin/user/dist/img/user3-128x128.jpg,1726412741,b86d3e,200
+b86d3e,172.18.0.1,GET,http://localhost:8080/admin/user/dist/img/user3-128x128.jpg,1726412741,,404

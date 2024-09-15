@@ -9,9 +9,10 @@ pipeline {
         }
 
         stage('Install Dependencies') {
-            steps {
-                // Use 'start /b' instead of nohup on Windows
-                bat 'composer install'
+            script {
+                sh 'which composer' // Vérifie où Composer est installé
+                sh 'composer --version' // Vérifie la version de Composer
+                sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
             }
         }
 
@@ -57,12 +58,5 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            mail to: 'ines.rhouma@esprit.tn', subject: 'Build Successful', body: 'The build was successful.'
-        }
-        failure {
-            mail to: 'ines.rhouma@esprit.tn', subject: 'Build Failed', body: 'The build failed. Check Jenkins for details.'
-        }
-    }
+    
 }
