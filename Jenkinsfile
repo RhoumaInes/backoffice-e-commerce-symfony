@@ -1,13 +1,5 @@
 pipeline {
     agent any
-    
-    environment {
-        SONARQUBE_URL = 'http://localhost:9000'
-        SONARQUBE_CREDENTIALS = 'SonarQube'
-        NEXUS_URL = 'http://localhost:8081'
-        NEXUS_CREDENTIALS = 'nexus-credentials'
-        DOCKER_REGISTRY = 'docker-hub-credentials'
-    }
 
     stages {
         stage('Checkout') {
@@ -18,72 +10,59 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'composer install'
+                // Use 'start /b' instead of nohup on Windows
+                bat 'composer install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'vendor/bin/phpunit --log-junit build/logs/junit.xml --coverage-clover build/logs/clover.xml'
+                // Exécuter les tests PHPUnit
+                sh './vendor/bin/phpunit --log-junit test-results.xml'
+            }
+            post {
+                always {
+                    // Archive les résultats des tests dans Jenkins
+                    junit 'test-results.xml'
+                }
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    // Assure-toi que tu as installé SonarScanner et configuré `sonar-project.properties`
-                    sh 'sonar-scanner'
+                withSonarQubeEnv('My SonarQube Server') {
+                    bat 'sonar-scanner'
                 }
             }
         }
 
         stage('Quality Gate') {
             steps {
-                waitForQualityGate abortPipeline: true
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
 
         stage('Build Archive') {
             steps {
-                sh 'zip -r build/my-app.zip . -x "*.git*" -x "build/*"'
+                bat 'zip -r archive.zip *'
             }
         }
 
         stage('Publish to Nexus') {
             steps {
-                nexusArtifactUploader artifacts: [
-                    [artifactId: 'my-app', classifier: '', file: 'build/my-app.zip', type: 'zip']
-                ], credentialsId: "${env.NEXUS_CREDENTIALS}", groupId: 'com.mycompany.app', nexusUrl: "${env.NEXUS_URL}", repository: 'maven-releases', version: "${env.BUILD_ID}"
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build("my-app:${env.BUILD_ID}")
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', "${env.DOCKER_REGISTRY}") {
-                        docker.image("my-app:${env.BUILD_ID}").push()
-                    }
-                }
+                bat 'curl -v -u admin:nexus --upload-file archive.zip http://nexus.example.com/repository/my-repo/'
             }
         }
     }
-    
+
     post {
         success {
-            echo 'Pipeline success!'
+            mail to: 'ines.rhouma@esprit.tn', subject: 'Build Successful', body: 'The build was successful.'
         }
         failure {
-            mail to: "ines.rhouma@esprit.tn",
-            subject: "The Pipeline failed",
-            body: "The Pipeline failed"
+            mail to: 'ines.rhouma@esprit.tn', subject: 'Build Failed', body: 'The build failed. Check Jenkins for details.'
         }
     }
 }
