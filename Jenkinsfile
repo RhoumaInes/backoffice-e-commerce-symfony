@@ -23,7 +23,18 @@ pipeline {
                 bat 'C:/ProgramData/ComposerSetup/bin/composer install --prefer-dist --optimize-autoloader' // Installer les dépendances
             }
         }
-
+        stage('Run Tests') {
+            steps {
+                // Exécuter les tests PHPUnit
+                sh './vendor/bin/phpunit --log-junit test-results.xml'
+            }
+            post {
+                always {
+                    // Archive les résultats des tests dans Jenkins
+                    junit 'test-results.xml'
+                }
+            }
+        }
     }
 
     
