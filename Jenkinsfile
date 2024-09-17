@@ -2,10 +2,8 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'dev', url: 'https://github.com/RhoumaInes/backoffice-e-commerce-symfony'
-            }
+        stage('SCM') {
+            checkout scm
         }
         stage('Check Environment') {
             steps {
@@ -42,10 +40,9 @@ pipeline {
             }
         }
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('My SonarQube Server') {
-                    bat 'sonar-scanner'
-                }
+            def scannerHome = tool 'SonarQube Scanner';
+            withSonarQubeEnv() {
+                bat "${scannerHome}/bin/sonar-scanner"
             }
         }
     }
