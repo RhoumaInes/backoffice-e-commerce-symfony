@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('SCM') {
-            checkout scm
+        stage('Checkout') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/RhoumaInes/backoffice-e-commerce-symfony'
+            }
         }
         stage('Check Environment') {
             steps {
