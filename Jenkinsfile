@@ -41,6 +41,13 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('My SonarQube Server') {
+                    bat 'sonar-scanner'
+                }
+            }
+        }
     }
 
     
