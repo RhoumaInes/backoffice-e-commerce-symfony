@@ -26,7 +26,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 // Exécuter les tests PHPUnit
-                sh './vendor/bin/phpunit --log-junit test-results.xml'
+                bat './vendor/bin/phpunit --log-junit test-results.xml'
             }
             post {
                 always {
