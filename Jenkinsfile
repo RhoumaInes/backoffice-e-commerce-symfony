@@ -7,80 +7,22 @@ pipeline {
                 git branch: 'dev', url: 'https://github.com/RhoumaInes/backoffice-e-commerce-symfony'
             }
         }
-
-        stage('Build') {
+        stage('Check Environment') {
             steps {
-                parallel(
-                    composer: {
-                        sh 'composer install --prefer-dist --optimize-autoloader'
-                        sh 'composer require --dev phpmetrics/phpmetrics friendsofphp/php-cs-fixer --no-interaction --prefer-dist --optimize-autoloader'
-                    },
-                    'prepare-dir': {
-                        sh 'rm -Rf ./build/'
-                        sh 'mkdir -p ./build/coverage'
-                        sh 'mkdir -p ./build/logs'
-                        sh 'mkdir -p ./build/phpmetrics'
-                    }
-                )
+                sh 'php --version'
+                sh 'composer --version'
             }
         }
 
-
-        stage('Linter & Test') {
+        stage('Install Dependencies') {
             steps {
-                parallel(
-                    'cache-clear prod': {
-                        sh 'APP_ENV=prod ./bin/console cache:clear'
-                    },
-                    'php-lint': {
-                        sh 'php -l src/'
-                    },
-                    'symfony-container': {
-                        sh './bin/console lint:container'
-                    },
-                    'symfony-yaml': {
-                        sh './bin/console lint:yaml config/ src/ --parse-tags'
-                    },
-                    'doctrine-mapping': {
-                        sh './bin/console doctrine:schema:validate --skip-sync'
-                    },
-                    phpunit: {
-                        sh 'vendor/bin/phpunit --configuration ./phpunit.xml --log-junit ./build/logs/phpunit.junit.xml --coverage-html ./build/coverage --coverage-cobertura ./build/logs/coverage.corbutera.xml'
-                    },
-                    /*behat: {},*/
-                    failFast: true
-                )
+                // Vérifier et installer les dépendances Composer
+                sh 'which composer'  // Vérifie où Composer est installé
+                sh 'composer --version'  // Vérifie la version de Composer
+                sh 'C:/ProgramData/ComposerSetup/bin/composer install --prefer-dist --optimize-autoloader' // Installer les dépendances
             }
         }
 
-
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('My SonarQube Server') {
-                    bat 'sonar-scanner'
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
-        stage('Build Archive') {
-            steps {
-                bat 'zip -r archive.zip *'
-            }
-        }
-
-        stage('Publish to Nexus') {
-            steps {
-                bat 'curl -v -u admin:nexus --upload-file archive.zip http://nexus.example.com/repository/my-repo/'
-            }
-        }
     }
 
     
