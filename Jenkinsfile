@@ -23,6 +23,12 @@ pipeline {
                 bat 'C:/ProgramData/ComposerSetup/bin/composer install --prefer-dist --optimize-autoloader' // Installer les dépendances
             }
         }
+        stage('List Files') {
+            steps {
+                bat 'dir'
+            }
+        }
+
         stage('Run Tests') {
             steps {
                 // Exécuter les tests PHPUnit
