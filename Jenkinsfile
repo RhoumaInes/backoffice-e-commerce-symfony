@@ -59,7 +59,7 @@ pipeline {
                     def repository = 'symfony-artifacts'
                     def fileName = 'my-artifact.zip'
                     
-                    sh "curl -v -u admin:nexus --upload-file ${fileName} ${nexusUrl}/#admin/repository/repositories:${repository}/${fileName}"
+                    bat "curl -v -u admin:nexus --upload-file ${fileName} ${nexusUrl}/repository/${repository}/${fileName}"
                 }
             }
         }
