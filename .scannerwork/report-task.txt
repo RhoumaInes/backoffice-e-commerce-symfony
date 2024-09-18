@@ -1,0 +1,6 @@
+projectKey=backoffice-e-commerce-symfony
+serverUrl=http://localhost:9000
+serverVersion=10.6.0.92116
+dashboardUrl=http://localhost:9000/dashboard?id=backoffice-e-commerce-symfony
+ceTaskId=66138008-da56-4ef3-b572-80c24285535d
+ceTaskUrl=http://localhost:9000/api/ce/task?id=66138008-da56-4ef3-b572-80c24285535d

@@ -41,10 +41,21 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis') {
+        stage('SonarQube analysis') {
+            environment {
+                scannerHome = tool 'SonarQube Scanner'
+            }
             steps {
-                withSonarQubeEnv('SonarQube Scanner') {
-                    bat 'sonar-scanner'
+                withSonarQubeEnv('SonarQube') {
+                    bat "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
