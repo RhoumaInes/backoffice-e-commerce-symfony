@@ -54,8 +54,19 @@ pipeline {
 
         stage("Quality Gate") {
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
+                timeout(time: 3, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        stage('Deploy to Nexus') {
+            steps {
+                script {
+                    def nexusUrl = 'http://localhost:8081'
+                    def repository = 'symfony-artifacts'
+                    def fileName = 'my-artifact.zip'
+                    
+                    sh "curl -v -u admin:nexus --upload-file ${fileName} ${nexusUrl}/repository/${repository}/${fileName}"
                 }
             }
         }
