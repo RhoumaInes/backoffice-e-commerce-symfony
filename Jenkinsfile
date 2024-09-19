@@ -1,7 +1,9 @@
 pipeline {
     agent any
     environment {
-        VERSION = "1.0.${env.BUILD_NUMBER}" 
+        VERSION = "1.0.${env.BUILD_NUMBER}"
+        DOCKER_IMAGE = "inesrhouma/backoffice-symfony:${env.VERSION}"
+        DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
     }
     stages {
         stage('Checkout') {
@@ -73,7 +75,22 @@ pipeline {
                 }
             }
         }
-    }
-
-    
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    bat "docker build -t ${env.DOCKER_IMAGE} ."
+                }
+            }
+        }
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                        bat "docker push ${env.DOCKER_IMAGE}"
+                    }
+                }
+            }
+        }
+    }    
 }
