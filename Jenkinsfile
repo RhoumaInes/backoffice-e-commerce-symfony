@@ -84,11 +84,20 @@ pipeline {
         }
         stage('Push Docker Image to Docker Hub') {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                        bat "docker push ${env.DOCKER_IMAGE}"
+                timeout(time: 10, unit: 'MINUTES') {
+                    script {
+                            withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                            bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                            bat "docker push ${env.DOCKER_IMAGE}"
+                        }
                     }
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    bat "kubectl apply -f deployment.yml"
                 }
             }
         }
