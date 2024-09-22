@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         VERSION = "1.0.${env.BUILD_NUMBER}"
-        DOCKER_IMAGE = "inesrhouma/backoffice-symfony:${env.VERSION}"
+        DOCKER_IMAGE = "inesrhouma/backoffice-symfony:latest"
         DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
     }
     stages {
