@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         VERSION = "1.0.${env.BUILD_NUMBER}"
-        DOCKER_IMAGE = "inesrhouma/backoffice-symfony:latest"
+        DOCKER_IMAGE = "inesrhouma/backoffice-du-symfony:latest"
         DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
     }
     stages {
@@ -88,7 +88,7 @@ pipeline {
                     script {
                             withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                             bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                            bat "docker push ${env.DOCKER_IMAGE}"
+                            bat "docker push ${DOCKER_USERNAME}/backoffice-de-symfony:latest"
                         }
                     }
                 }
