@@ -55,21 +55,19 @@ pipeline {
                 }
             }
         }
-        
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    bat "docker build -t ${env.DOCKER_IMAGE} ."
-                }
-            }
-        }
         stage('Push Docker Image to Docker Hub') {
             steps {
                 timeout(time: 10, unit: 'MINUTES') {
                     script {
-                            withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                            bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                            bat "docker push ${DOCKER_USERNAME}/backoffice-de-symfony:latest"
+                        withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                            bat '''
+                                echo Building Docker image...
+                                docker build -t %DOCKER_USERNAME%/backoffice-de-symfony:latest .
+                                echo Logging in to Docker Hub...
+                                docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%
+                                echo Pushing Docker image...
+                                docker push %DOCKER_USERNAME%/backoffice-de-symfony:latest
+                            '''
                         }
                     }
                 }
