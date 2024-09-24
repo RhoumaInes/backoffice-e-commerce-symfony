@@ -55,26 +55,7 @@ pipeline {
                 }
             }
         }
-        stage('Create Zip Artifact') {
-            steps {
-                script {
-                    // Créer un fichier .zip de votre projet Symfony
-                    def zipFileName = "my-artifact-${env.VERSION}.zip"
-                    bat "powershell Compress-Archive -Path .\\* -DestinationPath ${zipFileName}"
-                }
-            }
-        }
-        stage('Deploy to Nexus') {
-            steps {
-                script {
-                    def nexusUrl = 'http://localhost:8081'
-                    def repository = 'symfony-artifacts'
-                    def fileName = "my-artifact-${env.VERSION}.zip"
-                    
-                    bat "curl -v -u admin:nexus --upload-file ${fileName} ${nexusUrl}/repository/${repository}/${fileName}"
-                }
-            }
-        }
+        
         stage('Build Docker Image') {
             steps {
                 script {
