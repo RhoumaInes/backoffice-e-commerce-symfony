@@ -2,8 +2,9 @@ pipeline {
     agent any
     environment {
         VERSION = "1.0.${env.BUILD_NUMBER}"
-        DOCKER_IMAGE = "inesrhouma/backoffice-du-symfony:latest"
+        imagename = "inesrhouma/backoffice_symfony"
         DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
+        dockerImage = ''
     }
     stages {
         stage('Checkout') {
@@ -55,24 +56,52 @@ pipeline {
                 }
             }
         }
-        stage('Push Docker Image to Docker Hub') {
+        stage('Create Zip Artifact') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    script {
-                        withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                            bat '''
-                                echo Building Docker image...
-                                docker build -t %DOCKER_USERNAME%/backoffice-de-symfony:latest .
-                                echo Logging in to Docker Hub...
-                                docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%
-                                echo Pushing Docker image...
-                                docker push %DOCKER_USERNAME%/backoffice-de-symfony:latest
-                            '''
-                        }
-                    }
+                script {
+                    // Créer un fichier .zip de votre projet Symfony
+                    def zipFileName = "my-artifact-${env.VERSION}.zip"
+                    bat "powershell Compress-Archive -Path .\\* -DestinationPath ${zipFileName}"
                 }
             }
         }
+        stage('Deploy to Nexus') {
+            steps {
+                script {
+                    def nexusUrl = 'http://localhost:8081'
+                    def repository = 'symfony-artifacts'
+                    def fileName = "my-artifact-${env.VERSION}.zip"
+                    
+                    bat "curl -v -u admin:nexus --upload-file ${fileName} ${nexusUrl}/repository/${repository}/${fileName}"
+                }
+            }
+        }
+
+        stage('Building image') {
+            steps{
+            script {
+            dockerImage = docker.build imagename
+            }
+        }
+        }
+        stage('Deploy Image') {
+        steps{
+            script {
+            withDockerRegistry(credentialsId: 'docker-hub-credentials') {
+                dockerImage.push("$BUILD_NUMBER")
+                dockerImage.push('latest')
+            }
+            }
+        }
+        }
+        stage('Remove Unused docker image') {
+        steps{
+            bat "docker rmi $imagename:$BUILD_NUMBER"
+            bat "docker rmi $imagename:latest"
+    
+        }
+        }
+        
         stage('Deploy to Kubernetes') {
             steps {
                 script {
@@ -81,4 +110,11 @@ pipeline {
             }
         }
     }    
+    post {
+        failure {
+            mail to: "ines.rhouma@esprit.tn",
+            subject: "The Pipeline failed",
+            body: "The Pipeline failed"
+        }
+    }
 }
