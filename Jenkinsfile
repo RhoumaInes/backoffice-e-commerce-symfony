@@ -33,13 +33,10 @@ pipeline {
                 bat 'dir'
             }
         }
-
-        
-
         stage('Building image') {
             steps{
                 script {
-                    dockerImage = docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
+                    dockerImage = docker.build("${imagename}:${BUILD_NUMBER}")
                 }
             }
         }
