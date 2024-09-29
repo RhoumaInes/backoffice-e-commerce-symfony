@@ -79,15 +79,15 @@ pipeline {
 
         stage('Building image') {
             steps{
-            script {
-            dockerImage = docker.build imagename
+                script {
+                    dockerImage = docker.build("backoffice_symfony:${BUILD_NUMBER}")
+                }
             }
-        }
         }
         stage('Deploy Image') {
             steps{
                 script {
-                    withDockerRegistry(credentialsId: 'docker-hub-credentials') {
+                    withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID) {
                         dockerImage.push("$BUILD_NUMBER")
                         dockerImage.push('latest')
                     }
