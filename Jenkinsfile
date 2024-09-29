@@ -61,7 +61,7 @@ pipeline {
                 script {
                     // Créer un fichier .zip de votre projet Symfony
                     def zipFileName = "my-artifact-${env.VERSION}.zip"
-                    bat "powershell Compress-Archive -Path .\\* -DestinationPath ${zipFileName}"
+                    bat "7z a ${zipFileName} .\\*"
                 }
             }
         }
