@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: symfony-container
-        image: inesrhouma/inesrhouma/backoffice_symfony:latest
+        image: inesrhouma/backoffice_symfony:latest
         ports:
         - containerPort: 80
 ---

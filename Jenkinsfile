@@ -85,21 +85,21 @@ pipeline {
         }
         }
         stage('Deploy Image') {
-        steps{
-            script {
-            withDockerRegistry(credentialsId: 'docker-hub-credentials') {
-                dockerImage.push("$BUILD_NUMBER")
-                dockerImage.push('latest')
+            steps{
+                script {
+                    withDockerRegistry(credentialsId: 'docker-hub-credentials') {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+                    }
+                }
             }
-            }
-        }
         }
         stage('Remove Unused docker image') {
-        steps{
-            bat "docker rmi $imagename:$BUILD_NUMBER"
-            bat "docker rmi $imagename:latest"
-    
-        }
+            steps{
+                bat "docker rmi $imagename:$BUILD_NUMBER"
+                bat "docker rmi $imagename:latest"
+        
+            }
         }
         
         stage('Deploy to Kubernetes') {
