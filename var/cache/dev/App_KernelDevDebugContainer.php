@@ -16,6 +16,6 @@ if (!\class_exists(App_KernelDevDebugContainer::class, false)) {
 
 return new \ContainerGFrwTFl\App_KernelDevDebugContainer([
     'container.build_hash' => 'GFrwTFl',
-    'container.build_id' => '0d78d913',
-    'container.build_time' => 1726412716,
+    'container.build_id' => '87074c5e',
+    'container.build_time' => 1726682027,
 ], __DIR__.\DIRECTORY_SEPARATOR.'ContainerGFrwTFl');

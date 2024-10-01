@@ -1,62 +1,78 @@
 pipeline {
     agent any
-
+    environment {
+        VERSION = "1.0.${env.BUILD_NUMBER}"
+        imagename = "backoffice_app_symfony"
+        DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
+        dockerImage = ''
+    }
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'dev', url: 'https://github.com/RhoumaInes/backoffice-e-commerce-symfony'
             }
         }
-
-        stage('Install Dependencies') {
-            script {
-                sh 'which composer' // Vérifie où Composer est installé
-                sh 'composer --version' // Vérifie la version de Composer
-                sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+        stage('Check Environment') {
+            steps {
+                bat 'php --version'
+                bat 'composer --version'
             }
         }
 
-        stage('Run Tests') {
+        stage('Building image') {
             steps {
-                // Exécuter les tests PHPUnit
-                sh './vendor/bin/phpunit --log-junit test-results.xml'
-            }
-            post {
-                always {
-                    // Archive les résultats des tests dans Jenkins
-                    junit 'test-results.xml'
+                script {
+                    dockerImage = docker.build("${imagename}:${BUILD_NUMBER}")
                 }
             }
         }
-
-        stage('SonarQube Analysis') {
+        stage('Tagging Image') {
             steps {
-                withSonarQubeEnv('My SonarQube Server') {
-                    bat 'sonar-scanner'
+                script {
+                    bat "docker tag ${imagename}:${BUILD_NUMBER} inesrhouma/backoffice_symfony:${BUILD_NUMBER}"
+                    bat "docker tag ${imagename}:${BUILD_NUMBER} inesrhouma/backoffice_symfony:latest"
                 }
             }
         }
-
-        stage('Quality Gate') {
+        stage('Login to Docker Hub') {
             steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
+                script {
+                    withDockerRegistry([credentialsId: DOCKER_CREDENTIALS_ID]) {
+                        echo "Logged in to Docker Hub"
+                    }
                 }
             }
         }
-
-        stage('Build Archive') {
+        stage('Deploy Image') {
             steps {
-                bat 'zip -r archive.zip *'
+                script {
+                    withDockerRegistry([credentialsId: DOCKER_CREDENTIALS_ID]) {
+                        dockerImage.push("${BUILD_NUMBER}")
+                        dockerImage.push('latest')
+                    }
+                }
             }
         }
-
-        stage('Publish to Nexus') {
+        stage('Remove Unused Docker Image') {
             steps {
-                bat 'curl -v -u admin:nexus --upload-file archive.zip http://nexus.example.com/repository/my-repo/'
+                bat "docker rmi ${imagename}:${BUILD_NUMBER}"
+                bat "docker rmi ${imagename}:latest"
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    bat "kubectl apply -f deployment.yml"
+                }
             }
         }
     }
-
-    
+    post {
+        failure {
+            mail to: "ines.rhouma@esprit.tn",
+            subject: "The Pipeline failed for build #${BUILD_NUMBER}",
+            body: "The Pipeline failed for build #${BUILD_NUMBER}. Check Jenkins for details: ${env.BUILD_URL}"
+        }
+    }
 }
