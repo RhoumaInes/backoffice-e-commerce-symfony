@@ -19,11 +19,10 @@ pipeline {
             }
         }
 
-       
         stage('Building image') {
-            steps{
+            steps {
                 script {
-                    dockerImage = docker.build("${imagename}")
+                    dockerImage = docker.build("${imagename}:${BUILD_NUMBER}")
                 }
             }
         }
@@ -31,6 +30,7 @@ pipeline {
             steps {
                 script {
                     bat "docker tag ${imagename}:${BUILD_NUMBER} inesrhouma/backoffice_symfony:${BUILD_NUMBER}"
+                    bat "docker tag ${imagename}:${BUILD_NUMBER} inesrhouma/backoffice_symfony:latest"
                 }
             }
         }
@@ -44,20 +44,19 @@ pipeline {
             }
         }
         stage('Deploy Image') {
-            steps{
+            steps {
                 script {
                     withDockerRegistry([credentialsId: DOCKER_CREDENTIALS_ID]) {
-                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push("${BUILD_NUMBER}")
                         dockerImage.push('latest')
                     }
                 }
             }
         }
-        stage('Remove Unused docker image') {
-            steps{
-                bat "docker rmi $imagename:$BUILD_NUMBER"
-                bat "docker rmi $imagename:latest"
-        
+        stage('Remove Unused Docker Image') {
+            steps {
+                bat "docker rmi ${imagename}:${BUILD_NUMBER}"
+                bat "docker rmi ${imagename}:latest"
             }
         }
         
@@ -68,12 +67,12 @@ pipeline {
                 }
             }
         }
-    }    
+    }
     post {
         failure {
             mail to: "ines.rhouma@esprit.tn",
-            subject: "The Pipeline failed",
-            body: "The Pipeline failed"
+            subject: "The Pipeline failed for build #${BUILD_NUMBER}",
+            body: "The Pipeline failed for build #${BUILD_NUMBER}. Check Jenkins for details: ${env.BUILD_URL}"
         }
     }
 }
