@@ -19,7 +19,15 @@ pipeline {
             }
         }
 
-        
+        stage('Install Dependencies') {
+            steps {
+                // Vérifier et installer les dépendances Composer
+                bat 'composer --version'  // Vérifie la version de Composer
+                bat 'rmdir /s /q vendor'
+                bat 'del composer.lock'
+                bat 'C:/ProgramData/ComposerSetup/bin/composer install --prefer-dist --optimize-autoloader' // Installer les dépendances
+            }
+        }
         stage('Building image') {
             steps{
                 script {
