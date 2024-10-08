@@ -100,6 +100,33 @@ pipeline {
                 }
             }
         }
+        // Remplacement dynamique du tag dans le fichier deployment.yml
+        stage('Update Deployment YAML') {
+            steps {
+                script {
+                    // Remplacement du tag et du nom d'image dans le fichier deployment.yml
+                    def deploymentYaml = readFile('deployment.yml')
+                    deploymentYaml = deploymentYaml.replace('__IMAGE_NAME__', "${imagename}")
+                    deploymentYaml = deploymentYaml.replace('__TAG__', "${BUILD_NUMBER}")
+                    writeFile(file: 'deployment.yml', text: deploymentYaml)
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Démarre minikube si nécessaire (si tu utilises minikube)
+                    bat "minikube start"
+
+                    // Applique la configuration du déploiement avec le bon tag
+                    bat "kubectl apply -f deployment.yml"
+
+                    // Vérifie que les pods sont en cours d'exécution
+                    bat "kubectl get pods"
+                }
+            }
+        }
 
         stage('Remove Unused docker image') {
             steps{
@@ -109,13 +136,6 @@ pipeline {
             }
         }
         
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    bat "kubectl apply -f deployment.yml"
-                }
-            }
-        }
     }    
     post {
         failure {
