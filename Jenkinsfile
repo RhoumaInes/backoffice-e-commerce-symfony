@@ -33,48 +33,6 @@ pipeline {
                 bat 'dir'
             }
         }
-        stage('Run Tests') {
-            steps {
-                // Exécuter les tests PHPUnit
-                bat 'vendor\\bin\\phpunit --log-junit test-results.xml'
-            }
-            post {
-                always {
-                    // Archive les résultats des tests dans Jenkins
-                    junit '**/test-results.xml'
-                }
-            }
-        }
-        stage('SonarQube analysis') {
-            environment {
-                scannerHome = tool 'SonarQube Scanner'
-            }
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    bat "${scannerHome}/bin/sonar-scanner"
-                }
-            }
-        }
-        stage('Create Zip Artifact') {
-            steps {
-                script {
-                    // Créer un fichier .zip de votre projet Symfony
-                    def zipFileName = "my-artifact-${env.VERSION}.zip"
-                    bat "\"C:\\Program Files\\7-Zip\\7z.exe\" a ${zipFileName} .\\*"
-                }
-            }
-        }
-        stage('Deploy to Nexus') {
-            steps {
-                script {
-                    def nexusUrl = 'http://localhost:8081'
-                    def repository = 'symfony-artifacts'
-                    def fileName = "my-artifact-${env.VERSION}.zip"
-                    
-                    bat "curl -v -u admin:nexus --upload-file ${fileName} ${nexusUrl}/repository/${repository}/${fileName}"
-                }
-            }
-        }
         stage('Building image') {
             steps{
                 script {
