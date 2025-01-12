@@ -1,11 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New CarrierPrice{% endblock %}
+{% block title %}Nouveau prix{% endblock %}
 
 {% block body %}
-    <h1>Create new CarrierPrice</h1>
-
-    {{ include('carrier_price/_form.html.twig') }}
-
-    <a href="{{ path('app_carrier_price_index') }}">back to list</a>
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-10">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Nouveau prix</h3>
+                </div>
+                <div class="card-body">
+                    {% if form_errors(form) %}
+                        <div class="alert alert-danger">{{ form_errors(form) }}</div>
+                    {% endif %} 
+                    {{ include('carrier_price/_form.html.twig') }}
+                </div>
+            </div>
+            <a href="{{ path('app_carrier_price_index', {'id':idCarrier}) }}">Retour à la liste</a>
+        </div>  
+    </div>
 {% endblock %}

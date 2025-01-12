@@ -47,6 +47,9 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Count(min: 0, minMessage:"Vous devez sélectionner au minimum un rôle.")]
     private ?array $roles = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isActive = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -161,5 +164,17 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function isIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(?bool $isActive): static
+    {
+        $this->isActive = $isActive;
+
+        return $this;
     }
 }

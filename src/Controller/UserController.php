@@ -74,18 +74,69 @@ class UserController extends AbstractController
             'attr' => ['class' => 'form-horizontal'],
         ]);
         $form->handleRequest($request);
-        
+        $user = $this->getUser();
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($this->getUser());
+            $profilePicture = $form->get('profileImage')->getData();
+
+            if ($profilePicture) {
+                $newFilename = uniqid() . '.' . $profilePicture->guessExtension();
+
+                // Déplacez l'image vers le répertoire public/uploads
+                $profilePicture->move(
+                    $this->getParameter('uploads_directory'),
+                    $newFilename
+                );
+
+                // Mettez à jour le chemin dans l'entité utilisateur
+                $user->setProfileImage($newFilename);
+            }
+            $em->persist($user);
             $em->flush();
 
             return $this->redirectToRoute('app_user');
         }
         //dd($form->createView());
-
+        //dd($form);
         return $this->render('user/profile.html.twig', [
             'formprofile' => $form->createView(),
         ]);
 
     }
+
+    #[Route('/edit-profile-image', name: 'user_profile_image', methods: ['GET', 'POST'])]
+    public function editProfile(Request $request, EntityManagerInterface $entityManager): Response 
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $profilePicture = $form->get('profileImage')->getData();
+
+            if ($profilePicture) {
+                $newFilename = uniqid() . '.' . $profilePicture->guessExtension();
+
+                // Déplacez l'image vers le répertoire public/uploads
+                $profilePicture->move(
+                    $this->getParameter('uploads_directory'),
+                    $newFilename
+                );
+
+                // Mettez à jour le chemin dans l'entité utilisateur
+                $user->setProfileImage($newFilename);
+            }
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Profil mis à jour avec succès !');
+            return $this->redirectToRoute('user_profile');
+        }
+
+        return $this->render('user/edit_profile.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
 }

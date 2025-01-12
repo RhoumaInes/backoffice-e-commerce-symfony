@@ -54,6 +54,7 @@ class ClientAuthController extends AbstractController
         $user->setFirstname($firstname);
         $user->setEmail($email);
         $user->setPassword($passwordHasher->hashPassword($user, $password));
+        $user->setIsActive(true);
 
         $entityManager->persist($user);
         $entityManager->flush();

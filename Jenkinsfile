@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         VERSION = "1.0.${env.BUILD_NUMBER}"
-        imagename = "backoffice_app_symfony"
+        imagename = "inesrhouma/backoffice_symfony"
         DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
         dockerImage = ''
     }
@@ -19,8 +19,22 @@ pipeline {
             }
         }
 
-        stage('Building image') {
+        stage('Install Dependencies') {
             steps {
+                // Vérifier et installer les dépendances Composer
+                bat 'composer --version'  // Vérifie la version de Composer
+                bat 'rmdir /s /q vendor'
+                bat 'del composer.lock'
+                bat 'C:/ProgramData/ComposerSetup/bin/composer install --prefer-dist --optimize-autoloader' // Installer les dépendances
+            }
+        }
+        stage('List Files') {
+            steps {
+                bat 'dir'
+            }
+        }
+        stage('Building image') {
+            steps{
                 script {
                     dockerImage = docker.build("${imagename}:${BUILD_NUMBER}")
                 }
@@ -34,17 +48,8 @@ pipeline {
                 }
             }
         }
-        stage('Login to Docker Hub') {
-            steps {
-                script {
-                    withDockerRegistry([credentialsId: DOCKER_CREDENTIALS_ID]) {
-                        echo "Logged in to Docker Hub"
-                    }
-                }
-            }
-        }
         stage('Deploy Image') {
-            steps {
+            steps{
                 script {
                     withDockerRegistry([credentialsId: DOCKER_CREDENTIALS_ID]) {
                         dockerImage.push("${BUILD_NUMBER}")
@@ -53,26 +58,48 @@ pipeline {
                 }
             }
         }
-        stage('Remove Unused Docker Image') {
-            steps {
-                bat "docker rmi ${imagename}:${BUILD_NUMBER}"
-                bat "docker rmi ${imagename}:latest"
-            }
-        }
-        
-        stage('Deploy to Kubernetes') {
+        // Remplacement dynamique du tag dans le fichier deployment.yml
+        stage('Update Deployment YAML') {
             steps {
                 script {
-                    bat "kubectl apply -f deployment.yml"
+                    // Remplacement du tag et du nom d'image dans le fichier deployment.yml
+                    def deploymentYaml = readFile('deployment.yml')
+                    deploymentYaml = deploymentYaml.replace('__IMAGE_NAME__', "${imagename}")
+                    deploymentYaml = deploymentYaml.replace('__TAG__', "${BUILD_NUMBER}")
+                    writeFile(file: 'deployment.yml', text: deploymentYaml)
                 }
             }
         }
-    }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Démarre minikube si nécessaire (si tu utilises minikube)
+                    bat "minikube start"
+
+                    // Applique la configuration du déploiement avec le bon tag
+                    bat "kubectl apply -f deployment.yml"
+
+                    // Vérifie que les pods sont en cours d'exécution
+                    bat "kubectl get pods"
+                }
+            }
+        }
+
+        stage('Remove Unused docker image') {
+            steps{
+                bat "docker rmi ${imagename}:${BUILD_NUMBER}"
+                bat "docker rmi ${imagename}:latest"
+        
+            }
+        }
+        
+    }    
     post {
         failure {
             mail to: "ines.rhouma@esprit.tn",
-            subject: "The Pipeline failed for build #${BUILD_NUMBER}",
-            body: "The Pipeline failed for build #${BUILD_NUMBER}. Check Jenkins for details: ${env.BUILD_URL}"
+            subject: "The Pipeline failed",
+            body: "The Pipeline failed"
         }
     }
 }

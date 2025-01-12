@@ -83,4 +83,43 @@ class AvatarController extends AbstractController
 
         return $this->redirectToRoute('app_avatar_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/api/avatar', methods: ['POST'])]
+    public function saveAvatar(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not authenticated'], 403);
+        }
+
+        $avatar = $em->getRepository(Avatar::class)->findOneBy(['user' => $user]) ?? new Avatar();
+        $avatar->setUserId($user);
+        $avatar->setAvatarUrl($data['avatarUrl']);
+
+        $em->persist($avatar);
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    #[Route('/api/avatar', methods: ['GET'])]
+    public function getAvatar(EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not authenticated'], 403);
+        }
+
+        $avatar = $em->getRepository(Avatar::class)->findOneBy(['user' => $user]);
+
+        if (!$avatar) {
+            return new JsonResponse(['avatarUrl' => null]);
+        }
+
+        return new JsonResponse(['avatarUrl' => $avatar->getAvatarUrl()]);
+    }
 }

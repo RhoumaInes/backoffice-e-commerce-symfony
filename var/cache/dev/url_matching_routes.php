@@ -19,6 +19,10 @@ return [
         '/attribute/new' => [[['_route' => 'app_attribute_new', '_controller' => 'App\\Controller\\AttributeController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/avatar' => [[['_route' => 'app_avatar_index', '_controller' => 'App\\Controller\\AvatarController::index'], null, ['GET' => 0], null, true, false, null]],
         '/avatar/new' => [[['_route' => 'app_avatar_new', '_controller' => 'App\\Controller\\AvatarController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/avatar/api/avatar' => [
+            [['_route' => 'app_avatar_saveavatar', '_controller' => 'App\\Controller\\AvatarController::saveAvatar'], null, ['POST' => 0], null, false, false, null],
+            [['_route' => 'app_avatar_getavatar', '_controller' => 'App\\Controller\\AvatarController::getAvatar'], null, ['GET' => 0], null, false, false, null],
+        ],
         '/admin/carrier' => [[['_route' => 'app_carrier_index', '_controller' => 'App\\Controller\\CarrierController::index'], null, ['GET' => 0], null, true, false, null]],
         '/admin/carrier/new' => [[['_route' => 'app_carrier_new', '_controller' => 'App\\Controller\\CarrierController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/categorie' => [[['_route' => 'app_categorie_index', '_controller' => 'App\\Controller\\CategorieController::index'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
@@ -31,6 +35,7 @@ return [
         '/connexion2' => [[['_route' => 'app_connexionn', '_controller' => 'App\\Controller\\ClientAuthController::loginFront2'], null, ['POST' => 0, 'GET' => 1], null, false, false, null]],
         '/avatar/api/check-avatar' => [[['_route' => 'check_avatar', '_controller' => 'App\\Controller\\ClientAuthController::checkUserAvatar'], null, ['GET' => 0], null, false, false, null]],
         '/avatar/api/save-avatar' => [[['_route' => 'save_avatar', '_controller' => 'App\\Controller\\ClientAuthController::saveAvatar'], null, ['POST' => 0], null, false, false, null]],
+        '/admin/clients' => [[['_route' => 'admin_clients_list', '_controller' => 'App\\Controller\\ClientController::list'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
         '/image/upload' => [[['_route' => 'app_image_upload', '_controller' => 'App\\Controller\\ImageUploadController::index'], null, null, null, false, false, null]],
         '/product/image/upload' => [[['_route' => 'app_image_upload_product', '_controller' => 'App\\Controller\\ImageUploadController::uploadForProduct'], null, null, null, false, false, null]],
         '/upload_image' => [[['_route' => 'upload_image', '_controller' => 'App\\Controller\\ImageUploadController::uploadImage'], null, ['POST' => 0], null, false, false, null]],
@@ -47,6 +52,7 @@ return [
         '/tax/rules/new' => [[['_route' => 'app_tax_rules_new', '_controller' => 'App\\Controller\\TaxRulesController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/user' => [[['_route' => 'app_user', '_controller' => 'App\\Controller\\UserController::index'], null, null, null, true, false, null]],
         '/admin/user/mon-profile' => [[['_route' => 'user_profile', '_controller' => 'App\\Controller\\UserController::profile'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/admin/user/edit-profile-image' => [[['_route' => 'user_profile_image', '_controller' => 'App\\Controller\\UserController::editProfile'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/error500' => [[['_route' => 'error500', '_controller' => 'App\\Controller\\ErrorController::error500'], null, null, null, false, false, null]],
         '/error404' => [[['_route' => 'error404', '_controller' => 'App\\Controller\\ErrorController::error404'], null, null, null, false, false, null]],
         '/error' => [[['_route' => 'error_generic', '_controller' => 'App\\Controller\\ErrorController::errorGeneric'], null, null, null, false, false, null]],
@@ -93,67 +99,73 @@ return [
                         .'|(*:365)'
                     .')'
                     .'|dmin/(?'
-                        .'|ca(?'
-                            .'|rrier/(?'
-                                .'|([^/]++)(?'
-                                    .'|(*:407)'
-                                    .'|/edit(*:420)'
+                        .'|c(?'
+                            .'|a(?'
+                                .'|rrier/(?'
+                                    .'|([^/]++)(?'
+                                        .'|(*:410)'
+                                        .'|/edit(*:423)'
+                                    .')'
+                                    .'|toggle/([^/]++)(*:447)'
+                                    .'|([^/]++)(*:463)'
                                 .')'
-                                .'|toggle/([^/]++)(*:444)'
-                                .'|([^/]++)(*:460)'
+                                .'|tegorie/([^/]++)(?'
+                                    .'|(*:491)'
+                                    .'|/edit(*:504)'
+                                    .'|(*:512)'
+                                .')'
                             .')'
-                            .'|tegorie/([^/]++)(?'
-                                .'|(*:488)'
-                                .'|/edit(*:501)'
-                                .'|(*:509)'
+                            .'|lients/(?'
+                                .'|toggle/([^/]++)(*:547)'
+                                .'|([^/]++)/orders(*:570)'
                             .')'
                         .')'
                         .'|pro(?'
                             .'|duct/(?'
-                                .'|categorie/([^/]++)/products(*:560)'
-                                .'|provider/([^/]++)/products(*:594)'
+                                .'|categorie/([^/]++)/products(*:621)'
+                                .'|provider/([^/]++)/products(*:655)'
                                 .'|([^/]++)(?'
-                                    .'|(*:613)'
+                                    .'|(*:674)'
                                     .'|/(?'
-                                        .'|edit(*:629)'
+                                        .'|edit(*:690)'
                                         .'|update_(?'
-                                            .'|category(*:655)'
-                                            .'|attributs(*:672)'
+                                            .'|category(*:716)'
+                                            .'|attributs(*:733)'
                                         .')'
                                     .')'
                                 .')'
-                                .'|toggle/([^/]++)(*:698)'
-                                .'|([^/]++)(*:714)'
+                                .'|toggle/([^/]++)(*:759)'
+                                .'|([^/]++)(*:775)'
                             .')'
                             .'|vider/([^/]++)(?'
-                                .'|(*:740)'
-                                .'|/edit(*:753)'
-                                .'|(*:761)'
+                                .'|(*:801)'
+                                .'|/edit(*:814)'
+                                .'|(*:822)'
                             .')'
                         .')'
                         .'|user/(?'
-                            .'|([^/]++)/edit(*:792)'
-                            .'|delete/([^/]++)(*:815)'
+                            .'|([^/]++)/edit(*:853)'
+                            .'|delete/([^/]++)(*:876)'
                         .')'
                     .')'
                 .')'
                 .'|/carrier/price/(?'
-                    .'|index/([^/]++)(*:858)'
-                    .'|new/([^/]++)(*:878)'
+                    .'|index/([^/]++)(*:919)'
+                    .'|new/([^/]++)(*:939)'
                     .'|([^/]++)(?'
-                        .'|(*:897)'
-                        .'|/edit(*:910)'
-                        .'|(*:918)'
+                        .'|(*:958)'
+                        .'|/edit(*:971)'
+                        .'|(*:979)'
                     .')'
                 .')'
-                .'|/image/([^/]++)/delete(*:950)'
+                .'|/image/([^/]++)/delete(*:1011)'
                 .'|/tax/rules/(?'
                     .'|([^/]++)(?'
-                        .'|(*:983)'
-                        .'|/edit(*:996)'
+                        .'|(*:1045)'
+                        .'|/edit(*:1059)'
                     .')'
-                    .'|toggle/([^/]++)(*:1020)'
-                    .'|([^/]++)(*:1037)'
+                    .'|toggle/([^/]++)(*:1084)'
+                    .'|([^/]++)(*:1101)'
                 .')'
             .')/?$}sDu',
     ],
@@ -176,36 +188,38 @@ return [
         344 => [[['_route' => 'app_avatar_show', '_controller' => 'App\\Controller\\AvatarController::show'], ['id'], ['GET' => 0], null, false, true, null]],
         357 => [[['_route' => 'app_avatar_edit', '_controller' => 'App\\Controller\\AvatarController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         365 => [[['_route' => 'app_avatar_delete', '_controller' => 'App\\Controller\\AvatarController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        407 => [[['_route' => 'app_carrier_show', '_controller' => 'App\\Controller\\CarrierController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        420 => [[['_route' => 'app_carrier_edit', '_controller' => 'App\\Controller\\CarrierController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        444 => [[['_route' => 'toggle_carrier', '_controller' => 'App\\Controller\\CarrierController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
-        460 => [[['_route' => 'app_carrier_delete', '_controller' => 'App\\Controller\\CarrierController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        488 => [[['_route' => 'app_categorie_show', '_controller' => 'App\\Controller\\CategorieController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        501 => [[['_route' => 'app_categorie_edit', '_controller' => 'App\\Controller\\CategorieController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        509 => [[['_route' => 'app_categorie_delete', '_controller' => 'App\\Controller\\CategorieController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        560 => [[['_route' => 'app_category_products', '_controller' => 'App\\Controller\\ProductController::listProductsByCategory'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        594 => [[['_route' => 'app_provider_products', '_controller' => 'App\\Controller\\ProductController::listProductsByProvider'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        613 => [[['_route' => 'app_product_show', '_controller' => 'App\\Controller\\ProductController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        629 => [[['_route' => 'app_product_edit', '_controller' => 'App\\Controller\\ProductController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        655 => [[['_route' => 'product_update_category', '_controller' => 'App\\Controller\\ProductController::updateCategory'], ['id'], ['POST' => 0], null, false, false, null]],
-        672 => [[['_route' => 'product_update_attributs', '_controller' => 'App\\Controller\\ProductController::updateAttributs'], ['id'], ['POST' => 0], null, false, false, null]],
-        698 => [[['_route' => 'toggle_product', '_controller' => 'App\\Controller\\ProductController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
-        714 => [[['_route' => 'app_product_delete', '_controller' => 'App\\Controller\\ProductController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        740 => [[['_route' => 'app_provider_show', '_controller' => 'App\\Controller\\ProviderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        753 => [[['_route' => 'app_provider_edit', '_controller' => 'App\\Controller\\ProviderController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        761 => [[['_route' => 'app_provider_delete', '_controller' => 'App\\Controller\\ProviderController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        792 => [[['_route' => 'user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        815 => [[['_route' => 'user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        858 => [[['_route' => 'app_carrier_price_index', '_controller' => 'App\\Controller\\CarrierPriceController::index'], ['id'], ['GET' => 0], null, false, true, null]],
-        878 => [[['_route' => 'app_carrier_price_new', '_controller' => 'App\\Controller\\CarrierPriceController::new'], ['id_carrier'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        897 => [[['_route' => 'app_carrier_price_show', '_controller' => 'App\\Controller\\CarrierPriceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        910 => [[['_route' => 'app_carrier_price_edit', '_controller' => 'App\\Controller\\CarrierPriceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        918 => [[['_route' => 'app_carrier_price_delete', '_controller' => 'App\\Controller\\CarrierPriceController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        950 => [[['_route' => 'image_delete', '_controller' => 'App\\Controller\\ImageUploadController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        983 => [[['_route' => 'app_tax_rules_show', '_controller' => 'App\\Controller\\TaxRulesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        996 => [[['_route' => 'app_tax_rules_edit', '_controller' => 'App\\Controller\\TaxRulesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1020 => [[['_route' => 'toggle_tax', '_controller' => 'App\\Controller\\TaxRulesController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
-        1037 => [
+        410 => [[['_route' => 'app_carrier_show', '_controller' => 'App\\Controller\\CarrierController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        423 => [[['_route' => 'app_carrier_edit', '_controller' => 'App\\Controller\\CarrierController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        447 => [[['_route' => 'toggle_carrier', '_controller' => 'App\\Controller\\CarrierController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
+        463 => [[['_route' => 'app_carrier_delete', '_controller' => 'App\\Controller\\CarrierController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        491 => [[['_route' => 'app_categorie_show', '_controller' => 'App\\Controller\\CategorieController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        504 => [[['_route' => 'app_categorie_edit', '_controller' => 'App\\Controller\\CategorieController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        512 => [[['_route' => 'app_categorie_delete', '_controller' => 'App\\Controller\\CategorieController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        547 => [[['_route' => 'admin_client_toggle', '_controller' => 'App\\Controller\\ClientController::toggleStatus'], ['id'], ['POST' => 0], null, false, true, null]],
+        570 => [[['_route' => 'admin_client_orders', '_controller' => 'App\\Controller\\ClientController::viewOrders'], ['id'], ['GET' => 0], null, false, false, null]],
+        621 => [[['_route' => 'app_category_products', '_controller' => 'App\\Controller\\ProductController::listProductsByCategory'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        655 => [[['_route' => 'app_provider_products', '_controller' => 'App\\Controller\\ProductController::listProductsByProvider'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        674 => [[['_route' => 'app_product_show', '_controller' => 'App\\Controller\\ProductController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        690 => [[['_route' => 'app_product_edit', '_controller' => 'App\\Controller\\ProductController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        716 => [[['_route' => 'product_update_category', '_controller' => 'App\\Controller\\ProductController::updateCategory'], ['id'], ['POST' => 0], null, false, false, null]],
+        733 => [[['_route' => 'product_update_attributs', '_controller' => 'App\\Controller\\ProductController::updateAttributs'], ['id'], ['POST' => 0], null, false, false, null]],
+        759 => [[['_route' => 'toggle_product', '_controller' => 'App\\Controller\\ProductController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
+        775 => [[['_route' => 'app_product_delete', '_controller' => 'App\\Controller\\ProductController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        801 => [[['_route' => 'app_provider_show', '_controller' => 'App\\Controller\\ProviderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        814 => [[['_route' => 'app_provider_edit', '_controller' => 'App\\Controller\\ProviderController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        822 => [[['_route' => 'app_provider_delete', '_controller' => 'App\\Controller\\ProviderController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        853 => [[['_route' => 'user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        876 => [[['_route' => 'user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        919 => [[['_route' => 'app_carrier_price_index', '_controller' => 'App\\Controller\\CarrierPriceController::index'], ['id'], ['GET' => 0], null, false, true, null]],
+        939 => [[['_route' => 'app_carrier_price_new', '_controller' => 'App\\Controller\\CarrierPriceController::new'], ['id_carrier'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        958 => [[['_route' => 'app_carrier_price_show', '_controller' => 'App\\Controller\\CarrierPriceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        971 => [[['_route' => 'app_carrier_price_edit', '_controller' => 'App\\Controller\\CarrierPriceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        979 => [[['_route' => 'app_carrier_price_delete', '_controller' => 'App\\Controller\\CarrierPriceController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1011 => [[['_route' => 'image_delete', '_controller' => 'App\\Controller\\ImageUploadController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
+        1045 => [[['_route' => 'app_tax_rules_show', '_controller' => 'App\\Controller\\TaxRulesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1059 => [[['_route' => 'app_tax_rules_edit', '_controller' => 'App\\Controller\\TaxRulesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1084 => [[['_route' => 'toggle_tax', '_controller' => 'App\\Controller\\TaxRulesController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
+        1101 => [
             [['_route' => 'app_tax_rules_delete', '_controller' => 'App\\Controller\\TaxRulesController::delete'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

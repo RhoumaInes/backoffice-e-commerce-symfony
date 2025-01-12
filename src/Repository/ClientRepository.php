@@ -20,6 +20,14 @@ class ClientRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Client::class);
     }
+    public function findByLikeEmail(string $searchTerm): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.email LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Client[] Returns an array of Client objects
