@@ -30,6 +30,22 @@ final class TemplateWrapper
     ) {
     }
 
+    /**
+     * @return iterable<scalar|\Stringable|null>
+     */
+    public function stream(array $context = []): iterable
+    {
+        yield from $this->template->yield($context);
+    }
+
+    /**
+     * @return iterable<scalar|\Stringable|null>
+     */
+    public function streamBlock(string $name, array $context = []): iterable
+    {
+        yield from $this->template->yieldBlock($name, $context);
+    }
+
     public function render(array $context = []): string
     {
         return $this->template->render($context);
@@ -57,12 +73,12 @@ final class TemplateWrapper
 
     public function renderBlock(string $name, array $context = []): string
     {
-        return $this->template->renderBlock($name, $this->env->mergeGlobals($context));
+        return $this->template->renderBlock($name, $context + $this->env->getGlobals());
     }
 
     public function displayBlock(string $name, array $context = [])
     {
-        $context = $this->env->mergeGlobals($context);
+        $context += $this->env->getGlobals();
         foreach ($this->template->yieldBlock($name, $context) as $data) {
             echo $data;
         }

@@ -1,7 +1,7 @@
 require('../css/form-type-text-editor.css');
 
 import DirtyForm from "dirty-form";
-import Trix from 'trix/dist/trix';
+import Trix from 'trix/dist/trix.esm';
 
 // Provide Trix variable globally to allow custom backend pages to use it
 window.Trix = Trix;
@@ -40,7 +40,7 @@ class TextEditorField {
 
                 if (editor !== null) {
                     // Here we consider 21px as the average line height
-                    editor.style.setProperty('min-height', `${21 * trixContentElement.dataset.numberOfRows}px`);
+                    editor.style.setProperty('min-block-size', `${21 * trixContentElement.dataset.numberOfRows}px`);
                 }
             }
         });

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\CarrierPrice;
 use App\Form\CarrierPriceType;
 use App\Repository\CarrierPriceRepository;
+use App\Repository\CarrierRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,22 +33,25 @@ class CarrierPriceController extends AbstractController
     }
 
     #[Route('/new/{id_carrier}', name: 'app_carrier_price_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,int $id_carrier, CarrierRepository $carrierRepository): Response
     {
+        //var_dump(value: $id_carrier);die;
         $carrierPrice = new CarrierPrice();
         $form = $this->createForm(CarrierPriceType::class, $carrierPrice);
         $form->handleRequest($request);
+        $carrierPrice->setCarrier($carrierRepository->find($id_carrier));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($carrierPrice);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_carrier_price_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_carrier_price_index', ['id' => $id_carrier], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('carrier_price/new.html.twig', [
+        return $this->renderForm('carrier_price/new.html.twig', parameters: [
             'carrier_price' => $carrierPrice,
             'form' => $form,
+            'idCarrier'=>$id_carrier,
         ]);
     }
 
@@ -64,27 +68,29 @@ class CarrierPriceController extends AbstractController
     {
         $form = $this->createForm(CarrierPriceType::class, $carrierPrice);
         $form->handleRequest($request);
-
+        $carrierid= $carrierPrice->getCarrier()->getId();
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_carrier_price_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_carrier_price_index', parameters: ['id' =>$carrierid], status: Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('carrier_price/edit.html.twig', [
             'carrier_price' => $carrierPrice,
             'form' => $form,
+            'carrierid'=>$carrierid,
         ]);
     }
 
     #[Route('/{id}', name: 'app_carrier_price_delete', methods: ['POST'])]
     public function delete(Request $request, CarrierPrice $carrierPrice, EntityManagerInterface $entityManager): Response
     {
+        $carrierid = $carrierPrice->getCarrier()->getId();
         if ($this->isCsrfTokenValid('delete'.$carrierPrice->getId(), $request->request->get('_token'))) {
             $entityManager->remove($carrierPrice);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_carrier_price_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_carrier_price_index', ['id'=>$carrierid], Response::HTTP_SEE_OTHER);
     }
 }

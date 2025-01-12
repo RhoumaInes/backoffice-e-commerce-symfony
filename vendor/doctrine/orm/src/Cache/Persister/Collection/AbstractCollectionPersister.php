@@ -25,7 +25,7 @@ use function array_values;
 use function assert;
 use function count;
 
-/** @psalm-import-type AssociationMapping from ClassMetadata */
+/** @phpstan-import-type AssociationMapping from ClassMetadata */
 abstract class AbstractCollectionPersister implements CachedCollectionPersister
 {
     /** @var UnitOfWork */
@@ -254,9 +254,8 @@ abstract class AbstractCollectionPersister implements CachedCollectionPersister
     /**
      * @deprecated This method is not used anymore.
      *
-     * @param string $targetEntity
-     * @param object $element
-     * @psalm-param class-string $targetEntity
+     * @param class-string $targetEntity
+     * @param object       $element
      *
      * @return void
      */
