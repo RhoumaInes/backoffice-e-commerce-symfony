@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: symfony-container
-        image: __IMAGE_NAME__:__TAG__
+        image: inesrhouma/backoffice_symfony:latest
         ports:
         - containerPort: 80
 ---
@@ -23,7 +23,7 @@ kind: Service
 metadata:
   name: symfony-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 80
   selector:
