@@ -74,13 +74,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Démarre minikube si nécessaire (si tu utilises minikube)
-                    bat "minikube start"
-
-                    // Applique la configuration du déploiement avec le bon tag
                     bat "kubectl apply -f deployment.yml"
-
-                    // Vérifie que les pods sont en cours d'exécution
                     bat "kubectl get pods"
                 }
             }
