@@ -19,10 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-#[Route('/admin/product')]
 class ProductController extends AbstractController
 {
-    #[Route('/', name: 'app_product_index', methods: ['GET','POST'])]
+    #[Route('/admin/product', name: 'app_product_index', methods: ['GET','POST'])]
     public function index(PaginatorInterface $paginator, Request $request, ProductRepository $productRepository): Response
     {
         $searchproduct = $request->request->get('searchproduct');
@@ -40,8 +39,40 @@ class ProductController extends AbstractController
             'products' => $pagination,
         ]);
     }
+    #[Route('/productlist', name: 'app_product_list_api', methods: ['GET','POST'])]
+    public function productlist(ProductRepository $productRepository): JsonResponse
+    {
+        $products = $productRepository->findBy(['state' => true]);
+        //$baseUrl = $this->getParameter('base_url');
 
-    #[Route('/categorie/{id}/products', name: 'app_category_products', methods: ['GET','POST'])]
+        $responseData = [];
+        foreach ($products as $product) {
+            $responseData[] = [
+                'id' => $product->getId(),
+                'sku' => $product->getId(),
+                'name' => $product->getTitle(),
+                'description' => $product->getDescription(),
+                'price' => $product->getPrixVenteTtc(),
+                'categories' => array_map(function ($category) {
+                    return [
+                        'id' => $category->getId(),
+                        'name' => $category->getName(),
+                    ];
+                }, array: $product->getCategories()->toArray()),
+                'images' => array_map(function ($image) {
+                    return [
+                        'id' => $image->getId(),
+                        'src' => $this->getParameter('base_url') . '/uploads/' . $image->getFilename(),
+                    ];
+                }, array: $product->getImagesproducts()->toArray()),
+            ];
+        }
+
+        return new JsonResponse($responseData);
+        
+    }
+
+    #[Route('/admin/product/categorie/{id}/products', name: 'app_category_products', methods: ['GET','POST'])]
     public function listProductsByCategory(PaginatorInterface $paginator, Request $request, $id, ProductRepository $productRepository, CategorieRepository $categorieRepository): Response
     {
         // Récupérer la catégorie
@@ -63,7 +94,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/provider/{id}/products', name: 'app_provider_products', methods: ['GET','POST'])]
+    #[Route('/admin/product/provider/{id}/products', name: 'app_provider_products', methods: ['GET','POST'])]
     public function listProductsByProvider(PaginatorInterface $paginator, Request $request, $id, ProviderRepository $providerRepository): Response
     {
         // Récupérer la catégorie
@@ -85,7 +116,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
+    #[Route('/admin/product/new', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         
@@ -107,7 +138,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
+    #[Route('/admin/product/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
         return $this->render('product/show.html.twig', [
@@ -115,7 +146,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
+    #[Route('/admin/product/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProductType::class, $product);
@@ -168,7 +199,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/update_category', name: 'product_update_category', methods: ['POST'])]
+    #[Route('/admin/product/{id}/update_category', name: 'product_update_category', methods: ['POST'])]
     public function updateCategory(Product $product, Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -192,7 +223,7 @@ class ProductController extends AbstractController
         return new JsonResponse(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 
-    #[Route('/{id}/update_attributs', name: 'product_update_attributs', methods: ['POST'])]
+    #[Route('/admin/product/{id}/update_attributs', name: 'product_update_attributs', methods: ['POST'])]
     public function updateAttributs(Product $product, Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -216,7 +247,7 @@ class ProductController extends AbstractController
         return new JsonResponse(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 
-    #[Route('/toggle/{id}', name: 'toggle_product', methods: ['POST'])]
+    #[Route('/admin/product/toggle/{id}', name: 'toggle_product', methods: ['POST'])]
     public function toggleTaxState(int $id, Request $request, EntityManagerInterface $em): JsonResponse
     {
         $product = $em->getRepository(Product::class)->find($id);
@@ -232,7 +263,7 @@ class ProductController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-    #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
+    #[Route('/admin/product/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
