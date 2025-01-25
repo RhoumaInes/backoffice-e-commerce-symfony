@@ -49,7 +49,7 @@ class ProductController extends AbstractController
         foreach ($products as $product) {
             $responseData[] = [
                 'id' => $product->getId(),
-                'sku' => $product->getId(),
+                'sku' => "basketball_01",
                 'name' => $product->getTitle(),
                 'description' => $product->getDescription(),
                 'price' => $product->getPrixVenteTtc(),

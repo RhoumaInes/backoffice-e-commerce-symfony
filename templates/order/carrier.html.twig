@@ -1,0 +1,32 @@
+<!-- Bouton pour afficher la fenêtre modale -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+    Livrer la commande
+</button>
+
+<!-- Fenêtre modale de confirmation -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Sélectionner un livreur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Sélecteur des livreurs -->
+                <form id="deliver-form" action="{{ path('app_order_assign_carrier', {'id': order.id}) }}" method="post">
+                    <select class="form-control" id="carrier" name="carrier">
+                        {% for carrier in carriers %}
+                            <option value="{{ carrier.id }}">{{ carrier.name }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Bouton pour soumettre le formulaire -->
+                <button type="button" class="btn btn-primary" id="confirm-delivery">Confirmer</button>
+                <!-- Bouton pour fermer la fenêtre modale -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>

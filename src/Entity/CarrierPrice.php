@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Traits\Timestampable;
 use App\Repository\CarrierPriceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Enum\CityEnum;
 
 #[ORM\Entity(repositoryClass: CarrierPriceRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -17,8 +18,8 @@ class CarrierPrice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $city = null;
+    #[ORM\Column(length: 255, enumType: CityEnum::class)]
+    private ?CityEnum $city = null;
 
     #[ORM\Column]
     private ?float $price = null;
@@ -32,12 +33,12 @@ class CarrierPrice
         return $this->id;
     }
 
-    public function getCity(): ?string
+    public function getCity(): ?CityEnum
     {
         return $this->city;
     }
 
-    public function setCity(string $city): static
+    public function setCity(CityEnum $city): static
     {
         $this->city = $city;
 

@@ -26,7 +26,7 @@
                         {% for carrier_price in carrier_prices %}
                             <tr>
                                 <td>{{ carrier_price.id }}</td>
-                                <td>{{ carrier_price.city }}</td>
+                                <td>{{ carrier_price.city.value }}</td>
                                 <td>{{ carrier_price.price }} DT</td>
                                 <td>
                                     <a href="{{ path('app_carrier_price_edit', {'id': carrier_price.id}) }}">Modifier</a>

@@ -25,12 +25,24 @@ class Order
     #[ORM\Column]
     private ?int $ordernumber = null;
 
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'orders')]
-    private Collection $products;
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    private ?Client $client = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $total = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $state = null;
+
+    #[ORM\OneToMany(mappedBy: 'orderid', targetEntity: OrderProduct::class)]
+    private Collection $orderProduct;
+
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    private ?Carrier $carrier = null;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->orderProduct = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,26 +86,59 @@ class Order
         return $this;
     }
 
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProducts(): Collection
+
+    public function getClient(): ?Client
     {
-        return $this->products;
+        return $this->client;
     }
 
-    public function addProduct(Product $product): static
+    public function setClient(?Client $client): static
     {
-        if (!$this->products->contains($product)) {
-            $this->products->add($product);
-        }
+        $this->client = $client;
 
         return $this;
     }
 
-    public function removeProduct(Product $product): static
+    public function getTotal(): ?float
     {
-        $this->products->removeElement($product);
+        return $this->total;
+    }
+
+    public function setTotal(?float $total): static
+    {
+        $this->total = $total;
+
+        return $this;
+    }
+
+    public function isState(): ?bool
+    {
+        return $this->state;
+    }
+
+    public function setState(?bool $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderProduct>
+     */
+    public function getOrderProduct(): Collection
+    {
+        return $this->orderProduct;
+    }
+
+    public function getCarrier(): ?Carrier
+    {
+        return $this->carrier;
+    }
+
+    public function setCarrier(?Carrier $carrier): static
+    {
+        $this->carrier = $carrier;
 
         return $this;
     }

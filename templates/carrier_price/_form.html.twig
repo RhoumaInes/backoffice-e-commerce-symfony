@@ -1,7 +1,7 @@
 {{ form_start(form) }}
     <div class="form-group">
         <label>Ville</label>
-        {{ form_widget(form.city, { 'attr': {'class': 'form-control'} }) }}
+        {{ form_widget(form.city, { 'attr': {'class': 'form-control form-control custom-select'} }) }}
         <div class="text-danger">
             {{ form_errors(form.city) }}
         </div>

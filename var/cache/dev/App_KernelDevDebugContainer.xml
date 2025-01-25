@@ -450,6 +450,13 @@
         <argument type="service" id=".service_locator.jIxfAsi.App\Controller\ImageUploadController"/>
       </call>
     </service>
+    <service id="App\Controller\OrderController" class="App\Controller\OrderController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jIxfAsi.App\Controller\OrderController"/>
+      </call>
+    </service>
     <service id="App\Controller\ProductController" class="App\Controller\ProductController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -518,6 +525,9 @@
     <service id="App\Form\FileTypeProfile" class="App\Form\FileTypeProfile" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
+    <service id="App\Form\OrderType" class="App\Form\OrderType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
     <service id="App\Form\ProductPricingType" class="App\Form\ProductPricingType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
@@ -568,6 +578,10 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\ImagesproductRepository" class="App\Repository\ImagesproductRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\OrderProductRepository" class="App\Repository\OrderProductRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -1414,6 +1428,7 @@
         <argument>App\Form\CarrierType</argument>
         <argument>App\Form\CategorieType</argument>
         <argument>App\Form\FileTypeProfile</argument>
+        <argument>App\Form\OrderType</argument>
         <argument>App\Form\ProductPricingType</argument>
         <argument>App\Form\ProductType</argument>
         <argument>App\Form\ProfileType</argument>
@@ -3785,7 +3800,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.kL0gIN5"/>
+      <argument type="service" id=".service_locator.Uh9QMQq"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -4705,7 +4720,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.QfAGW4v"/>
+      <argument type="service" id=".service_locator.B.CyeOt"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -7548,6 +7563,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ImageUploadController" class="App\Controller\ImageUploadController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ImageUploadController" class="App\Controller\ImageUploadController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ImageUploadController" class="App\Controller\ImageUploadController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\OrderController" class="App\Controller\OrderController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\OrderController" class="App\Controller\OrderController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\OrderController" class="App\Controller\OrderController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ProductController" class="App\Controller\ProductController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ProductController" class="App\Controller\ProductController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ProductController" class="App\Controller\ProductController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -7580,6 +7598,8 @@
     <service id=".abstract.instanceof.App\Form\CategorieType" class="App\Form\CategorieType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\FileTypeProfile" class="App\Form\FileTypeProfile" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\FileTypeProfile" class="App\Form\FileTypeProfile" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\OrderType" class="App\Form\OrderType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\OrderType" class="App\Form\OrderType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProductPricingType" class="App\Form\ProductPricingType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ProductPricingType" class="App\Form\ProductPricingType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProductType" class="App\Form\ProductType" autowire="true" abstract="true"/>
@@ -7610,6 +7630,8 @@
     <service id=".abstract.instanceof.App\Repository\ClientRepository" class="App\Repository\ClientRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ImagesproductRepository" class="App\Repository\ImagesproductRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\ImagesproductRepository" class="App\Repository\ImagesproductRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\OrderProductRepository" class="App\Repository\OrderProductRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\OrderProductRepository" class="App\Repository\OrderProductRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\OrderRepository" class="App\Repository\OrderRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\OrderRepository" class="App\Repository\OrderRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ProductRepository" class="App\Repository\ProductRepository" autowire="true" abstract="true"/>
@@ -8177,6 +8199,12 @@
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
+    <service id=".service_locator.A1D.kr_" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="carrierRepository" type="service_closure" id="App\Repository\CarrierRepository"/>
+      </argument>
+    </service>
     <service id=".service_locator.38itQPb" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -8285,6 +8313,41 @@
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="image" type="service_closure" id=".errored..service_locator.Y0duKX1.App\Entity\Imagesproduct"/>
+      </argument>
+    </service>
+    <service id=".service_locator.T9ipEv_" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="orderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
+        <argument key="paginator" type="service_closure" id="knp_paginator"/>
+      </argument>
+    </service>
+    <service id=".service_locator.jmVMimg" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="order" type="service_closure" id=".errored..service_locator.jmVMimg.App\Entity\Order"/>
+      </argument>
+    </service>
+    <service id=".service_locator.lkiAlIP" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="carrierRepository" type="service_closure" id="App\Repository\CarrierRepository"/>
+        <argument key="order" type="service_closure" id=".errored..service_locator.lkiAlIP.App\Entity\Order"/>
+      </argument>
+    </service>
+    <service id=".service_locator.v5CX8Wk" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="carrierRepository" type="service_closure" id="App\Repository\CarrierRepository"/>
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="order" type="service_closure" id=".errored..service_locator.v5CX8Wk.App\Entity\Order"/>
+      </argument>
+    </service>
+    <service id=".service_locator.j.zZqtE" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="order" type="service_closure" id=".errored..service_locator.j.zZqtE.App\Entity\Order"/>
       </argument>
     </service>
     <service id=".service_locator.e.ptmCY" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -8410,7 +8473,7 @@
         <argument key="user" type="service_closure" id=".errored..service_locator.GPGtF8v.App\Entity\User"/>
       </argument>
     </service>
-    <service id=".service_locator.kJ.0QlM" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.e48EiKD" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\DashboardController::configureUserMenu" type="service_closure" id=".service_locator.st3ASTR"/>
@@ -8433,6 +8496,7 @@
         <argument key="App\Controller\AvatarController::show" type="service_closure" id=".service_locator.Y.FcE3o"/>
         <argument key="App\Controller\CarrierController::delete" type="service_closure" id=".service_locator.5JyMHg3"/>
         <argument key="App\Controller\CarrierController::edit" type="service_closure" id=".service_locator.5JyMHg3"/>
+        <argument key="App\Controller\CarrierController::getCarriers" type="service_closure" id=".service_locator.A1D.kr_"/>
         <argument key="App\Controller\CarrierController::index" type="service_closure" id=".service_locator.YKnGOoW"/>
         <argument key="App\Controller\CarrierController::new" type="service_closure" id=".service_locator.aKM6MDa"/>
         <argument key="App\Controller\CarrierController::show" type="service_closure" id=".service_locator.GWCwrNq"/>
@@ -8459,6 +8523,13 @@
         <argument key="App\Controller\ClientController::viewOrders" type="service_closure" id=".service_locator.krDjkOX"/>
         <argument key="App\Controller\ImageUploadController::deleteImage" type="service_closure" id=".service_locator.Y0duKX1"/>
         <argument key="App\Controller\ImageUploadController::upload" type="service_closure" id=".service_locator.aKM6MDa"/>
+        <argument key="App\Controller\OrderController::assignCarrier" type="service_closure" id=".service_locator.v5CX8Wk"/>
+        <argument key="App\Controller\OrderController::delete" type="service_closure" id=".service_locator.j.zZqtE"/>
+        <argument key="App\Controller\OrderController::edit" type="service_closure" id=".service_locator.j.zZqtE"/>
+        <argument key="App\Controller\OrderController::getState" type="service_closure" id=".service_locator.jmVMimg"/>
+        <argument key="App\Controller\OrderController::index" type="service_closure" id=".service_locator.T9ipEv_"/>
+        <argument key="App\Controller\OrderController::new" type="service_closure" id=".service_locator.aKM6MDa"/>
+        <argument key="App\Controller\OrderController::show" type="service_closure" id=".service_locator.lkiAlIP"/>
         <argument key="App\Controller\ProductController::delete" type="service_closure" id=".service_locator.1QZmUjg"/>
         <argument key="App\Controller\ProductController::edit" type="service_closure" id=".service_locator.1QZmUjg"/>
         <argument key="App\Controller\ProductController::index" type="service_closure" id=".service_locator.e.ptmCY"/>
@@ -8513,6 +8584,7 @@
         <argument key="App\Controller\AvatarController:show" type="service_closure" id=".service_locator.Y.FcE3o"/>
         <argument key="App\Controller\CarrierController:delete" type="service_closure" id=".service_locator.5JyMHg3"/>
         <argument key="App\Controller\CarrierController:edit" type="service_closure" id=".service_locator.5JyMHg3"/>
+        <argument key="App\Controller\CarrierController:getCarriers" type="service_closure" id=".service_locator.A1D.kr_"/>
         <argument key="App\Controller\CarrierController:index" type="service_closure" id=".service_locator.YKnGOoW"/>
         <argument key="App\Controller\CarrierController:new" type="service_closure" id=".service_locator.aKM6MDa"/>
         <argument key="App\Controller\CarrierController:show" type="service_closure" id=".service_locator.GWCwrNq"/>
@@ -8539,6 +8611,13 @@
         <argument key="App\Controller\ClientController:viewOrders" type="service_closure" id=".service_locator.krDjkOX"/>
         <argument key="App\Controller\ImageUploadController:deleteImage" type="service_closure" id=".service_locator.Y0duKX1"/>
         <argument key="App\Controller\ImageUploadController:upload" type="service_closure" id=".service_locator.aKM6MDa"/>
+        <argument key="App\Controller\OrderController:assignCarrier" type="service_closure" id=".service_locator.v5CX8Wk"/>
+        <argument key="App\Controller\OrderController:delete" type="service_closure" id=".service_locator.j.zZqtE"/>
+        <argument key="App\Controller\OrderController:edit" type="service_closure" id=".service_locator.j.zZqtE"/>
+        <argument key="App\Controller\OrderController:getState" type="service_closure" id=".service_locator.jmVMimg"/>
+        <argument key="App\Controller\OrderController:index" type="service_closure" id=".service_locator.T9ipEv_"/>
+        <argument key="App\Controller\OrderController:new" type="service_closure" id=".service_locator.aKM6MDa"/>
+        <argument key="App\Controller\OrderController:show" type="service_closure" id=".service_locator.lkiAlIP"/>
         <argument key="App\Controller\ProductController:delete" type="service_closure" id=".service_locator.1QZmUjg"/>
         <argument key="App\Controller\ProductController:edit" type="service_closure" id=".service_locator.1QZmUjg"/>
         <argument key="App\Controller\ProductController:index" type="service_closure" id=".service_locator.e.ptmCY"/>
@@ -8642,7 +8721,7 @@
       <argument type="service" id="debug.argument_resolver.not_tagged_controller.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.kL0gIN5" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Uh9QMQq" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\AttributeType" type="service_closure" id="App\Form\AttributeType"/>
@@ -8652,6 +8731,7 @@
         <argument key="App\Form\CarrierType" type="service_closure" id="App\Form\CarrierType"/>
         <argument key="App\Form\CategorieType" type="service_closure" id="App\Form\CategorieType"/>
         <argument key="App\Form\FileTypeProfile" type="service_closure" id="App\Form\FileTypeProfile"/>
+        <argument key="App\Form\OrderType" type="service_closure" id="App\Form\OrderType"/>
         <argument key="App\Form\ProductPricingType" type="service_closure" id="App\Form\ProductPricingType"/>
         <argument key="App\Form\ProductType" type="service_closure" id="App\Form\ProductType"/>
         <argument key="App\Form\ProfileType" type="service_closure" id="App\Form\ProfileType"/>
@@ -8747,7 +8827,7 @@
         <argument key="doctrine.orm.messenger.doctrine_schema_subscriber" type="service_closure" id="doctrine.orm.messenger.doctrine_schema_subscriber"/>
       </argument>
     </service>
-    <service id=".service_locator.QfAGW4v" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.B.CyeOt" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\AttributeRepository" type="service_closure" id="App\Repository\AttributeRepository"/>
@@ -8758,6 +8838,7 @@
         <argument key="App\Repository\CategorieRepository" type="service_closure" id="App\Repository\CategorieRepository"/>
         <argument key="App\Repository\ClientRepository" type="service_closure" id="App\Repository\ClientRepository"/>
         <argument key="App\Repository\ImagesproductRepository" type="service_closure" id="App\Repository\ImagesproductRepository"/>
+        <argument key="App\Repository\OrderProductRepository" type="service_closure" id="App\Repository\OrderProductRepository"/>
         <argument key="App\Repository\OrderRepository" type="service_closure" id="App\Repository\OrderRepository"/>
         <argument key="App\Repository\ProductRepository" type="service_closure" id="App\Repository\ProductRepository"/>
         <argument key="App\Repository\ProviderRepository" type="service_closure" id="App\Repository\ProviderRepository"/>
@@ -9152,6 +9233,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.jIxfAsi" method="withContext"/>
     </service>
+    <service id=".service_locator.jIxfAsi.App\Controller\OrderController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\OrderController"/>
+      <argument>App\Controller\OrderController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jIxfAsi" method="withContext"/>
+    </service>
     <service id=".service_locator.jIxfAsi.App\Controller\ProductController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ProductController"/>
       <argument>App\Controller\ProductController</argument>
@@ -9406,12 +9493,12 @@
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
-      <argument type="service" id=".service_locator.kJ.0QlM"/>
+      <argument type="service" id=".service_locator.e48EiKD"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
-      <argument type="service" id=".service_locator.kJ.0QlM"/>
+      <argument type="service" id=".service_locator.e48EiKD"/>
     </service>
     <service id="debug.traced.messenger.bus.default.inner" class="Symfony\Component\Messenger\MessageBus">
       <argument type="iterator">
@@ -9448,6 +9535,10 @@
     <service id=".errored..service_locator.f2G_tRu.App\Entity\Client" class="App\Entity\Client"/>
     <service id=".errored..service_locator.krDjkOX.App\Entity\Client" class="App\Entity\Client"/>
     <service id=".errored..service_locator.Y0duKX1.App\Entity\Imagesproduct" class="App\Entity\Imagesproduct"/>
+    <service id=".errored..service_locator.jmVMimg.App\Entity\Order" class="App\Entity\Order"/>
+    <service id=".errored..service_locator.lkiAlIP.App\Entity\Order" class="App\Entity\Order"/>
+    <service id=".errored..service_locator.v5CX8Wk.App\Entity\Order" class="App\Entity\Order"/>
+    <service id=".errored..service_locator.j.zZqtE.App\Entity\Order" class="App\Entity\Order"/>
     <service id=".errored..service_locator.5OibA2..App\Entity\Product" class="App\Entity\Product"/>
     <service id=".errored..service_locator.1QZmUjg.App\Entity\Product" class="App\Entity\Product"/>
     <service id=".errored..service_locator.DS05KeC.App\Entity\Product" class="App\Entity\Product"/>
@@ -10528,7 +10619,7 @@
     </service>
     <service id="container.env_var_processors_locator" alias=".service_locator.gSv9zYw" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.kJ.0QlM"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.e48EiKD"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -10561,6 +10652,10 @@
     <service id=".service_locator.iS9QMTC" alias=".service_locator.HL46oFv"/>
     <service id=".service_locator.C.s.Jog" alias=".service_locator.JPcie15"/>
     <service id=".service_locator.Uhz0Cxs" alias=".service_locator.Y0duKX1"/>
+    <service id=".service_locator.p3JjCjj" alias=".service_locator.T9ipEv_"/>
+    <service id=".service_locator.fg86lwC" alias=".service_locator.lkiAlIP"/>
+    <service id=".service_locator.WxqTfYD" alias=".service_locator.v5CX8Wk"/>
+    <service id=".service_locator.078lSOK" alias=".service_locator.j.zZqtE"/>
     <service id=".service_locator.gA.uKmN" alias=".service_locator.XMZmjfB"/>
     <service id=".service_locator.0FMNV5z" alias=".service_locator.1QZmUjg"/>
     <service id=".service_locator.cHNQCk8" alias=".service_locator.DS05KeC"/>
@@ -10569,9 +10664,9 @@
     <service id=".service_locator.ITM7EPN" alias=".service_locator.6hoUpXZ"/>
     <service id=".service_locator.XH_zfHo" alias=".service_locator.B_u2V6B"/>
     <service id=".service_locator.b76MKMg" alias=".service_locator.GPGtF8v"/>
-    <service id=".service_locator.miYKT8M" alias=".service_locator.kJ.0QlM"/>
+    <service id=".service_locator.l7FpQmL" alias=".service_locator.e48EiKD"/>
     <service id=".service_locator.wKF4yn1" alias=".service_locator.19_mNxd"/>
-    <service id=".service_locator.FAxLVfU" alias=".service_locator.kL0gIN5"/>
+    <service id=".service_locator.QJ3xbV4" alias=".service_locator.Uh9QMQq"/>
     <service id=".service_locator.t4pBJ9b" alias=".service_locator.DnZAF.f"/>
     <service id=".service_locator.KQS8tm0" alias=".service_locator.nIg6JWH"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
@@ -10620,6 +10715,7 @@
     <service id=".service_locator.ZCVYy4." alias=".service_locator.YKnGOoW"/>
     <service id=".service_locator.m8vgh63" alias=".service_locator.GWCwrNq"/>
     <service id=".service_locator.ATAmYPO" alias=".service_locator.5JyMHg3"/>
+    <service id=".service_locator.joDFX56" alias=".service_locator.A1D.kr_"/>
     <service id=".service_locator.f5nbO0I" alias=".service_locator.38itQPb"/>
     <service id=".service_locator.SkXHok4" alias=".service_locator.Zg.rYVz"/>
     <service id=".service_locator.OjNsAl_" alias=".service_locator.BDSF51C"/>
@@ -10636,6 +10732,11 @@
     <service id=".service_locator.lj5N9F_" alias=".service_locator.f2G_tRu"/>
     <service id=".service_locator.VSEq3Un" alias=".service_locator.krDjkOX"/>
     <service id=".service_locator.q9Xufcx" alias=".service_locator.Y0duKX1"/>
+    <service id=".service_locator.0UDjoKY" alias=".service_locator.T9ipEv_"/>
+    <service id=".service_locator.kinFRzu" alias=".service_locator.jmVMimg"/>
+    <service id=".service_locator.R1ie6X8" alias=".service_locator.lkiAlIP"/>
+    <service id=".service_locator.S2pXcY9" alias=".service_locator.v5CX8Wk"/>
+    <service id=".service_locator.w.FD0Oe" alias=".service_locator.j.zZqtE"/>
     <service id=".service_locator.f2KrqfC" alias=".service_locator.e.ptmCY"/>
     <service id=".service_locator.sa.k_vl" alias=".service_locator.0Fb1YCW"/>
     <service id=".service_locator.StZF50_" alias=".service_locator.XMZmjfB"/>

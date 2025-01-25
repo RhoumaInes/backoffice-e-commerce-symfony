@@ -33,6 +33,7 @@
                         <thead>
                             <tr>
                             <th>ID</th>
+                            <th></th>
                             <th>Nom</th>
                             <th>Email</th>
                             <th>Date de création</th>
@@ -50,6 +51,13 @@
                                 {% for user in pagination %}
                                     <tr>
                                         <td>{{ user.id }}</td>
+                                        <td>
+                                            {% if user.profileImage|length > 0 %}
+                                                <img class="small-image" src="{{ asset('uploads/' ~ user.profileImage) }}" alt="{{ user.firstname }}">
+                                            {% else %}
+                                                <p></p>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ user.firstname ~ ' ' ~ user.lastname }}</td>
                                         <td>{{ user.email }}</td>
                                         <td>{{ user.createdAt | date('Y-m-d H:i:s') }}</td>

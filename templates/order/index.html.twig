@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des commandes{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Liste des commandes
+                    </h3>
+                    <div class="card-tools">
+                        <form method="post" action="{{ path('app_order_index') }}">
+                            <div class="input-group input-group-sm" style="min-width: 150px;">
+                                <input type="text" name="searchorder" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchorder') }}">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <div class="input-group-append">
+                                    <a href="{{ path('app_order_index') }}" type="button" class="btn btn-default">
+                                        Réinitialiser
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Référence</th>
+                                <th>Facture</th>
+                                <th>Numéro commande</th>
+                                <th>Nom du Client</th> {# Nouvelle colonne #}
+                                <th>Total</th>
+                                <th>État</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if orders|length == 0 %}
+                                <tr>
+                                    <td colspan="8">Aucune commande trouvée.</td> 
+                                </tr>
+                            {% else %}
+                                {% for order in orders %}
+                                    <tr>
+                                        <td>{{ order.id }}</td>
+                                        <td>{{ order.reference }}</td>
+                                        <td>{{ order.billreference }}</td>
+                                        <td>{{ order.ordernumber }}</td>
+                                        <td>{{ order.client.firstname }} {{ order.client.lastname }}</td> 
+                                        <td>{{ order.total }}</td> 
+                                        <td>{{ order.state }}</td> 
+                                        <td>
+                                            <a href="{{ path('app_order_show', {'id': order.id}) }}">Consulter</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+
+                    </table>
+                    {# Afficher la pagination #}
+                    {{ knp_pagination_render(orders) }}
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+
+{% endblock %}

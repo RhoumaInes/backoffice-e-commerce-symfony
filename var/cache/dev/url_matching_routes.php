@@ -25,6 +25,7 @@ return [
         ],
         '/admin/carrier' => [[['_route' => 'app_carrier_index', '_controller' => 'App\\Controller\\CarrierController::index'], null, ['GET' => 0], null, true, false, null]],
         '/admin/carrier/new' => [[['_route' => 'app_carrier_new', '_controller' => 'App\\Controller\\CarrierController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/api/carriers' => [[['_route' => 'api_carriers', '_controller' => 'App\\Controller\\CarrierController::getCarriers'], null, ['GET' => 0], null, false, false, null]],
         '/admin/categorie' => [[['_route' => 'app_categorie_index', '_controller' => 'App\\Controller\\CategorieController::index'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/api/categories' => [[['_route' => 'get_categories', '_controller' => 'App\\Controller\\CategorieController::getCategories'], null, ['GET' => 0], null, false, false, null]],
         '/admin/categorie/new' => [[['_route' => 'app_categorie_new', '_controller' => 'App\\Controller\\CategorieController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
@@ -40,6 +41,8 @@ return [
         '/product/image/upload' => [[['_route' => 'app_image_upload_product', '_controller' => 'App\\Controller\\ImageUploadController::uploadForProduct'], null, null, null, false, false, null]],
         '/upload_image' => [[['_route' => 'upload_image', '_controller' => 'App\\Controller\\ImageUploadController::uploadImage'], null, ['POST' => 0], null, false, false, null]],
         '/file_upload' => [[['_route' => 'file_upload', '_controller' => 'App\\Controller\\ImageUploadController::upload'], null, ['POST' => 0], null, false, false, null]],
+        '/order' => [[['_route' => 'app_order_index', '_controller' => 'App\\Controller\\OrderController::index'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
+        '/order/new' => [[['_route' => 'app_order_new', '_controller' => 'App\\Controller\\OrderController::new'], null, ['POST' => 0], null, false, false, null]],
         '/admin/product' => [[['_route' => 'app_product_index', '_controller' => 'App\\Controller\\ProductController::index'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/productlist' => [[['_route' => 'app_product_list_api', '_controller' => 'App\\Controller\\ProductController::productlist'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/product/new' => [[['_route' => 'app_product_new', '_controller' => 'App\\Controller\\ProductController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
@@ -160,13 +163,24 @@ return [
                     .')'
                 .')'
                 .'|/image/([^/]++)/delete(*:1011)'
+                .'|/order/(?'
+                    .'|order/get\\-state/([^/]++)(*:1055)'
+                    .'|([^/]++)(?'
+                        .'|(*:1075)'
+                        .'|/(?'
+                            .'|assign\\-carrier(*:1103)'
+                            .'|edit(*:1116)'
+                        .')'
+                        .'|(*:1126)'
+                    .')'
+                .')'
                 .'|/tax/rules/(?'
                     .'|([^/]++)(?'
-                        .'|(*:1045)'
-                        .'|/edit(*:1059)'
+                        .'|(*:1162)'
+                        .'|/edit(*:1176)'
                     .')'
-                    .'|toggle/([^/]++)(*:1084)'
-                    .'|([^/]++)(*:1101)'
+                    .'|toggle/([^/]++)(*:1201)'
+                    .'|([^/]++)(*:1218)'
                 .')'
             .')/?$}sDu',
     ],
@@ -217,10 +231,15 @@ return [
         971 => [[['_route' => 'app_carrier_price_edit', '_controller' => 'App\\Controller\\CarrierPriceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         979 => [[['_route' => 'app_carrier_price_delete', '_controller' => 'App\\Controller\\CarrierPriceController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
         1011 => [[['_route' => 'image_delete', '_controller' => 'App\\Controller\\ImageUploadController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        1045 => [[['_route' => 'app_tax_rules_show', '_controller' => 'App\\Controller\\TaxRulesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1059 => [[['_route' => 'app_tax_rules_edit', '_controller' => 'App\\Controller\\TaxRulesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1084 => [[['_route' => 'toggle_tax', '_controller' => 'App\\Controller\\TaxRulesController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
-        1101 => [
+        1055 => [[['_route' => 'order_get_state', '_controller' => 'App\\Controller\\OrderController::getState'], ['id'], ['GET' => 0], null, false, true, null]],
+        1075 => [[['_route' => 'app_order_show', '_controller' => 'App\\Controller\\OrderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1103 => [[['_route' => 'app_order_assign_carrier', '_controller' => 'App\\Controller\\OrderController::assignCarrier'], ['id'], ['POST' => 0], null, false, false, null]],
+        1116 => [[['_route' => 'app_order_edit', '_controller' => 'App\\Controller\\OrderController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1126 => [[['_route' => 'app_order_delete', '_controller' => 'App\\Controller\\OrderController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1162 => [[['_route' => 'app_tax_rules_show', '_controller' => 'App\\Controller\\TaxRulesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1176 => [[['_route' => 'app_tax_rules_edit', '_controller' => 'App\\Controller\\TaxRulesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1201 => [[['_route' => 'toggle_tax', '_controller' => 'App\\Controller\\TaxRulesController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
+        1218 => [
             [['_route' => 'app_tax_rules_delete', '_controller' => 'App\\Controller\\TaxRulesController::delete'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
