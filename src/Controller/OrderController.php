@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Carrier;
 use App\Entity\Client;
 use App\Entity\Order;
+use App\Entity\OrderProduct;
 use App\Entity\Product;
 use App\Form\OrderType;
 use App\Repository\CarrierRepository;
@@ -90,9 +91,11 @@ class OrderController extends AbstractController
             if (!$product) {
                 return new JsonResponse(['error' => "Product with ID {$cartItem['product_id']} not found"], Response::HTTP_NOT_FOUND);
             }
+            $orderProduct = new OrderProduct();
+            $orderProduct->setProduct($product);
+            $orderProduct->setQuantity(1);
 
-            // Ajouter le produit à la commande
-            $order->addProduct(product: $product);
+            $order->addOrderProduct($orderProduct);
 
             // Calculer le sous-total pour cet article
             $subtotal = $product->getPrixVenteTtc() * $cartItem['quantity'];

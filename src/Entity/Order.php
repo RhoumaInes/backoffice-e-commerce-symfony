@@ -34,11 +34,17 @@ class Order
     #[ORM\Column(nullable: true)]
     private ?bool $state = null;
 
-    #[ORM\OneToMany(mappedBy: 'orderid', targetEntity: OrderProduct::class)]
+    #[ORM\OneToMany(mappedBy: 'orderid', targetEntity: OrderProduct::class, cascade: ['persist', 'remove'])]
     private Collection $orderProduct;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?Carrier $carrier = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $address = null;
+
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    private ?CarrierPrice $carrierPrice = null;
 
     public function __construct()
     {
@@ -131,6 +137,47 @@ class Order
         return $this->orderProduct;
     }
 
+    public function addOrderProduct(OrderProduct $orderProduct): self
+    {
+        $this->orderProduct[] = $orderProduct;
+        $orderProduct->setOrderid($this); // Assurez-vous que la relation inverse est correctement définie.
+
+        return $this;
+    }
+
+    public function removeOrderProduct(OrderProduct $orderProduct): self
+    {
+        if ($this->orderProduct->contains($orderProduct)) {
+            $this->orderProduct->removeElement($orderProduct);
+            // Supprime la relation côté inverse si nécessaire
+            if ($orderProduct->getOrderid() === $this) {
+                $orderProduct->setOrderid(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Définit les produits de la commande.
+     *
+     * @param array|Collection $orderProducts
+     * @return static
+     */
+    public function setOrderProducts($orderProducts): static
+    {
+        // Supprime tous les produits existants
+        foreach ($this->orderProduct as $existingOrderProduct) {
+            $this->removeOrderProduct($existingOrderProduct);
+        }
+
+        // Ajoute les nouveaux produits
+        foreach ($orderProducts as $orderProduct) {
+            $this->addOrderProduct($orderProduct);
+        }
+
+        return $this;
+    }
     public function getCarrier(): ?Carrier
     {
         return $this->carrier;
@@ -139,6 +186,30 @@ class Order
     public function setCarrier(?Carrier $carrier): static
     {
         $this->carrier = $carrier;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getCarrierPrice(): ?CarrierPrice
+    {
+        return $this->carrierPrice;
+    }
+
+    public function setCarrierPrice(?CarrierPrice $carrierPrice): static
+    {
+        $this->carrierPrice = $carrierPrice;
 
         return $this;
     }

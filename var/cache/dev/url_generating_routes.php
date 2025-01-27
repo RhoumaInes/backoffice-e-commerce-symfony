@@ -41,6 +41,7 @@ return [
     'toggle_carrier' => [['id'], ['_controller' => 'App\\Controller\\CarrierController::toggleTaxState'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/admin/carrier/toggle']], [], [], []],
     'app_carrier_delete' => [['id'], ['_controller' => 'App\\Controller\\CarrierController::delete'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/admin/carrier']], [], [], []],
     'api_carriers' => [[], ['_controller' => 'App\\Controller\\CarrierController::getCarriers'], [], [['text', '/api/carriers']], [], [], []],
+    'api_submit_delivery' => [[], ['_controller' => 'App\\Controller\\CarrierController::submitDelivery'], [], [['text', '/api/submit-delivery']], [], [], []],
     'app_carrier_price_index' => [['id'], ['_controller' => 'App\\Controller\\CarrierPriceController::index'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/carrier/price/index']], [], [], []],
     'app_carrier_price_new' => [['id_carrier'], ['_controller' => 'App\\Controller\\CarrierPriceController::new'], [], [['variable', '/', '[^/]++', 'id_carrier', true], ['text', '/carrier/price/new']], [], [], []],
     'app_carrier_price_show' => [['id'], ['_controller' => 'App\\Controller\\CarrierPriceController::show'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/carrier/price']], [], [], []],

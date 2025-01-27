@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Carrier;
+use App\Entity\CarrierPrice;
+use App\Entity\Order;
 use App\Form\CarrierType;
 use App\Repository\CarrierRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -133,15 +135,16 @@ class CarrierController extends AbstractController
         return $this->json($data);
     }
 
-    /*#[Route('/api/submit-delivery', name: 'api_submit_delivery', methods: ['POST'])]
+    #[Route('/api/submit-delivery', name: 'api_submit_delivery', methods: ['POST'])]
     public function submitDelivery(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $carrierId = $request->request->get('carrier_id');
-        $city = $request->request->get('city');
+        $city = $request->request->get('city_id');
         $address = $request->request->get('address');
         $totalPrice = $request->request->get('total_price');
 
         $carrier = $entityManager->getRepository(Carrier::class)->find($carrierId);
+        $carrierPrice = $entityManager->getRepository(CarrierPrice::class)->find($city);
         if (!$carrier) {
             return $this->json(['error' => 'Carrier not found'], 404);
         }
@@ -149,14 +152,15 @@ class CarrierController extends AbstractController
         // Mettre à jour la commande
         $order = new Order();
         $order->setCarrier($carrier);
-        $order->setCity($city);
+        $order->setCarrierPrice($carrierPrice);
         $order->setAddress($address);
-        $order->setTotalPrice($totalPrice);
+        $order->setTotal($totalPrice);
 
         $entityManager->persist($order);
         $entityManager->flush();
 
         return $this->json(['message' => 'Delivery details saved successfully']);
-    }*/
+    }
+
 
 }

@@ -26,6 +26,7 @@ return [
         '/admin/carrier' => [[['_route' => 'app_carrier_index', '_controller' => 'App\\Controller\\CarrierController::index'], null, ['GET' => 0], null, true, false, null]],
         '/admin/carrier/new' => [[['_route' => 'app_carrier_new', '_controller' => 'App\\Controller\\CarrierController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/api/carriers' => [[['_route' => 'api_carriers', '_controller' => 'App\\Controller\\CarrierController::getCarriers'], null, ['GET' => 0], null, false, false, null]],
+        '/api/submit-delivery' => [[['_route' => 'api_submit_delivery', '_controller' => 'App\\Controller\\CarrierController::submitDelivery'], null, ['POST' => 0], null, false, false, null]],
         '/admin/categorie' => [[['_route' => 'app_categorie_index', '_controller' => 'App\\Controller\\CategorieController::index'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/api/categories' => [[['_route' => 'get_categories', '_controller' => 'App\\Controller\\CategorieController::getCategories'], null, ['GET' => 0], null, false, false, null]],
         '/admin/categorie/new' => [[['_route' => 'app_categorie_new', '_controller' => 'App\\Controller\\CategorieController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
