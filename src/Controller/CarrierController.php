@@ -138,19 +138,21 @@ class CarrierController extends AbstractController
     #[Route('/api/submit-delivery', name: 'api_submit_delivery', methods: ['POST'])]
     public function submitDelivery(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        $orderId = $request->request->get('order_id');
         $carrierId = $request->request->get('carrier_id');
         $city = $request->request->get('city_id');
         $address = $request->request->get('address');
         $totalPrice = $request->request->get('total_price');
-
+        //dd($totalPrice);
         $carrier = $entityManager->getRepository(Carrier::class)->find($carrierId);
+        
         $carrierPrice = $entityManager->getRepository(CarrierPrice::class)->find($city);
         if (!$carrier) {
             return $this->json(['error' => 'Carrier not found'], 404);
         }
 
         // Mettre à jour la commande
-        $order = new Order();
+        $order = $entityManager->getRepository(Order::class)->find($orderId);
         $order->setCarrier($carrier);
         $order->setCarrierPrice($carrierPrice);
         $order->setAddress($address);
