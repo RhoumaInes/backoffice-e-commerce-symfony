@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Récapitulatif Commande</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Récapitulatif de la Commande</h1>
+    <p>Référence : {{ order.reference }}</p>
+    <p>Total : {{ order.total|number_format(2, '.', ',') }} €</p>
+
+    <h2>Produits</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in order.orderProducts %}
+                <tr>
+                    <td>{{ product.product.title }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.product.prixVenteTtc|number_format(2, '.', ',') }} €</td>
+                    <td>{{ (product.product.prixVenteTtc * product.quantity)|number_format(2, '.', ',') }} €</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

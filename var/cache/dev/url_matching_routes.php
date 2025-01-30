@@ -44,6 +44,7 @@ return [
         '/file_upload' => [[['_route' => 'file_upload', '_controller' => 'App\\Controller\\ImageUploadController::upload'], null, ['POST' => 0], null, false, false, null]],
         '/order' => [[['_route' => 'app_order_index', '_controller' => 'App\\Controller\\OrderController::index'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
         '/order/new' => [[['_route' => 'app_order_new', '_controller' => 'App\\Controller\\OrderController::new'], null, ['POST' => 0], null, false, false, null]],
+        '/order/admin/invoices' => [[['_route' => 'admin_invoices', '_controller' => 'App\\Controller\\OrderController::listInvoices'], null, null, null, false, false, null]],
         '/admin/product' => [[['_route' => 'app_product_index', '_controller' => 'App\\Controller\\ProductController::index'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/productlist' => [[['_route' => 'app_product_list_api', '_controller' => 'App\\Controller\\ProductController::productlist'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/product/new' => [[['_route' => 'app_product_new', '_controller' => 'App\\Controller\\ProductController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
@@ -165,23 +166,35 @@ return [
                 .')'
                 .'|/image/([^/]++)/delete(*:1011)'
                 .'|/order/(?'
-                    .'|order/get\\-state/([^/]++)(*:1055)'
+                    .'|order/(?'
+                        .'|get\\-state/([^/]++)(*:1058)'
+                        .'|([^/]++)/toggle\\-payment(*:1091)'
+                    .')'
                     .'|([^/]++)(?'
-                        .'|(*:1075)'
+                        .'|(*:1112)'
+                        .'|/assign\\-carrier(*:1137)'
+                    .')'
+                    .'|admin/order/([^/]++)/set\\-delivery\\-date(*:1187)'
+                    .'|order/([^/]++)/update\\-payment\\-method(*:1234)'
+                    .'|([^/]++)(?'
                         .'|/(?'
-                            .'|assign\\-carrier(*:1103)'
-                            .'|edit(*:1116)'
+                            .'|edit(*:1262)'
+                            .'|generate\\-invoice(*:1288)'
                         .')'
-                        .'|(*:1126)'
+                        .'|(*:1298)'
+                    .')'
+                    .'|a(?'
+                        .'|dmin/orders/([^/]++)/download\\-invoice(*:1350)'
+                        .'|pi/order/([^/]++)/pdf(*:1380)'
                     .')'
                 .')'
                 .'|/tax/rules/(?'
                     .'|([^/]++)(?'
-                        .'|(*:1162)'
-                        .'|/edit(*:1176)'
+                        .'|(*:1416)'
+                        .'|/edit(*:1430)'
                     .')'
-                    .'|toggle/([^/]++)(*:1201)'
-                    .'|([^/]++)(*:1218)'
+                    .'|toggle/([^/]++)(*:1455)'
+                    .'|([^/]++)(*:1472)'
                 .')'
             .')/?$}sDu',
     ],
@@ -232,15 +245,21 @@ return [
         971 => [[['_route' => 'app_carrier_price_edit', '_controller' => 'App\\Controller\\CarrierPriceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         979 => [[['_route' => 'app_carrier_price_delete', '_controller' => 'App\\Controller\\CarrierPriceController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
         1011 => [[['_route' => 'image_delete', '_controller' => 'App\\Controller\\ImageUploadController::deleteImage'], ['id'], ['POST' => 0], null, false, false, null]],
-        1055 => [[['_route' => 'order_get_state', '_controller' => 'App\\Controller\\OrderController::getState'], ['id'], ['GET' => 0], null, false, true, null]],
-        1075 => [[['_route' => 'app_order_show', '_controller' => 'App\\Controller\\OrderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1103 => [[['_route' => 'app_order_assign_carrier', '_controller' => 'App\\Controller\\OrderController::assignCarrier'], ['id'], ['POST' => 0], null, false, false, null]],
-        1116 => [[['_route' => 'app_order_edit', '_controller' => 'App\\Controller\\OrderController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1126 => [[['_route' => 'app_order_delete', '_controller' => 'App\\Controller\\OrderController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        1162 => [[['_route' => 'app_tax_rules_show', '_controller' => 'App\\Controller\\TaxRulesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1176 => [[['_route' => 'app_tax_rules_edit', '_controller' => 'App\\Controller\\TaxRulesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1201 => [[['_route' => 'toggle_tax', '_controller' => 'App\\Controller\\TaxRulesController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
-        1218 => [
+        1058 => [[['_route' => 'order_get_state', '_controller' => 'App\\Controller\\OrderController::getState'], ['id'], ['GET' => 0], null, false, true, null]],
+        1091 => [[['_route' => 'admin_order_toggle_payment', '_controller' => 'App\\Controller\\OrderController::togglePayment'], ['id'], null, null, false, false, null]],
+        1112 => [[['_route' => 'app_order_show', '_controller' => 'App\\Controller\\OrderController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1137 => [[['_route' => 'app_order_assign_carrier', '_controller' => 'App\\Controller\\OrderController::assignCarrier'], ['id'], ['POST' => 0], null, false, false, null]],
+        1187 => [[['_route' => 'app_order_set_delivery_date', '_controller' => 'App\\Controller\\OrderController::setDeliveryDate'], ['id'], ['POST' => 0], null, false, false, null]],
+        1234 => [[['_route' => 'admin_order_update_payment_method', '_controller' => 'App\\Controller\\OrderController::updatePaymentMethod'], ['id'], ['POST' => 0], null, false, false, null]],
+        1262 => [[['_route' => 'app_order_edit', '_controller' => 'App\\Controller\\OrderController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1288 => [[['_route' => 'admin_order_generate_invoice', '_controller' => 'App\\Controller\\OrderController::generateInvoice'], ['id'], null, null, false, false, null]],
+        1298 => [[['_route' => 'app_order_delete', '_controller' => 'App\\Controller\\OrderController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1350 => [[['_route' => 'admin_order_download_invoice', '_controller' => 'App\\Controller\\OrderController::downloadInvoice'], ['id'], null, null, false, false, null]],
+        1380 => [[['_route' => 'api_order_pdf', '_controller' => 'App\\Controller\\OrderController::generatePdf'], ['id'], ['GET' => 0], null, false, false, null]],
+        1416 => [[['_route' => 'app_tax_rules_show', '_controller' => 'App\\Controller\\TaxRulesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1430 => [[['_route' => 'app_tax_rules_edit', '_controller' => 'App\\Controller\\TaxRulesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1455 => [[['_route' => 'toggle_tax', '_controller' => 'App\\Controller\\TaxRulesController::toggleTaxState'], ['id'], ['POST' => 0], null, false, true, null]],
+        1472 => [
             [['_route' => 'app_tax_rules_delete', '_controller' => 'App\\Controller\\TaxRulesController::delete'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

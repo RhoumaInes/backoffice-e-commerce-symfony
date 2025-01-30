@@ -1,32 +1,63 @@
 <!-- Bouton pour afficher la fenêtre modale -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
-    Livrer la commande
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+    Programmer une livraison
 </button>
 
-<!-- Fenêtre modale de confirmation -->
+<!-- Fenêtre modale pour la sélection de la date -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Sélectionner un livreur</h5>
+                <h5 class="modal-title" id="confirmationModalLabel">Sélectionner une date de livraison</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Sélecteur des livreurs -->
-                <form id="deliver-form" action="{{ path('app_order_assign_carrier', {'id': order.id}) }}" method="post">
-                    <select class="form-control" id="carrier" name="carrier">
-                        {% for carrier in carriers %}
-                            <option value="{{ carrier.id }}">{{ carrier.name }}</option>
-                        {% endfor %}
-                    </select>
+                <form id="delivery-date-form" action="{{ path('app_order_set_delivery_date', {'id': order.id}) }}" method="post">
+                    <label for="delivery-date">Date de livraison :</label>
+                    <input type="date" class="form-control" id="delivery-date" name="deliveryDate" required>
                 </form>
             </div>
             <div class="modal-footer">
-                <!-- Bouton pour soumettre le formulaire -->
-                <button type="button" class="btn btn-primary" id="confirm-delivery">Confirmer</button>
-                <!-- Bouton pour fermer la fenêtre modale -->
+                <button type="button" class="btn btn-primary" id="confirm-delivery-date">Confirmer</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
             </div>
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const confirmDeliveryDateButton = document.getElementById('confirm-delivery-date');
+    const formAction = document.getElementById('delivery-date-form').action;
+
+    confirmDeliveryDateButton.addEventListener('click', function () {
+        const deliveryDate = document.getElementById('delivery-date').value;
+
+        if (!deliveryDate) {
+            alert('Veuillez sélectionner une date de livraison.');
+            return;
+        }
+
+        fetch(formAction, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ deliveryDate: deliveryDate }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('Date de livraison mise à jour avec succès.');
+                    location.reload(); // Recharge la page pour refléter les changements
+                } else {
+                    alert('Erreur : ' + (data.error || 'Une erreur est survenue.'));
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour de la date de livraison :', error);
+                alert('Impossible de mettre à jour la date de livraison.');
+            });
+    });
+});
+</script>

@@ -58,7 +58,16 @@
                                         <td>{{ order.ordernumber }}</td>
                                         <td>{{ order.client.firstname }} {{ order.client.lastname }}</td> 
                                         <td>{{ order.total }}</td> 
-                                        <td>{{ order.state }}</td> 
+                                        <td>
+                                            {% if order.deliveryDate and order.deliveryDate < date() %}
+                                                <span class="badge bg-success">Livré</span>
+                                            {% elseif order.cancelled %}
+                                                <span class="badge bg-danger">Annulée</span>
+                                            {% else %}
+                                                <span class="badge bg-warning">En attente</span>
+                                            {% endif %}
+                                        </td>
+
                                         <td>
                                             <a href="{{ path('app_order_show', {'id': order.id}) }}">Consulter</a>
                                         </td>

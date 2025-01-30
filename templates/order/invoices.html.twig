@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Factures{% endblock %}
+
+{% block body %}
+    <h1>Liste des Factures</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Référence</th>
+                <th>Nom du livreur</th>
+                <th>Date de commande</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.reference }}</td>
+                    <td>{{ order.client.firstname }} {{ order.client.lastname }}</td>
+                    <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('admin_order_generate_invoice', {id: order.id}) }}" class="btn btn-primary">
+                            Voir la Facture
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucune facture générée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour au tableau de bord</a>
+{% endblock %}

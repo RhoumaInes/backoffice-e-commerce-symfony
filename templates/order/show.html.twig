@@ -4,6 +4,9 @@
 
 {% block body %}
     <h1>Commande</h1>
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %}
 
     <table class="table">
         <tbody>
@@ -17,15 +20,62 @@
             </tr>
             <tr>
                 <th>Facture</th>
-                <td>{{ order.billreference }}</td>
+                <td>
+                    {% if order.billreference %}
+                        {{ order.billreference }}
+                        <a href="{{ path('admin_order_download_invoice', {id: order.id}) }}" class="btn btn-sm btn-success">
+                            Télécharger
+                        </a>
+                    {% else %}
+                        <a href="{{ path('admin_order_generate_invoice', {id: order.id}) }}" class="btn btn-sm btn-primary">
+                            Générer la Facture
+                        </a>
+                    {% endif %}
+                </td>
             </tr>
             <tr>
-                <th>Numéro de commande</th>
-                <td>{{ order.ordernumber }}</td>
+                <th>Status de paiement</th>
+                <td>
+                    {% if order.paid %}
+                        <span class="badge bg-success">Payé</span>
+                    {% else %}
+                        <span class="badge bg-warning">Non payé</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Mode de paiement</th>
+                <td>
+                    {% if order.paymentMethod %}
+                        <span class="badge bg-primary">{{ order.paymentMethod }}</span>
+                    {% else %}
+                        <span class="badge bg-warning">Non défini</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Date de livraison</th>
+                <td>
+                    {% if order.deliveryDate %}
+                        {{ order.deliveryDate|date('d/m/Y') }}
+                    {% else %}
+                        Non définie.
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Status de livraison</th>
+                <td>
+                    {% if order.deliveryDate and order.deliveryDate < date() %}
+                        <span class="badge bg-success">Livré</span>
+                    {% else %}
+                        <span class="badge bg-warning">En attente</span>
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Livreur</th>
-                <td id="assigned-carrier">
+                <td>
                     {% if order.carrier %}
                         {{ order.carrier.name }}
                     {% else %}
@@ -33,9 +83,9 @@
                     {% endif %}
                 </td>
             </tr>
+
         </tbody>
     </table>
-
 
     <h2>Produits de la commande</h2>
     <table class="table">
@@ -52,117 +102,31 @@
                 <tr>
                     <td>{{ product.product.title }}</td>
                     <td>{{ product.quantity }}</td>
-                    <td>{{ product.product.prixVenteTtc|number_format(2, '.', ',') }} DT</td>
-                    <td>{{ (product.product.prixVenteTtc * product.quantity)|number_format(2, '.', ',') }} DT</td>
+                    <td>{{ product.product.prixVenteTtc|number_format(2, '.', ',') }} €</td>
+                    <td></td>
                 </tr>
             {% else %}
                 <tr>
                     <td colspan="4">Aucun produit trouvé.</td>
                 </tr>
             {% endfor %}
+            <tr>
+                <td colspan="3"></td>
+                <td>{{ order.total|number_format(2, '.', ',') }} €</td>
+            </tr>
         </tbody>
     </table>
+    
+    <a href="{{ path('app_order_index') }}">Retour à la liste</a><br><br/>
 
-    {{ include('order/carrier.html.twig') }}
-
-
-    <a href="{{ path('app_order_index') }}">Retour à la liste</a>
-
+    {{ include('order/paiement.html.twig') }}<br/><br/>
+    {% if not order.cancelled %}
+        {% if not order.paid %}
+            <a href="{{ path('admin_order_toggle_payment', {id: order.id}) }}" class="btn btn-primary">Marquer comme payé</a>
+        {% else %}
+            <a href="{{ path('admin_order_toggle_payment', {id: order.id}) }}" class="btn btn-secondary">Marquer comme non payé</a>
+        {% endif %}
+    {% endif %}<br/><br/>
+    {{ include('order/carrier.html.twig') }}<br/><br/>
     {{ include('order/_delete_form.html.twig') }}
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        $('.custom-toggle-switch').change(function () {
-            const orderId = $(this).data('id');
-            const isChecked = $(this).prop('checked');
-
-            // Vérification avant de permettre le changement
-            if (!isChecked) {
-                // Si on tente de désactiver, vérifier l'état actuel
-                fetch(`/order/get-state/${orderId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.state === true) { // Commande acceptée
-                        // Annuler le changement si l'état est déjà accepté
-                        $(this).prop('checked', true); // Rendre le toggle actif
-                        alert("Vous ne pouvez pas annuler cette commande une fois qu'elle est acceptée.");
-                    } else {
-                        // Effectuer le changement si l'état est non accepté
-                        toggleState(orderId, 0);
-                    }
-                });
-            } else {
-                // Autoriser l'activation
-                toggleState(orderId, 1);
-            }
-        });
-
-        function toggleState(orderId, newState) {
-            fetch(`/order/toggle/${orderId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                body: JSON.stringify({ state: newState }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('Order state updated successfully.');
-                } else {
-                    console.error('Error updating order state.');
-                }
-            });
-        }
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const confirmButton = document.querySelector('#confirmationModal .btn-danger');
-
-    confirmButton.addEventListener('click', function (event) {
-        event.preventDefault();
-
-        // Récupérer l'ID de la commande et du livreur sélectionné
-        const orderId = {{ order.id }};
-        const carrierId = document.querySelector('#carrier').value;
-
-        // Envoi de la requête AJAX
-        fetch(`/order/${orderId}/assign-carrier`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: JSON.stringify({ carrierId: carrierId }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Mettre à jour la cellule du livreur
-                const carrierCell = document.querySelector('#assigned-carrier');
-                carrierCell.textContent = data.carrierName;
-
-                // Fermer la modale
-                const modal = bootstrap.Modal.getInstance(document.querySelector('#confirmationModal'));
-                modal.hide();
-            } else {
-                alert('Erreur lors de l\'affectation du livreur.');
-            }
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            alert('Une erreur s\'est produite lors de la communication avec le serveur.');
-        });
-    });
-});
-</script>
 {% endblock %}

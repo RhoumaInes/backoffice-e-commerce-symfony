@@ -36,7 +36,7 @@ class ClientController extends AbstractController
     #[Route('/toggle/{id}', name: 'admin_client_toggle', methods: ['POST'])]
     public function toggleStatus(Client $client, EntityManagerInterface $em): Response
     {
-        $client->setIsActive(isActive: !$client->getIsActive());
+        $client->setIsActive(isActive: !$client->isIsActive());
         $em->flush();
 
         $this->addFlash('success', 'Statut du compte client mis à jour.');
@@ -44,12 +44,16 @@ class ClientController extends AbstractController
     }
 
     #[Route('/{id}/orders', name: 'admin_client_orders', methods: ['GET'])]
-    public function viewOrders(Client $client, OrderRepository $orderRepository): Response
+    public function viewOrders(Client $client, OrderRepository $orderRepository,Request $request,PaginatorInterface $paginator): Response
     {
         $orders = $orderRepository->findBy(['client' => $client]);
-        return $this->render('client/orders.html.twig', [
-            'client' => $client,
-            'orders' => $orders,
+        $pagination = $paginator->paginate(
+            $orders,
+            $request->query->getInt('page', 1),
+            10
+        );
+        return $this->render('order/index.html.twig', [
+            'orders' => $pagination,
         ]);
     }
 }

@@ -2,15 +2,20 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Timestampable;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
+#[ORM\HasLifecycleCallbacks]
 class Order
 {
+    use Timestampable;
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -45,6 +50,24 @@ class Order
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?CarrierPrice $carrierPrice = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $paid = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $cancelled = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $delivered = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $deliveryDate = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $invoiceGenerated = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $paymentMethod = null;
 
     public function __construct()
     {
@@ -158,6 +181,7 @@ class Order
         return $this;
     }
 
+
     /**
      * Définit les produits de la commande.
      *
@@ -210,6 +234,78 @@ class Order
     public function setCarrierPrice(?CarrierPrice $carrierPrice): static
     {
         $this->carrierPrice = $carrierPrice;
+
+        return $this;
+    }
+
+    public function isPaid(): ?bool
+    {
+        return $this->paid;
+    }
+
+    public function setPaid(?bool $paid): static
+    {
+        $this->paid = $paid;
+
+        return $this;
+    }
+
+    public function isCancelled(): ?bool
+    {
+        return $this->cancelled;
+    }
+
+    public function setCancelled(?bool $cancelled): static
+    {
+        $this->cancelled = $cancelled;
+
+        return $this;
+    }
+
+    public function isDelivered(): ?bool
+    {
+        return $this->delivered;
+    }
+
+    public function setDelivered(?bool $delivered): static
+    {
+        $this->delivered = $delivered;
+
+        return $this;
+    }
+
+    public function getDeliveryDate(): ?\DateTimeInterface
+    {
+        return $this->deliveryDate;
+    }
+
+    public function setDeliveryDate(?\DateTimeInterface $deliveryDate): static
+    {
+        $this->deliveryDate = $deliveryDate;
+
+        return $this;
+    }
+
+    public function isInvoiceGenerated(): ?bool
+    {
+        return $this->invoiceGenerated;
+    }
+
+    public function setInvoiceGenerated(?bool $invoiceGenerated): static
+    {
+        $this->invoiceGenerated = $invoiceGenerated;
+
+        return $this;
+    }
+
+    public function getPaymentMethod(): ?string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(string $paymentMethod): static
+    {
+        $this->paymentMethod = $paymentMethod;
 
         return $this;
     }

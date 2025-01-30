@@ -1,0 +1,49 @@
+{% if not order.cancelled %}
+    <button id="payment-method-button" class="btn btn-primary">Changer le mode de paiement</button>
+{% endif %}
+
+<!-- Modale de sélection du mode de paiement -->
+<div class="modal fade" id="paymentMethodModal" tabindex="-1" aria-labelledby="paymentMethodModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentMethodModalLabel">Sélectionner le mode de paiement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="payment-method-form" action="{{ path('admin_order_update_payment_method', {id: order.id}) }}" method="POST">
+                    {% if order.deliveryDate %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="paid-on-delivery" value="Payé à la livraison" {% if order.paymentMethod == 'Payé à la livraison' %}checked{% endif %}>
+                            <label class="form-check-label" for="paid-on-delivery">
+                                Payé à la livraison
+                            </label>
+                        </div>
+                    {% endif %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="bank-transfer" value="Par virement" {% if order.paymentMethod == 'Par virement' %}checked{% endif %}>
+                        <label class="form-check-label" for="bank-transfer">
+                            Par virement
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="payment-method-form" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript pour ouvrir la modale -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentMethodButton = document.getElementById('payment-method-button');
+        const paymentMethodModal = new bootstrap.Modal(document.getElementById('paymentMethodModal'));
+
+        paymentMethodButton.addEventListener('click', function () {
+            paymentMethodModal.show();
+        });
+    });
+</script>

@@ -11,6 +11,8 @@ use App\Form\OrderType;
 use App\Repository\CarrierRepository;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -117,7 +119,27 @@ class OrderController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * @Route("/order/{id}/toggle-payment", name="admin_order_toggle_payment")
+     */
+    public function togglePayment(Order $order,EntityManagerInterface $entityManager): Response
+    {
+        // Vérification si la commande peut être modifiée
+        if ($order->isCancelled()) {
+            $this->addFlash('error', 'La commande est annulée et ne peut pas être modifiée.');
+            return $this->redirectToRoute('app_order_show', ['id' => $order->getId()]);
+        }
 
+        // Changer le statut de paiement
+        $order->setPaid(!$order->isPaid()); // Inverser l'état du paiement
+        $entityManager->flush();
+
+        // Afficher un message de succès
+        $this->addFlash('success', 'Statut de paiement mis à jour avec succès.');
+
+        // Rediriger vers la page de la commande
+        return $this->redirectToRoute('app_order_show', ['id' => $order->getId()]);
+    }
 
     #[Route('/{id}', name: 'app_order_show', methods: ['GET'])]
     public function show(Order $order, CarrierRepository $carrierRepository): Response
@@ -161,6 +183,50 @@ class OrderController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/admin/order/{id}/set-delivery-date", name="app_order_set_delivery_date", methods={"POST"})
+     */
+    public function setDeliveryDate(Request $request, Order $order, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['deliveryDate']) || empty($data['deliveryDate'])) {
+            return new JsonResponse(['error' => 'Date de livraison non spécifiée.'], 400);
+        }
+
+        try {
+            $deliveryDate = new \DateTime($data['deliveryDate']);
+            $order->setDeliveryDate($deliveryDate); // Assurez-vous que l'entité Order a un champ `deliveryDate`
+            $entityManager->flush();
+
+            return new JsonResponse(['message' => 'Date de livraison mise à jour avec succès.']);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Erreur lors de la mise à jour : ' . $e->getMessage()], 500);
+        }
+    }
+    
+    #[Route('/order/{id}/update-payment-method', name: 'admin_order_update_payment_method', methods: ['POST'])]
+    public function updatePaymentMethod(Order $order, Request $request,EntityManagerInterface $entityManager): Response
+    {
+        // Vérification si la commande est déjà annulée ou non
+        if ($order->isCancelled()) {
+            $this->addFlash('error', 'La commande est annulée et ne peut pas être modifiée.');
+            return $this->redirectToRoute('app_order_show', ['id' => $order->getId()]);
+        }
+
+        // Récupérer le mode de paiement envoyé par le formulaire
+        $paymentMethod = $request->request->get('paymentMethod');
+
+        // Mettre à jour le mode de paiement
+        $order->setPaymentMethod($paymentMethod);
+        $entityManager->flush();
+
+        // Afficher un message de succès
+        $this->addFlash('success', 'Mode de paiement mis à jour avec succès.');
+
+        // Rediriger vers la page des détails de la commande
+        return $this->redirectToRoute('app_order_show', ['id' => $order->getId()]);
+    }
 
 
     #[Route('/{id}/edit', name: 'app_order_edit', methods: ['GET', 'POST'])]
@@ -190,6 +256,113 @@ class OrderController extends AbstractController
         }
 
         return $this->redirectToRoute('app_order_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/generate-invoice', name: 'admin_order_generate_invoice')]
+    public function generateInvoice(Order $order, EntityManagerInterface $entityManager): Response
+    {
+        // Vérifier si la commande possède un livreur
+        if (!$order->getCarrier()) {
+            $this->addFlash('error', 'La commande doit être associée à un livreur pour générer une facture.');
+            return $this->redirectToRoute('app_order_show', ['id' => $order->getId()]);
+        }
+
+        // Vérifier si la facture a déjà été générée
+        if ($order->isInvoiceGenerated()) {
+            $this->addFlash('error', 'Une facture a déjà été générée pour cette commande.');
+            return $this->redirectToRoute('app_order_show', ['id' => $order->getId()]);
+        }
+        $billReference = 'FACT-' . strtoupper(uniqid()) . '-' . $order->getId();
+        $order->setBillreference($billReference);
+        // Générer la facture
+        $pdfContent = $this->generateInvoicePdf($order);
+
+        // Marquer la facture comme générée
+        $order->setInvoiceGenerated(true);
+        $entityManager->flush();
+
+        // Retourner le PDF pour téléchargement
+        return new Response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="facture_' . $order->getReference() . '.pdf"',
+        ]);
+    }
+
+
+    private function generateInvoicePdf(Order $order): string
+    {
+        $dompdf = new \Dompdf\Dompdf();
+        $html = $this->renderView('order/invoice.html.twig', [
+            'order' => $order,
+        ]);
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+
+        return $dompdf->output();
+    }
+
+    #[Route('/admin/orders/{id}/download-invoice', name: 'admin_order_download_invoice')]
+    public function downloadInvoice(Order $order): Response
+    {
+        $filePath = '/path/to/invoices/facture_' . $order->getBillreference() . '.pdf';
+
+        if (!file_exists($filePath)) {
+            $this->addFlash('danger', 'Le fichier de la facture est introuvable.');
+            return $this->redirectToRoute('admin_order_show', ['id' => $order->getId()]);
+        }
+
+        return $this->file($filePath, 'facture_' . $order->getBillreference() . '.pdf');
+    }
+
+
+    #[Route('/admin/invoices', name: 'admin_invoices')]
+    public function listInvoices(OrderRepository $orderRepository): Response
+    {
+        // Récupérer les commandes ayant une facture générée
+        $ordersWithInvoices = $orderRepository->findBy(['invoiceGenerated' => true]);
+
+        return $this->render('order/invoices.html.twig', [
+            'orders' => $ordersWithInvoices,
+        ]);
+    }
+
+    #[Route('/api/order/{id}/pdf', name: 'api_order_pdf', methods: ['GET'])]
+    public function generatePdf($id, EntityManagerInterface $em): Response
+    {
+        $order = $em->getRepository(Order::class)->find($id);
+
+        if (!$order) {
+            return new Response('Order not found', 404);
+        }
+
+        // Configuration de Dompdf
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+
+        // Générer le HTML
+        $html = $this->renderView('order/pdf.html.twig', [
+            'order' => $order,
+        ]);
+
+        // Charger le HTML dans Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Optionnel) Configurer la taille du papier et l'orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Générer le PDF
+        $dompdf->render();
+
+        // Retourner le PDF en réponse
+        return new Response(
+            $dompdf->output(),
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="order_' . $order->getId() . '.pdf"',
+            ]
+        );
     }
 }
 
