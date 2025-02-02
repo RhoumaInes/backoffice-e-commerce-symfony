@@ -23,7 +23,7 @@ class ClientRepository extends ServiceEntityRepository
     public function findByLikeEmail(string $searchTerm): array
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.email LIKE :searchTerm')
+            ->andWhere('c.email LIKE :searchTerm OR c.firstname LIKE :searchTerm OR c.lastname LIKE :searchTerm')
             ->setParameter('searchTerm', '%' . $searchTerm . '%')
             ->getQuery()
             ->getResult();

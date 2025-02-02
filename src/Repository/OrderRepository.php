@@ -26,13 +26,26 @@ class OrderRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('o')
             ->leftJoin('o.client', 'c')
             ->addSelect('c')
-            ->where('o.reference LIKE :search')
-            ->orWhere('c.firstname LIKE :search')
+            ->where('o.reference LIKE :search OR c.firstname LIKE :search OR c.lastname LIKE :search')
             ->setParameter('search', '%' . $search . '%')
             ->getQuery();
 
         return $qb->getResult();
     }
+
+    public function findByReferenceOrCustomerNameCancelledOrders(string $search): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->leftJoin('o.client', 'c')
+            ->addSelect('c')
+            ->where('o.cancelled = true')
+            ->andwhere('o.reference LIKE :search OR c.firstname LIKE :search OR c.lastname LIKE :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->getQuery();
+
+        return $qb->getResult();
+    }
+
 
 //    /**
 //     * @return Order[] Returns an array of Order objects

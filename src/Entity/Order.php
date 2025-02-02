@@ -69,6 +69,9 @@ class Order
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $paymentMethod = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $cancelReason = null;
+
     public function __construct()
     {
         $this->orderProduct = new ArrayCollection();
@@ -306,6 +309,18 @@ class Order
     public function setPaymentMethod(string $paymentMethod): static
     {
         $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    public function getCancelReason(): ?string
+    {
+        return $this->cancelReason;
+    }
+
+    public function setCancelReason(?string $cancelReason): static
+    {
+        $this->cancelReason = $cancelReason;
 
         return $this;
     }

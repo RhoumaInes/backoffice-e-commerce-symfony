@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/')]
 class CarrierController extends AbstractController
 {
-    #[Route('admin/carrier/', name: 'app_carrier_index', methods: ['GET'])]
+    #[Route('admin/carrier/', name: 'app_carrier_index', methods: ['GET','POST'])]
     public function index(CarrierRepository $carrierRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $searchcarrier = $request->request->get('searchcarrier');

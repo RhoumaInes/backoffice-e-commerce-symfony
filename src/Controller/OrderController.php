@@ -26,11 +26,33 @@ class OrderController extends AbstractController
     #[Route('/', name: 'app_order_index', methods: ['GET','POST'])]
     public function index(PaginatorInterface $paginator, Request $request, OrderRepository $orderRepository): Response
     {
-        $searchorder = $request->query->get('searchorder'); // Utilisez `query` au lieu de `request` pour une recherche via GET
+        $searchorder = $request->query->get('searchorder'); 
         if ($searchorder) {
             $orders = $orderRepository->findByReferenceOrCustomerName($searchorder);
         } else {
             $orders = $orderRepository->findAll();
+        }
+        //dd($searchorder);
+        $pagination = $paginator->paginate(
+            $orders,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('order/index.html.twig', [
+            'orders' => $pagination,
+            'isCancelled' => false,
+        ]);
+    }
+
+    #[Route('/cancelled', name: 'app_order_cancelled', methods: ['GET','POST'])]
+    public function cancelledOrders(PaginatorInterface $paginator, Request $request, OrderRepository $orderRepository): Response
+    {
+        $searchorder = $request->query->get('searchorder');
+        if ($searchorder) {
+            $orders = $orderRepository->findByReferenceOrCustomerNameCancelledOrders($searchorder);
+        } else {
+            $orders = $orderRepository->findBy(['cancelled' => true]);
         }
 
         $pagination = $paginator->paginate(
@@ -41,6 +63,7 @@ class OrderController extends AbstractController
 
         return $this->render('order/index.html.twig', [
             'orders' => $pagination,
+            'isCancelled' => true,
         ]);
     }
 
@@ -50,6 +73,31 @@ class OrderController extends AbstractController
         return new JsonResponse(['state' => $order->isState()]);
     }
 
+    #[Route('/cancel/{id}', name: 'order_cancel', methods: ['POST'])]
+    public function cancelOrder(Request $request, $id,EntityManagerInterface $em): JsonResponse
+    {
+        $order = $em->getRepository(Order::class)->find($id);
+
+        if (!$order) {
+            return new JsonResponse(['success' => false, 'message' => 'Commande introuvable.'], 404);
+        }
+
+        if ($order->isCancelled()) {
+            return new JsonResponse(['success' => false, 'message' => 'La commande a déjà été annulée.'], 400);
+        }
+
+        if ($order->isDelivered()) {
+            return new JsonResponse(['success' => false, 'message' => 'La commande est déjà livrée et ne peut pas être annulée.'], 400);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $order->setCancelled(true);
+        $order->setCancelReason($data['reason']);
+
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
 
 
 
@@ -277,6 +325,16 @@ class OrderController extends AbstractController
         // Générer la facture
         $pdfContent = $this->generateInvoicePdf($order);
 
+        $invoiceDir = $this->getParameter('kernel.project_dir') . '/public/invoices/';
+        if (!file_exists($invoiceDir)) {
+            mkdir($invoiceDir, 0777, true);
+        }
+
+        $filePath = $invoiceDir . 'facture_' . $order->getBillreference() . '.pdf';
+
+        // Sauvegarder le fichier PDF
+        file_put_contents($filePath, $pdfContent);
+
         // Marquer la facture comme générée
         $order->setInvoiceGenerated(true);
         $entityManager->flush();
@@ -304,11 +362,11 @@ class OrderController extends AbstractController
     #[Route('/admin/orders/{id}/download-invoice', name: 'admin_order_download_invoice')]
     public function downloadInvoice(Order $order): Response
     {
-        $filePath = '/path/to/invoices/facture_' . $order->getBillreference() . '.pdf';
+        $filePath = $this->getParameter('kernel.project_dir') . '/public/invoices/facture_' . $order->getBillreference() . '.pdf';
 
         if (!file_exists($filePath)) {
             $this->addFlash('danger', 'Le fichier de la facture est introuvable.');
-            return $this->redirectToRoute('admin_order_show', ['id' => $order->getId()]);
+            return $this->redirectToRoute('admin_order_generate_invoice', ['id' => $order->getId()]);
         }
 
         return $this->file($filePath, 'facture_' . $order->getBillreference() . '.pdf');

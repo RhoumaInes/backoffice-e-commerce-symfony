@@ -17,7 +17,7 @@ class ClientController extends AbstractController
     #[Route('/', name: 'admin_clients_list', methods: ['GET','POST'])]
     public function list(PaginatorInterface $paginator,ClientRepository $clientRepository,Request $request): Response
     {
-        $searchTerm = $request->request->get('searchclient');
+        $searchTerm = $request->request->get('searchTerm');
         if ($searchTerm) {
             $clients = $clientRepository->findByLikeEmail($searchTerm);
         } else {
@@ -54,6 +54,7 @@ class ClientController extends AbstractController
         );
         return $this->render('order/index.html.twig', [
             'orders' => $pagination,
+            'isCancelled' => false,
         ]);
     }
 }

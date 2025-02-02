@@ -34,6 +34,24 @@
                 </td>
             </tr>
             <tr>
+                <th>Status de Commande</th>
+                <td>
+                    {% if order.cancelled %}
+                        <span class="badge bg-danger">Annuler</span>
+                    {% else %}
+                        <span class="badge bg-success">En attente</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% if order.cancelled %}
+                <tr>
+                    <th>Motif d'annulation</th>
+                    <td>
+                        <p>{{ order.cancelReason }}</p>
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
                 <th>Status de paiement</th>
                 <td>
                     {% if order.paid %}
@@ -118,15 +136,90 @@
     </table>
     
     <a href="{{ path('app_order_index') }}">Retour à la liste</a><br><br/>
-
-    {{ include('order/paiement.html.twig') }}<br/><br/>
     {% if not order.cancelled %}
+    {{ include('order/paiement.html.twig') }}<br/><br/>
+    
         {% if not order.paid %}
             <a href="{{ path('admin_order_toggle_payment', {id: order.id}) }}" class="btn btn-primary">Marquer comme payé</a>
         {% else %}
             <a href="{{ path('admin_order_toggle_payment', {id: order.id}) }}" class="btn btn-secondary">Marquer comme non payé</a>
         {% endif %}
-    {% endif %}<br/><br/>
+    <br/><br/>
     {{ include('order/carrier.html.twig') }}<br/><br/>
-    {{ include('order/_delete_form.html.twig') }}
+    {% endif %}
+    {% if not order.cancelled and order.state != 'delivered' and order.paid == false %}
+        <button id="cancel-order-button" class="btn btn-danger">Annuler la commande</button>
+    {% endif %}<br/><br/>
+
+
+    <!-- Modal pour saisir la raison de l'annulation -->
+    <div id="cancelModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Raison de l'annulation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="cancel-reason" class="form-control" placeholder="Indiquez la raison de l'annulation..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="button" id="submit-cancel" class="btn btn-danger">Confirmer l'annulation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Ouvrir le modal lorsque le bouton d'annulation est cliqué
+            const cancelButton = document.getElementById('cancel-order-button');
+            const cancelModal = document.getElementById('cancelModal');
+            const submitCancelButton = document.getElementById('submit-cancel');
+            const cancelReason = document.getElementById('cancel-reason');
+            const orderId = "{{ order.id }}";
+
+            cancelButton.addEventListener('click', function () {
+                $('#cancelModal').modal('show');
+            });
+
+            // Soumettre la raison d'annulation et envoyer une requête AJAX
+            submitCancelButton.addEventListener('click', function () {
+                const reason = cancelReason.value.trim();
+
+                if (!reason) {
+                    alert('Veuillez entrer une raison pour annuler la commande.');
+                    return;
+                }
+
+                // Envoi AJAX pour annuler la commande
+                fetch(`/order/cancel/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ cancelled: true, reason: reason })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Commande annulée avec succès');
+                        location.reload(); // Recharger la page pour afficher l'annulation
+                    } else {
+                        alert('Erreur lors de l\'annulation de la commande : ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Erreur lors de l\'annulation de la commande.');
+                });
+
+                $('#cancelModal').modal('hide');
+            });
+        });
+    </script>
 {% endblock %}

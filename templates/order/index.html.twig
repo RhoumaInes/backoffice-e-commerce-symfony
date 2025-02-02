@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des commandes{% endblock %}
+{% block title %} {% if isCancelled %} Commandes annulées {% else %} Toutes les commandes {% endif %} {% endblock %}
 
 {% block body %}
     <div class="row">
@@ -8,10 +8,10 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        Liste des commandes
+                        {% if isCancelled %} Commandes annulées {% else %} Toutes les commandes {% endif %}
                     </h3>
                     <div class="card-tools">
-                        <form method="post" action="{{ path('app_order_index') }}">
+                        <form method="get" action="{{ isCancelled ? path('app_order_cancelled') : path('app_order_index') }}">
                             <div class="input-group input-group-sm" style="min-width: 150px;">
                                 <input type="text" name="searchorder" class="form-control float-right" placeholder="Recherche" value="{{ app.request.get('searchorder') }}">
 
@@ -21,7 +21,7 @@
                                     </button>
                                 </div>
                                 <div class="input-group-append">
-                                    <a href="{{ path('app_order_index') }}" type="button" class="btn btn-default">
+                                    <a href="{{ isCancelled ? path('app_order_cancelled') : path('app_order_index') }}" type="button" class="btn btn-default">
                                         Réinitialiser
                                     </a>
                                 </div>

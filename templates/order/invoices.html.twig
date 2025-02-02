@@ -20,10 +20,10 @@
                 <tr>
                     <td>{{ order.id }}</td>
                     <td>{{ order.reference }}</td>
-                    <td>{{ order.client.firstname }} {{ order.client.lastname }}</td>
+                    <td>{{ order.carrier.name }}</td>
                     <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
                     <td>
-                        <a href="{{ path('admin_order_generate_invoice', {id: order.id}) }}" class="btn btn-primary">
+                        <a href="{{ path('admin_order_download_invoice', {id: order.id}) }}" class="btn btn-primary">
                             Voir la Facture
                         </a>
                     </td>

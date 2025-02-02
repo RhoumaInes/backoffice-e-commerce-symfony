@@ -375,6 +375,7 @@
       <tag name="ea.dashboard_controller"/>
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.XmW3LYn.App\Controller\Admin\DashboardController"/>
       </call>
@@ -8480,7 +8481,7 @@
         <argument key="user" type="service_closure" id=".errored..service_locator.GPGtF8v.App\Entity\User"/>
       </argument>
     </service>
-    <service id=".service_locator.PFrcXGF" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.ecrOIQg" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Admin\DashboardController::configureUserMenu" type="service_closure" id=".service_locator.st3ASTR"/>
@@ -8532,6 +8533,8 @@
         <argument key="App\Controller\ImageUploadController::deleteImage" type="service_closure" id=".service_locator.Y0duKX1"/>
         <argument key="App\Controller\ImageUploadController::upload" type="service_closure" id=".service_locator.aKM6MDa"/>
         <argument key="App\Controller\OrderController::assignCarrier" type="service_closure" id=".service_locator.v5CX8Wk"/>
+        <argument key="App\Controller\OrderController::cancelOrder" type="service_closure" id=".service_locator.t6i3vFk"/>
+        <argument key="App\Controller\OrderController::cancelledOrders" type="service_closure" id=".service_locator.T9ipEv_"/>
         <argument key="App\Controller\OrderController::delete" type="service_closure" id=".service_locator.j.zZqtE"/>
         <argument key="App\Controller\OrderController::downloadInvoice" type="service_closure" id=".service_locator.jmVMimg"/>
         <argument key="App\Controller\OrderController::edit" type="service_closure" id=".service_locator.j.zZqtE"/>
@@ -8628,6 +8631,8 @@
         <argument key="App\Controller\ImageUploadController:deleteImage" type="service_closure" id=".service_locator.Y0duKX1"/>
         <argument key="App\Controller\ImageUploadController:upload" type="service_closure" id=".service_locator.aKM6MDa"/>
         <argument key="App\Controller\OrderController:assignCarrier" type="service_closure" id=".service_locator.v5CX8Wk"/>
+        <argument key="App\Controller\OrderController:cancelOrder" type="service_closure" id=".service_locator.t6i3vFk"/>
+        <argument key="App\Controller\OrderController:cancelledOrders" type="service_closure" id=".service_locator.T9ipEv_"/>
         <argument key="App\Controller\OrderController:delete" type="service_closure" id=".service_locator.j.zZqtE"/>
         <argument key="App\Controller\OrderController:downloadInvoice" type="service_closure" id=".service_locator.jmVMimg"/>
         <argument key="App\Controller\OrderController:edit" type="service_closure" id=".service_locator.j.zZqtE"/>
@@ -9516,12 +9521,12 @@
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
-      <argument type="service" id=".service_locator.PFrcXGF"/>
+      <argument type="service" id=".service_locator.ecrOIQg"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
-      <argument type="service" id=".service_locator.PFrcXGF"/>
+      <argument type="service" id=".service_locator.ecrOIQg"/>
     </service>
     <service id="debug.traced.messenger.bus.default.inner" class="Symfony\Component\Messenger\MessageBus">
       <argument type="iterator">
@@ -10642,7 +10647,7 @@
     </service>
     <service id="container.env_var_processors_locator" alias=".service_locator.gSv9zYw" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.PFrcXGF"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.ecrOIQg"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -10687,7 +10692,7 @@
     <service id=".service_locator.ITM7EPN" alias=".service_locator.6hoUpXZ"/>
     <service id=".service_locator.XH_zfHo" alias=".service_locator.B_u2V6B"/>
     <service id=".service_locator.b76MKMg" alias=".service_locator.GPGtF8v"/>
-    <service id=".service_locator.lGwIwKy" alias=".service_locator.PFrcXGF"/>
+    <service id=".service_locator.8BCW0UL" alias=".service_locator.ecrOIQg"/>
     <service id=".service_locator.wKF4yn1" alias=".service_locator.19_mNxd"/>
     <service id=".service_locator.QJ3xbV4" alias=".service_locator.Uh9QMQq"/>
     <service id=".service_locator.t4pBJ9b" alias=".service_locator.DnZAF.f"/>
