@@ -11,8 +11,8 @@
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item active">User Profile</li>
+          <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+          <li class="breadcrumb-item active">Profile</li>
         </ol>
       </div>
     </div>
@@ -49,58 +49,12 @@
         </div>
         <!-- /.card -->
 
-        <!-- About Me Box -->
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">About Me</h3>
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body">
-            {% if app.user.education is not empty %}
-              <strong><i class="fas fa-book mr-1"></i> Education</strong>
-
-              <p class="text-muted">
-                {{ app.user.education }}
-              </p>
-
-              <hr>
-            {% endif %}
-            {% if app.user.location is not empty %}
-              <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
-
-              <p class="text-muted">Malibu, California</p>
-
-              <hr>
-            {% endif %}
-
-            {% if app.user.skills is not empty %}
-              <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
-
-              <p class="text-muted">
-                <span class="tag tag-danger">
-                  {{ app.user.skills }}
-                </span>
-              </p>
-
-              <hr>
-            {% endif %}
-            {% if app.user.skills is not empty %}
-              <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
-
-              <p class="text-muted">{{ app.user.notes }}</p>
-            {% endif %}
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
       </div>
       <!-- /.col -->
       <div class="col-md-9">
         <div class="card">
           <div class="card-header p-2">
             <ul class="nav nav-pills">
-              <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab">Activity</a></li>
-              <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
               <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Paramètres</a></li>
             </ul>
           </div><!-- /.card-header -->
@@ -139,15 +93,15 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                    <label for="inputSkills" class="col-sm-2 col-form-label">Compétences</label>
                     <div class="col-sm-10">
-                      {{ form_widget(formprofile.skills, { 'attr': {'class': 'form-control', 'placeholder': 'Skills'} }) }}
+                      {{ form_widget(formprofile.skills, { 'attr': {'class': 'form-control', 'placeholder': 'Compétences'} }) }}
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputSkills" class="col-sm-2 col-form-label">Education</label>
+                    <label for="inputSkills" class="col-sm-2 col-form-label">Éducation</label>
                     <div class="col-sm-10">
-                      {{ form_widget(formprofile.education, { 'attr': {'class': 'form-control', 'placeholder': 'Education'} }) }}
+                      {{ form_widget(formprofile.education, { 'attr': {'class': 'form-control', 'placeholder': 'Éducation'} }) }}
                     </div>
                   </div>
                   <div class="form-group row">
@@ -161,14 +115,14 @@
                       <div class="checkbox">
                         <label>
                           {{ form_widget(formprofile.agreeTerms) }}
-                          I agree to the <a href="#">terms and conditions</a>
+                          J'accepte les <a href="#">termes et conditions</a>
                         </label>
                       </div>
                     </div>
                   </div>
                   <div class="form-group row">
                     <div class="offset-sm-2 col-sm-10">
-                      <button type="submit" class="btn btn-danger">Submit</button>
+                      <button type="submit" class="btn btn-danger">Valider</button>
                     </div>
                   </div>
                   

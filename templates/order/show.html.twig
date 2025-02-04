@@ -77,7 +77,7 @@
                     {% if order.deliveryDate %}
                         {{ order.deliveryDate|date('d/m/Y') }}
                     {% else %}
-                        Non définie.
+                        <span class="badge bg-warning">Non définie</span>
                     {% endif %}
                 </td>
             </tr>
@@ -101,7 +101,16 @@
                     {% endif %}
                 </td>
             </tr>
-
+            <tr>
+                <th>Ville de livraison</th>
+                <td>
+                    {% if order.carrier %}
+                        {{ order.carrierPrice.city.value }}
+                    {% else %}
+                        Aucun livreur affecté.
+                    {% endif %}
+                </td>
+            </tr>
         </tbody>
     </table>
 
@@ -120,7 +129,7 @@
                 <tr>
                     <td>{{ product.product.title }}</td>
                     <td>{{ product.quantity }}</td>
-                    <td>{{ product.product.prixVenteTtc|number_format(2, '.', ',') }} €</td>
+                    <td>{{ product.product.prixVenteTtc|number_format(2, '.', ',') }} DT</td>
                     <td></td>
                 </tr>
             {% else %}
@@ -128,9 +137,15 @@
                     <td colspan="4">Aucun produit trouvé.</td>
                 </tr>
             {% endfor %}
+            {% if order.carrier %}
+                <tr>
+                    <td colspan="3"><strong>Livraison</strong></td>
+                    <td>{{ order.carrierPrice.price|number_format(2, '.', ',') }} DT</td>
+                </tr>
+            {% endif %}            
             <tr>
                 <td colspan="3"></td>
-                <td>{{ order.total|number_format(2, '.', ',') }} €</td>
+                <td>{{ order.total|number_format(2, '.', ',') }} DT</td>
             </tr>
         </tbody>
     </table>

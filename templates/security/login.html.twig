@@ -1,6 +1,6 @@
 {% extends 'baseauth.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Se connecter!{% endblock %}
 
 {% block body %}
 <div class="limiter">
@@ -13,12 +13,12 @@
 
 				{% if app.user %}
 					<div class="mb-3">
-						You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+						Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
 					</div>
 				{% endif %}
 
 				<h1 class="login100-form-title p-b-49">
-					Please sign in
+					Se connecter
 				</h1>
 
 				<div class="wrap-input100 validate-input m-b-23" data-validate = "Email is reauired">
@@ -28,7 +28,7 @@
 				</div>
 				
 				<div class="wrap-input100 validate-input" data-validate="Password is required">
-					<span class="label-input100">Password</span>
+					<span class="label-input100">Mot de passe</span>
 					<input class="input100" type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required placeholder="Type your password">
 					<span class="focus-input100" data-symbol="&#xf190;"></span>
 				</div>
@@ -50,7 +50,7 @@
 
 				<div class="text-right p-t-8 p-b-31">
 					<a href="#">
-						Forgot password?
+						Mot de passe oublié?
 					</a>
 				</div>
 				
@@ -58,7 +58,7 @@
 					<div class="wrap-login100-form-btn">
 						<div class="login100-form-bgbtn"></div>
 						<button class="login100-form-btn" type="submit">
-							Login
+							Se connecter
 						</button>
 					</div>
 				</div>
