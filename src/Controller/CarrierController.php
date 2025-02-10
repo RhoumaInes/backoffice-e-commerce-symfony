@@ -120,6 +120,7 @@ class CarrierController extends AbstractController
             $cities = [];
             foreach ($carrier->getCarrierPrices() as $price) {
                 $cities[] = [
+                    'id' => $price->getId(),
                     'city' => $price->getCity(),
                     'price' => $price->getPrice(),
                 ];

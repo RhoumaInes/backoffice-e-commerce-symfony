@@ -74,6 +74,7 @@ class AttributeValueController extends AbstractController
                 'form' => $form->createView(),
                 'colorType' => $colorType,
                 'attributeTypes' => json_encode($attributeTypes),
+                'attribute' => $attribute,
             ]);
             //return $this->redirectToRoute('app_attribute_value_index', [], Response::HTTP_SEE_OTHER);
         }

@@ -46,10 +46,11 @@ class DashboardController extends AbstractDashboardController
             $totalEmployees = $this->entityManager->getRepository(User::class)
             ->createQueryBuilder('u')
             ->select('COUNT(u.id)')
-            ->where('u.roles LIKE :role')
-            ->setParameter('role', '%ROLE_EMPLOYEE%')
             ->getQuery()
             ->getSingleScalarResult();
+
+            /*->where('u.roles LIKE :role')
+            ->setParameter('role', '%ROLE_USER%')*/
 
 
             // Calcul du pourcentage des commandes payées

@@ -1,6 +1,6 @@
 {% extends 'baseauth.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Enregistrer un utilisateur{% endblock %}
 
 {% block body %}
 <div class="limiter">
@@ -18,7 +18,7 @@
 				
 
 				<h1 class="login100-form-title p-b-49">
-					Register
+					Enregistrer un utilisateur
 				</h1>
 				
 				<div class="wrap-input100 validate-input m-b-23" data-validate = "Last name is reauired">
@@ -47,7 +47,7 @@
 					{{ form_errors(registrationForm.email) }}
 				</div>
 				<div class="wrap-input100 validate-input" data-validate="Password is required">
-					<span class="label-input100">Password</span>
+					<span class="label-input100">Mot de passe</span>
 					{{ form_widget(registrationForm.plainPassword, { 'attr': {'class': 'input100'} }) }}
 					<span class="focus-input100" data-symbol="&#xf190;"></span>
 				</div>
@@ -79,7 +79,7 @@
 					<div class="wrap-login100-form-btn">
 						<div class="login100-form-bgbtn"></div>
 						<button class="login100-form-btn" type="submit" formnovalidate>
-							Register
+							Sauvegarder
 						</button>
 					</div>
 				</div>

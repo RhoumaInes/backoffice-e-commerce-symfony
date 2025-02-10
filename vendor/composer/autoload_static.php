@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1493df30aaa6704ada2db819bf497438
+class ComposerStaticInit74c0e4cf932c1f3b958f38056dc6b667
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -180,9 +180,9 @@ class ComposerStaticInit1493df30aaa6704ada2db819bf497438
     public static $prefixDirsPsr4 = array (
         'phpDocumentor\\Reflection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
         ),
         'Webmozart\\Assert\\' => 
         array (
@@ -619,7 +619,7 @@ class ComposerStaticInit1493df30aaa6704ada2db819bf497438
         ),
         'Doctrine\\Bundle\\MigrationsBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle',
+            0 => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src',
         ),
         'Doctrine\\Bundle\\DoctrineBundle\\' => 
         array (
@@ -805,13 +805,14 @@ class ComposerStaticInit1493df30aaa6704ada2db819bf497438
         'Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepositoryInterface' => __DIR__ . '/..' . '/doctrine/doctrine-bundle/src/Repository/ServiceEntityRepositoryInterface.php',
         'Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepositoryProxy' => __DIR__ . '/..' . '/doctrine/doctrine-bundle/src/Repository/ServiceEntityRepositoryProxy.php',
         'Doctrine\\Bundle\\DoctrineBundle\\Twig\\DoctrineExtension' => __DIR__ . '/..' . '/doctrine/doctrine-bundle/src/Twig/DoctrineExtension.php',
-        'Doctrine\\Bundle\\MigrationsBundle\\Collector\\MigrationsCollector' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/Collector/MigrationsCollector.php',
-        'Doctrine\\Bundle\\MigrationsBundle\\Collector\\MigrationsFlattener' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/Collector/MigrationsFlattener.php',
-        'Doctrine\\Bundle\\MigrationsBundle\\DependencyInjection\\CompilerPass\\ConfigureDependencyFactoryPass' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/DependencyInjection/CompilerPass/ConfigureDependencyFactoryPass.php',
-        'Doctrine\\Bundle\\MigrationsBundle\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/DependencyInjection/Configuration.php',
-        'Doctrine\\Bundle\\MigrationsBundle\\DependencyInjection\\DoctrineMigrationsExtension' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/DependencyInjection/DoctrineMigrationsExtension.php',
-        'Doctrine\\Bundle\\MigrationsBundle\\DoctrineMigrationsBundle' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/DoctrineMigrationsBundle.php',
-        'Doctrine\\Bundle\\MigrationsBundle\\MigrationsFactory\\ContainerAwareMigrationFactory' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/MigrationsFactory/ContainerAwareMigrationFactory.php',
+        'Doctrine\\Bundle\\MigrationsBundle\\Collector\\MigrationsCollector' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src/Collector/MigrationsCollector.php',
+        'Doctrine\\Bundle\\MigrationsBundle\\Collector\\MigrationsFlattener' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src/Collector/MigrationsFlattener.php',
+        'Doctrine\\Bundle\\MigrationsBundle\\DependencyInjection\\CompilerPass\\ConfigureDependencyFactoryPass' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src/DependencyInjection/CompilerPass/ConfigureDependencyFactoryPass.php',
+        'Doctrine\\Bundle\\MigrationsBundle\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src/DependencyInjection/Configuration.php',
+        'Doctrine\\Bundle\\MigrationsBundle\\DependencyInjection\\DoctrineMigrationsExtension' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src/DependencyInjection/DoctrineMigrationsExtension.php',
+        'Doctrine\\Bundle\\MigrationsBundle\\DoctrineMigrationsBundle' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src/DoctrineMigrationsBundle.php',
+        'Doctrine\\Bundle\\MigrationsBundle\\EventListener\\SchemaFilterListener' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src/EventListener/SchemaFilterListener.php',
+        'Doctrine\\Bundle\\MigrationsBundle\\MigrationsFactory\\ContainerAwareMigrationFactory' => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src/MigrationsFactory/ContainerAwareMigrationFactory.php',
         'Doctrine\\Common\\Annotations\\Annotation' => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations/Annotation.php',
         'Doctrine\\Common\\Annotations\\AnnotationException' => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations/AnnotationException.php',
         'Doctrine\\Common\\Annotations\\AnnotationReader' => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations/AnnotationReader.php',
@@ -1039,6 +1040,7 @@ class ComposerStaticInit1493df30aaa6704ada2db819bf497438
         'Doctrine\\DBAL\\Exception\\SyntaxErrorException' => __DIR__ . '/..' . '/doctrine/dbal/src/Exception/SyntaxErrorException.php',
         'Doctrine\\DBAL\\Exception\\TableExistsException' => __DIR__ . '/..' . '/doctrine/dbal/src/Exception/TableExistsException.php',
         'Doctrine\\DBAL\\Exception\\TableNotFoundException' => __DIR__ . '/..' . '/doctrine/dbal/src/Exception/TableNotFoundException.php',
+        'Doctrine\\DBAL\\Exception\\TransactionRolledBack' => __DIR__ . '/..' . '/doctrine/dbal/src/Exception/TransactionRolledBack.php',
         'Doctrine\\DBAL\\Exception\\UniqueConstraintViolationException' => __DIR__ . '/..' . '/doctrine/dbal/src/Exception/UniqueConstraintViolationException.php',
         'Doctrine\\DBAL\\ExpandArrayParameters' => __DIR__ . '/..' . '/doctrine/dbal/src/ExpandArrayParameters.php',
         'Doctrine\\DBAL\\FetchMode' => __DIR__ . '/..' . '/doctrine/dbal/src/FetchMode.php',
@@ -6756,6 +6758,7 @@ class ComposerStaticInit1493df30aaa6704ada2db819bf497438
         'Twig\\Extension\\EscaperExtension' => __DIR__ . '/..' . '/twig/twig/src/Extension/EscaperExtension.php',
         'Twig\\Extension\\ExtensionInterface' => __DIR__ . '/..' . '/twig/twig/src/Extension/ExtensionInterface.php',
         'Twig\\Extension\\GlobalsInterface' => __DIR__ . '/..' . '/twig/twig/src/Extension/GlobalsInterface.php',
+        'Twig\\Extension\\LastModifiedExtensionInterface' => __DIR__ . '/..' . '/twig/twig/src/Extension/LastModifiedExtensionInterface.php',
         'Twig\\Extension\\OptimizerExtension' => __DIR__ . '/..' . '/twig/twig/src/Extension/OptimizerExtension.php',
         'Twig\\Extension\\ProfilerExtension' => __DIR__ . '/..' . '/twig/twig/src/Extension/ProfilerExtension.php',
         'Twig\\Extension\\RuntimeExtensionInterface' => __DIR__ . '/..' . '/twig/twig/src/Extension/RuntimeExtensionInterface.php',
@@ -6874,6 +6877,7 @@ class ComposerStaticInit1493df30aaa6704ada2db819bf497438
         'Twig\\Node\\Expression\\Variable\\TemplateVariable' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Variable/TemplateVariable.php',
         'Twig\\Node\\Expression\\VariadicExpression' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/VariadicExpression.php',
         'Twig\\Node\\FlushNode' => __DIR__ . '/..' . '/twig/twig/src/Node/FlushNode.php',
+        'Twig\\Node\\ForElseNode' => __DIR__ . '/..' . '/twig/twig/src/Node/ForElseNode.php',
         'Twig\\Node\\ForLoopNode' => __DIR__ . '/..' . '/twig/twig/src/Node/ForLoopNode.php',
         'Twig\\Node\\ForNode' => __DIR__ . '/..' . '/twig/twig/src/Node/ForNode.php',
         'Twig\\Node\\IfNode' => __DIR__ . '/..' . '/twig/twig/src/Node/IfNode.php',
@@ -7094,9 +7098,9 @@ class ComposerStaticInit1493df30aaa6704ada2db819bf497438
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1493df30aaa6704ada2db819bf497438::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1493df30aaa6704ada2db819bf497438::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1493df30aaa6704ada2db819bf497438::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit74c0e4cf932c1f3b958f38056dc6b667::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit74c0e4cf932c1f3b958f38056dc6b667::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit74c0e4cf932c1f3b958f38056dc6b667::$classMap;
 
         }, null, ClassLoader::class);
     }
