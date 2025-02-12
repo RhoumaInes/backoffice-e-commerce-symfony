@@ -34,10 +34,11 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    bat "C:/sonar-scanner/sonar-scanner-6.2.1.4610-windows-x64/bin/sonar-scanner.bat -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}"
+                    bat "C:/sonar-scanner/sonar-scanner-6.2.1.4610-windows-x64/bin/sonar-scanner.bat -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_TOKEN}"
                 }
             }
         }
+
 
         stage('List Files') {
             steps {
