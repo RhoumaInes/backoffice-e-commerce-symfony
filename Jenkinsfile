@@ -5,6 +5,9 @@ pipeline {
         imagename = "inesrhouma/backoffice_symfony"
         DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
         dockerImage = ''
+        SONAR_TOKEN = credentials('sonar-token')  
+        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_PROJECT_KEY = 'vr-marketplace'
     }
     stages {
         stage('Checkout') {
@@ -21,13 +24,22 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Vérifier et installer les dépendances Composer
-                bat 'composer --version'  // Vérifie la version de Composer
+                bat 'composer --version'  
                 bat 'rmdir /s /q vendor'
                 bat 'del composer.lock'
                 bat 'C:/ProgramData/ComposerSetup/bin/composer install --prefer-dist --optimize-autoloader' // Installer les dépendances
             }
         }
+        
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    bat "C:/ProgramData/ComposerSetup/bin/composer require --dev sonarsource/sonar-scanner-cli"
+                    bat "C:/ProgramData/ComposerSetup/bin/composer exec sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}"
+                }
+            }
+        }
+
         stage('List Files') {
             steps {
                 bat 'dir'
@@ -58,12 +70,10 @@ pipeline {
                 }
             }
         }
-        // Remplacement dynamique du tag dans le fichier deployment.yml
         stage('Update Deployment YAML') {
             steps {
                 script {
-                    // Remplacement du tag et du nom d'image dans le fichier deployment.yml
-                    def deploymentYaml = readFile('deployment.yml')
+=                    def deploymentYaml = readFile('deployment.yml')
                     deploymentYaml = deploymentYaml.replace('__IMAGE_NAME__', "${imagename}")
                     deploymentYaml = deploymentYaml.replace('__TAG__', "${BUILD_NUMBER}")
                     writeFile(file: 'deployment.yml', text: deploymentYaml)
@@ -71,16 +81,12 @@ pipeline {
             }
         }
 
-        
-
         stage('Remove Unused docker image') {
             steps{
                 bat "docker rmi ${imagename}:${BUILD_NUMBER}"
                 bat "docker rmi ${imagename}:latest"
-        
             }
         }
-        
     }    
     post {
         failure {
