@@ -71,14 +71,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    bat "kubectl apply -f deployment.yml"
-                    bat "kubectl get pods"
-                }
-            }
-        }
+        
 
         stage('Remove Unused docker image') {
             steps{
