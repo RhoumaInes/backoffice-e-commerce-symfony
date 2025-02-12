@@ -5,7 +5,7 @@ pipeline {
         imagename = "inesrhouma/backoffice_symfony"
         DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
         dockerImage = ''
-        SONAR_TOKEN = credentials('sonar-token')  
+        SONAR_TOKEN = credentials('sonar-credentials')  
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_PROJECT_KEY = 'vr-marketplace'
     }
