@@ -73,7 +73,7 @@ pipeline {
         stage('Update Deployment YAML') {
             steps {
                 script {
-=                    def deploymentYaml = readFile('deployment.yml')
+                    def deploymentYaml = readFile('deployment.yml')
                     deploymentYaml = deploymentYaml.replace('__IMAGE_NAME__', "${imagename}")
                     deploymentYaml = deploymentYaml.replace('__TAG__', "${BUILD_NUMBER}")
                     writeFile(file: 'deployment.yml', text: deploymentYaml)
