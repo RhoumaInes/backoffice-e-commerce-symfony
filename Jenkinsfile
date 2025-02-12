@@ -34,8 +34,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    bat "C:/ProgramData/ComposerSetup/bin/composer require --dev sonarsource/sonar-scanner-cli"
-                    bat "C:/ProgramData/ComposerSetup/bin/composer exec sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}"
+                    bat "C:/sonar-scanner/sonar-scanner-6.2.1.4610-windows-x64/bin/sonar-scanner.bat -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}"
                 }
             }
         }
