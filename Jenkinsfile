@@ -5,9 +5,6 @@ pipeline {
         imagename = "inesrhouma/backoffice_symfony"
         DOCKER_CREDENTIALS_ID = "docker-hub-credentials"
         dockerImage = ''
-        SONAR_TOKEN = credentials('sonar-credentials')  
-        SONAR_HOST_URL = 'http://localhost:9000'
-        SONAR_PROJECT_KEY = 'vr-marketplace'
     }
     stages {
         stage('Checkout') {
@@ -24,22 +21,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'composer --version'  
+                // Vérifier et installer les dépendances Composer
+                bat 'composer --version'  // Vérifie la version de Composer
                 bat 'rmdir /s /q vendor'
                 bat 'del composer.lock'
                 bat 'C:/ProgramData/ComposerSetup/bin/composer install --prefer-dist --optimize-autoloader' // Installer les dépendances
             }
         }
-        
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    bat "C:/sonar-scanner/sonar-scanner-6.2.1.4610-windows-x64/bin/sonar-scanner.bat -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_TOKEN}"
-                }
-            }
-        }
-
-
         stage('List Files') {
             steps {
                 bat 'dir'
@@ -81,12 +69,16 @@ pipeline {
             }
         }
 
+        
+
         stage('Remove Unused docker image') {
             steps{
                 bat "docker rmi ${imagename}:${BUILD_NUMBER}"
                 bat "docker rmi ${imagename}:latest"
+        
             }
         }
+        
     }    
     post {
         failure {
